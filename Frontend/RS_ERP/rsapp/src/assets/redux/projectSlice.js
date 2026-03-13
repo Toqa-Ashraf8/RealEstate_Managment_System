@@ -17,10 +17,10 @@ const initialState = {
     tblLength: '',
     index: '',
     rowSel: '',
-    showdel: false,
+    deleteUnitRow: false,
     TotalP: '',
     deleted: '',
-    showdelall: false,
+    deleteProjectModal: false,
     showmdl_s: false,
     searchRowI: '',
     comeunits: [],
@@ -104,16 +104,16 @@ const projectSlice = createSlice({
             }
             state.showmdl = false;
         },
-        showdelMdl: (state, action) => {
+        showdeleteUnitRowModal: (state, action) => {
             state.rowSel = action.payload;
-            state.showdel = true;
+            state.deleteUnitRow = true;
         },
         DeleteRow: (state, action) => {
             state.units = state.units.filter((items, index) => index !== state.rowSel);
-            state.showdel = false;
+            state.deleteUnitRow = false;
         },
         hideDelmdl: (state) => {
-            state.showdel = false;
+            state.deleteUnitRow = false;
         },
         calcTotalPrice: (state) => {
             if (state.unit.TotalArea.length > 0 && state.unit.MeterPrice.length > 0) {
@@ -125,8 +125,8 @@ const projectSlice = createSlice({
                 state.unit.TotalPrice = 0;
             }
         },
-        showDelAllm: (state, action) => {
-            state.showdelall = action.payload;
+        showDeleteProjectModal: (state, action) => {
+            state.deleteProjectModal= action.payload;
         },
         showSearchm: (state, action) => {
             state.showmdl_s = action.payload;
@@ -221,7 +221,7 @@ const projectSlice = createSlice({
     }
 })
 export const { showunitMdl, changeVls, ClearInputs, changeVls_U, ClearModalvls,
-    fromMdlTotbl, showdelMdl, DeleteRow, hideDelmdl, calcTotalPrice, showDelAllm,
+    fromMdlTotbl, showdeleteUnitRowModal, DeleteRow, hideDelmdl, calcTotalPrice, showDeleteProjectModal,
     showSearchm, getRowIndexOfS,SetRowIndexvalue,GetProjectCode
 } = projectSlice.actions;
 const projReducer = projectSlice.reducer;

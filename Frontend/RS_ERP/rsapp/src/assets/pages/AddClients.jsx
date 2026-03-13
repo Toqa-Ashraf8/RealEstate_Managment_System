@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import "../css/CRM.css";
+import "../css/AddClients.css";
 import { MdCleaningServices, MdAdd ,MdDeleteOutline} from "react-icons/md";
 import { RiSave3Fill, RiDeleteBinLine } from "react-icons/ri";
 import { FaSearch } from "react-icons/fa";
@@ -40,11 +40,12 @@ import {
 } from "../redux/clientSlice";
 import NegotiationModal from "../modals/NegotiationModal";
 import {toast}from 'react-toastify'
-import ModalDeleteClients from "../modals/ModalDeleteClients";
 import SearchClients from "../modals/SearchClients";
 import { IoClose } from "react-icons/io5";
+import ModalDeleteClients from "../modals/ModalDeleteClients";
 
-const CRM = () => {
+
+const AddClients = () => {
   const db = useSelector((state) => state.clients);
   const dispatch = useDispatch();
   const nameRef = useRef();
@@ -319,4 +320,4 @@ const CRM = () => {
   );
 };
 
-export default CRM;
+export default AddClients;

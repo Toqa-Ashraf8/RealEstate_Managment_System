@@ -8,7 +8,6 @@ import AddProjects from './assets/pages/AddProjects'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProjectsCard from './assets/pages/ProjectsCard'
-import CRM from './assets/pages/CRM'
 import NegotiationRequests from './assets/pages/NegotiationRequests'
 import ReservationControl from './assets/pages/ReservationControl';
 import RejectedNegotiations from './assets/pages/RejectedNegotiations';
@@ -16,6 +15,7 @@ import AcceptedNegotiations from './assets/pages/AcceptedNegotiations';
 import BookingsManager from './assets/pages/BookingsManager';
 import ClientProfile from './assets/pages/ClientProfile';
 import UnitsCard from './assets/pages/UnitsCard';
+import AddClients from './assets/pages/AddClients';
 
 function App() {
 
@@ -36,7 +36,7 @@ function App() {
               <Route path="/addprojects" element={<AddProjects/>}/>
               <Route path="/projects" element={<ProjectsCard/>}/>
               <Route path="/units" element={<UnitsCard/>}/>
-              <Route path='/crm' element={<CRM/>}/> 
+              <Route path='/addclients' element={<AddClients/>}/> 
               <Route path='/negotiation_requests' element={<NegotiationRequests/>}/>
               <Route path='/booking' element={<BookingsManager/>}/> 
               <Route path='/rejected_negotiations' element={<RejectedNegotiations/>}/> 

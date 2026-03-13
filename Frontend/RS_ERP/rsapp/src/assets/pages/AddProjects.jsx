@@ -30,8 +30,8 @@ import {
   save_all,
   saveimgs,
   SetRowIndexvalue,
-  showDelAllm,
-  showdelMdl,
+  showDeleteProjectModal,
+  showdeleteUnitRowModal,
   showSearchm,
   showunitMdl,
 } from "../redux/projectSlice";
@@ -39,10 +39,10 @@ import { CiEdit } from "react-icons/ci";
 import { variables } from "../variables";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
-import ModalDelete from "../modals/ModalDelete";
-import ModalDelAll from "../modals/ModalDelAll";
 import SearchProjectsModal from "../modals/SearchProjectsModal";
 import { formatCurrency } from '../helpers'
+import DeleteProjectModal from "../modals/DeleteProjectModal.jsx";
+import DeleteUnitRowModal from "../modals/DeleteUnitRowModal.jsx";
 const AddProjects = () => {
   const db = useSelector((state) => state.projects);
   const dispatch = useDispatch();
@@ -110,8 +110,8 @@ const AddProjects = () => {
   return (
     <div className="page-container">
       {db.showmdl && <UnitModal />}
-      {db.showdel && <ModalDelete />}
-      {db.showdelall && <ModalDelAll />}
+      {db.deleteUnitRow && <DeleteUnitRowModal/>}
+      {db.deleteProjectModal && <DeleteProjectModal/>}
       {db.showmdl_s && <SearchProjectsModal />}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -158,7 +158,7 @@ const AddProjects = () => {
           <span
             className="btn_c"
             title="حذف"
-            onClick={() => dispatch(showDelAllm(true))}
+            onClick={() => dispatch(showDeleteProjectModal(true))}
           >
             <RiDeleteBinLine
               size={28}
@@ -410,7 +410,7 @@ const AddProjects = () => {
                           <MdDeleteOutline
                             size={25}
                             color="red"
-                            onClick={() => dispatch(showdelMdl(index))}
+                            onClick={() => dispatch(showdeleteUnitRowModal(index))}
                           />
                         </span>
                       </div>

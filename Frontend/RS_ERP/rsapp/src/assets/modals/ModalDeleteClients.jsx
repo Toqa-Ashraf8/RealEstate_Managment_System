@@ -1,6 +1,6 @@
 import React from 'react';
 import { MdClose, MdWarning, MdDelete } from "react-icons/md";
-import '../css/ModalDelete.css';
+import '../css/ModalDeleteClients.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearinputs, deleteAllData, HandleShowModal } from '../redux/clientSlice';
 import { toast } from 'react-toastify';
