@@ -199,7 +199,7 @@ const AddClients = () => {
       <input type="text" className="crm_inp" name="PhoneNumber" value={db.client.PhoneNumber || ""} onChange={HandleChange} />
     </div>
 
-    {/* المشروع والوحدة في سطر واحد داخل الـ Grid */}
+ 
     <div className="data_crm">
       <label className="lbl_crm"><Building2 size={18} /> إسم المشروع</label>
       <select className="crm_select" name="ProjectName" value={db.client.ProjectName || ""} onChange={HandleChange}>
@@ -268,7 +268,7 @@ const AddClients = () => {
                <th>تاريخ الطلب</th>
                 </>) 
                :""}
-                <th>الأحداث</th>
+                <th className="events_col">الأحداث</th>
               </tr>
             </thead>
             <tbody>
@@ -294,7 +294,7 @@ const AddClients = () => {
           </span>
         )}
         {(neg.NegotiationStatus !== 'مقبول' && neg.NegotiationStatus !== 'مرفوض') && (
-          <span style={{ color: '#f1c40f', display: 'flex', alignItems: 'center' }}>
+          <span style={{ display: 'flex', alignItems: 'center' }}>
             {neg.NegotiationStatus} <Hourglass size={18} className="hourglass_" style={{ marginRight: '5px' }} />
           </span>
         )}
@@ -305,8 +305,8 @@ const AddClients = () => {
 ) : ""}
                 <td>
                   <div className="btns_dtls_n">
-                    <span><CiEdit size={25} color="blue"/></span>
-                    <span><MdDeleteOutline size={25} color="red"/></span>
+                    <span><CiEdit size={30} color="blue"/></span>
+                    <span><MdDeleteOutline size={30} color="red"/></span>
                   </div>
                 </td>
               </tr>

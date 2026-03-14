@@ -98,7 +98,7 @@ const clientSlice = createSlice({
             if(state.negotiation.OriginalPrice && state.negotiation.NegotiationPrice){
                 const difference=state.negotiation.OriginalPrice - state.negotiation.NegotiationPrice;
                 const discount=(difference/state.negotiation.OriginalPrice)*100; 
-                state.negotiation.DiscountAmount=parseFloat(discount.toFixed(2));
+                state.negotiation.DiscountAmount=parseFloat(discount.toFixed(1));
             }
        },
        AddToNegotiationTable:(state,action)=>{
