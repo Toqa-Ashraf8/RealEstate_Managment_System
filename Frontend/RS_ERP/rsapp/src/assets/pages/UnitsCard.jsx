@@ -24,14 +24,14 @@ const UnitsCard = () => {
   return (
     <div className="u-card-wrapper" dir="rtl">
       <div className="u-card-container">
-        {db.units.length === 0 ? (
+        {db.unitss.length === 0 ? (
           <div className="u-card-empty">
             <FaImage size={40} color="#ccc" />
             <p>لا توجد وحدات متاحة لهذا المشروع حالياً</p>
           </div>
         ) : (
           <div className="u-card-grid">
-            {db.units.map((unit, index) => (
+            {db.unitss.map((unit, index) => (
               <div key={index} className="u-card-item">
                 <div className="u-card-header">
                   {unit.unitImage ? (

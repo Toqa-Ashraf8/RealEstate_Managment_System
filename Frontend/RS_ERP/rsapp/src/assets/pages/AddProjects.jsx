@@ -47,7 +47,7 @@ const AddProjects = () => {
   const db = useSelector((state) => state.projects);
   const dispatch = useDispatch();
   const NameRef = useRef();
-  const parms_ = { ...db.project, units: db.unitss };
+  const parms = { ...db.project, units: db.unitss };
   //********************************************************************************* */
   //--------------- Save Image ----------------------------
   const HandleImage = async (e) => {
@@ -70,12 +70,12 @@ const AddProjects = () => {
     dispatch(ClearInputs());
     NameRef.current.focus();
   };
-  console.log(parms_);
+  console.log(parms);
   //--------------- Save Master--------------------------------------------
   const HandleSave = async () => {
     try {
      
-      const result = await dispatch(save_all(parms_)).unwrap();
+      const result = await dispatch(save_all(parms)).unwrap();
       if (result.errorOccured) {
         toast.error("أدخل إسم المشروع لإتمام الحفظ!", {
           theme: "colored",

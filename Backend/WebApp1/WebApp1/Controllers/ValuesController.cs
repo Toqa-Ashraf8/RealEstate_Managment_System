@@ -148,23 +148,21 @@ namespace WebApp1.Controllers
                 }
 
                 if(prj.Units !=null && prj.Units.Count > 0) { 
-                string sqlin_u = @"insert into Units (serial,unitName,Floor,TotalArea,MeterPrice,TotalPrice,Unitstatus,unitImage,ProjectCode,ProjectName)
-                              values(@serial,@unitName,@Floor,@TotalArea,@MeterPrice,@TotalPrice,@Unitstatus,@unitImage,@ProjectCode,@ProjectName)";
+                string sqlin_u = @"insert into Units (serial,unitName,Floor,TotalArea,MeterPrice,TotalPrice,unitStatus,unitImage,ProjectCode,ProjectName)
+                                 values(@serial,@unitName,@Floor,@TotalArea,@MeterPrice,@TotalPrice,@unitStatus,@unitImage,@ProjectCode,@ProjectName)";
                     if (conn.State != ConnectionState.Open) conn.Open();
                     using (SqlCommand cmd = new SqlCommand(sqlin_u, conn))
                     {
                         foreach (var unit in prj.Units)
                         {
                             cmd.Parameters.Clear();
-
-                           
                             cmd.Parameters.Add("@serial", SqlDbType.Int).Value = unit.serial;
                             cmd.Parameters.Add("@unitName", SqlDbType.NVarChar).Value = unit.unitName ;
                             cmd.Parameters.Add("@Floor", SqlDbType.NVarChar).Value = unit.Floor;
                             cmd.Parameters.Add("@TotalArea", SqlDbType.Decimal).Value =  Convert.ToDecimal(unit.TotalArea) ;                         
                             cmd.Parameters.Add("@MeterPrice", SqlDbType.Int).Value =  Convert.ToInt32(unit.MeterPrice) ;                        
                             cmd.Parameters.Add("@TotalPrice", SqlDbType.Float).Value =  Convert.ToDouble(unit.TotalPrice);
-                            cmd.Parameters.Add("@Unitstatus", SqlDbType.NVarChar).Value = unit.Unitstatus;
+                            cmd.Parameters.Add("@unitStatus", SqlDbType.NVarChar).Value = unit.unitStatus;
                             cmd.Parameters.AddWithValue("@unitImage", string.IsNullOrEmpty(unit.unitImage) ? DBNull.Value : unit.unitImage);
                             cmd.Parameters.Add("@ProjectCode", SqlDbType.Int).Value = id;                          
                             cmd.Parameters.Add("@ProjectName", SqlDbType.NVarChar).Value =prj.ProjectName ;

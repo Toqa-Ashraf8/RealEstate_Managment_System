@@ -25,7 +25,7 @@ namespace WebApp1.Controllers
         [HttpGet]
         public JsonResult GetNegotationsCount()
         {
-            string query = "SELECT COUNT(*) FROM Negotiation where checkedByAdmin=0";
+            string query = "SELECT COUNT(*) FROM Negotiations where checkedByAdmin=0";
 
 
             using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -92,7 +92,7 @@ namespace WebApp1.Controllers
                     
                 try
                 {
-                    string sqlup = @"update Negotiation set NegotiationStatus='" + approvedstatement + "' , checkedByAdmin=1 where ClientID=" + ph.ClientID;
+                    string sqlup = @"update Negotiations set NegotiationStatus='" + approvedstatement + "' , checkedByAdmin=1 where ClientID=" + ph.ClientID;
                     using (SqlCommand cmd = new SqlCommand(sqlup, conn))
                     {
                         cmd.Parameters.Clear();
@@ -114,7 +114,7 @@ namespace WebApp1.Controllers
             {
                 try
                 {
-                    string sqlup = @"update Negotiation set NegotiationStatus='" + rejectstatement + "' , checkedByAdmin=1 where ClientID=" + ph.ClientID;
+                    string sqlup = @"update Negotiations set NegotiationStatus='" + rejectstatement + "' , checkedByAdmin=1 where ClientID=" + ph.ClientID;
                     using (SqlCommand cmd = new SqlCommand(sqlup, conn))
                     {
                         cmd.Parameters.Clear();

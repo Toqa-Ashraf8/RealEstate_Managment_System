@@ -38,15 +38,16 @@
     overflow: hidden;
  
 }
-.select-project{
-    width: 250px!important;
+.select-project,.select-unit{
+    width: 400px!important;
 }
+
 .project-unit-section{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     background-color: #eeeded;
-   height: 100px;
-   padding: 10px;
-   border-radius:10px ;
+    height: auto;
+    padding: 10px;
+    border-radius:10px ;
 }

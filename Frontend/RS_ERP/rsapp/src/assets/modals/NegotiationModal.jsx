@@ -55,8 +55,10 @@ const AddToTable=()=>{
               
             <div className="row">
                 <div className="project-unit-section col-5">
-                 <div className="data_projectname"style={{marginBottom:'15px',display:'flex',gap:'20px'}}>
-                      <label className="lbl_crm">إسم المشروع</label>
+                 <div className="data_projectname" style={{display:'flex'}}>
+                      <label className="data_lbl" style={{width:'150px!important'}}>
+                      إسم المشروع
+                      </label>
                       <select 
                       className="crm_select select-project" 
                       name="ProjectName" 
@@ -70,9 +72,9 @@ const AddToTable=()=>{
                   </div> 
                   <div></div>
                    {db.negotiation.ProjectName && db.negotiation.ProjectName !== "-1" && (
-                    <div >
+                    <div className="data-unitname" style={{display:'flex',gap:'40px'}}>
                       <label className="lbl_crm"> الوحدة</label>
-                      <select className="crm_select" name="Unit" value={db.negotiation.Unit || ""} onChange={HandleChange}>
+                      <select className="crm_select select-unit" name="Unit" value={db.negotiation.Unit || ""} onChange={HandleChange}>
                         <option value="-1">-إختر-</option>
                         {db.units.map((unit, index) => <option key={index} value={unit.UnitName}>{unit.UnitName}</option>)}
                       </select>

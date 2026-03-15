@@ -220,6 +220,8 @@ const AddClients = () => {
             <thead>
               <tr>
                 <th>كود الطلب</th>
+                <th>المشروع</th>
+                <th>الوحدة</th>
                 <th>السعر الأصلي للوحدة</th>
                 <th>سعر التفاوض</th>
                 <th>قيمة الخصم</th>
@@ -237,6 +239,8 @@ const AddClients = () => {
                db.negotiations.map((neg,index)=>
               <tr key={index}>
                 <td>{neg.serialCode}</td>
+                <td>{neg.ProjectName}</td>
+                <td>{neg.Unit}</td>
                 <td>{neg.OriginalPrice} ج</td>
                 <td>{neg.NegotiationPrice} ج</td>
                 <td>{neg.DiscountAmount} %</td>
