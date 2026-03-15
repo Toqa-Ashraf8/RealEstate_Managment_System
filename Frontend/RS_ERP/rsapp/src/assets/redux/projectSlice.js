@@ -7,7 +7,7 @@ const initialState = {
     project: { ProjectCode: 0, ProjectName: '', ProjectType: '-1', Location: '', TotalUnits: 0, ProjectStatus: '-1', ProjectImage: '' },
     projects: [],
     unit: {},
-    units: [],
+    unitss: [],
     loading: false,
     error: false,
     showmdl: false,
@@ -74,7 +74,7 @@ const projectSlice = createSlice({
         ClearInputs: (state) => {
             state.project = { ProjectCode: 0, ProjectName: '', ProjectType: '-1', Location: '', TotalUnits: 0, ProjectStatus: '-1', ProjectImage: '' };
             state.imgName = '';
-            state.units = [];
+            state.unitss = [];
         },
         changeVls_U: (state, action) => {
             state.unit = { ...state.unit, ...action.payload };
@@ -88,19 +88,19 @@ const projectSlice = createSlice({
         SetRowIndexvalue:(state,action)=>{
                 state.rowI = action.payload;
                 if (action.payload !== -1) {
-                    state.unit = state.units[action.payload];
-                    state.imgName_u = state.units[action.payload].unitImage;
+                    state.unit = state.unitss[action.payload];
+                    state.imgName_u = state.unitss[action.payload].unitImage;
                  }
           }
        ,
         fromMdlTotbl: (state, action) => {
             
             if (state.rowI === -1) {
-                state.units = [...state.units, state.unit];
+                state.unitss = [...state.unitss, state.unit];
                 
             }
             else {
-                state.units[state.rowI] = state.unit;
+                state.unitss[state.rowI] = state.unit;
             }
             state.showmdl = false;
         },
@@ -109,7 +109,7 @@ const projectSlice = createSlice({
             state.deleteUnitRow = true;
         },
         DeleteRow: (state, action) => {
-            state.units = state.units.filter((items, index) => index !== state.rowSel);
+            state.unitss = state.unitss.filter((items, index) => index !== state.rowSel);
             state.deleteUnitRow = false;
         },
         hideDelmdl: (state) => {
@@ -212,7 +212,7 @@ const projectSlice = createSlice({
             })
             .addCase(getdtlsByMaster.fulfilled, (state, action) => {
                 state.loading = false;
-                state.units = action.payload;
+                state.unitss = action.payload;
             })
             .addCase(getdtlsByMaster.rejected, (state) => {
                 state.loading = false;

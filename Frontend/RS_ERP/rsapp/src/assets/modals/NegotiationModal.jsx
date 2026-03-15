@@ -52,7 +52,34 @@ const AddToTable=()=>{
             </div>
           </div>
           <div className="bodyn">
+              
             <div className="row">
+                <div className="project-unit-section col-5">
+                 <div className="data_projectname"style={{marginBottom:'15px',display:'flex',gap:'20px'}}>
+                      <label className="lbl_crm">إسم المشروع</label>
+                      <select 
+                      className="crm_select select-project" 
+                      name="ProjectName" 
+                      value={db.negotiation.ProjectName || ""} 
+                      onChange={HandleChange}
+                      
+                      >
+                        <option value="-1">-إختر-</option>
+                        {db.projects.map((project, index) => <option key={index} value={project.ProjectName}>{project.ProjectName}</option>)}
+                      </select>
+                  </div> 
+                  <div></div>
+                   {db.negotiation.ProjectName && db.negotiation.ProjectName !== "-1" && (
+                    <div >
+                      <label className="lbl_crm"> الوحدة</label>
+                      <select className="crm_select" name="Unit" value={db.negotiation.Unit || ""} onChange={HandleChange}>
+                        <option value="-1">-إختر-</option>
+                        {db.units.map((unit, index) => <option key={index} value={unit.UnitName}>{unit.UnitName}</option>)}
+                      </select>
+                    </div>
+                  )}
+                  <div></div>
+              </div>
               <div className="col-7">
                 <div className="input-group-modern data_cntu">
                   <label className="data_lbl">كود الطلب</label>
@@ -104,24 +131,7 @@ const AddToTable=()=>{
                 </div> 
                
               </div>
-              <div className="project-unit-section col-5">
-                 <div className="data_crm"style={{marginBottom:'15px'}}>
-                      <label className="lbl_crm"><Building2 size={18} /> إسم المشروع</label>
-                      <select className="crm_select" name="ProjectName" value={db.negotiation.ProjectName || ""} onChange={HandleChange}>
-                        <option value="-1">-إختر-</option>
-                        {db.projects.map((project, index) => <option key={index} value={project.ProjectName}>{project.ProjectName}</option>)}
-                      </select>
-                     </div>
-                   {db.negotiation.ProjectName && db.negotiation.ProjectName !== "-1" && (
-                    <div>
-                      <label className="lbl_crm"><Ungroup size={18} /> الوحدة</label>
-                      <select className="crm_select" name="Unit" value={db.negotiation.Unit || ""} onChange={HandleChange}>
-                        <option value="-1">-إختر-</option>
-                        {db.units.map((unit, index) => <option key={index} value={unit.UnitName}>{unit.UnitName}</option>)}
-                      </select>
-                    </div>
-                  )}
-              </div>
+          
             </div>
           </div>
           <div className="footern">

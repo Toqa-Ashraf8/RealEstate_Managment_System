@@ -47,7 +47,7 @@ const AddProjects = () => {
   const db = useSelector((state) => state.projects);
   const dispatch = useDispatch();
   const NameRef = useRef();
-  const parms_ = { ...db.project, units_: db.units };
+  const parms_ = { ...db.project, units: db.unitss };
   //********************************************************************************* */
   //--------------- Save Image ----------------------------
   const HandleImage = async (e) => {
@@ -70,6 +70,7 @@ const AddProjects = () => {
     dispatch(ClearInputs());
     NameRef.current.focus();
   };
+  console.log(parms_);
   //--------------- Save Master--------------------------------------------
   const HandleSave = async () => {
     try {
@@ -96,7 +97,7 @@ const AddProjects = () => {
 
   //----------------------Add To Table Button Action----------------------
   const AddToTable = () => {
-    dispatch(ClearModalvls(db.units.length + 1));
+    dispatch(ClearModalvls(db.unitss.length + 1));
     dispatch(showunitMdl(true));
     dispatch(SetRowIndexvalue(-1));
   };
@@ -338,7 +339,7 @@ const AddProjects = () => {
               </tr>
             </thead>
             <tbody>
-              {db.units.length === 0 ? (
+              {db.unitss.length === 0 ? (
                 <tr>
                   <td
                     colSpan={8}
@@ -348,7 +349,7 @@ const AddProjects = () => {
                   </td>{" "}
                 </tr>
               ) : (
-                db.units.map((unitt, index) => (
+                db.unitss.map((unitt, index) => (
                   
                   <tr key={index}>
                     <td>{unitt.serial}</td>
