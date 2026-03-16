@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApp1.Models
 {
-    public class Rejected_negotiations_phases
+    public class Rejected_negotiations_phase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]

@@ -10,7 +10,7 @@ namespace WebApp1.EF
         public DbSet<Unit> Units { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Negotiation> Negotiations { get; set; }    
-        public DbSet<Rejected_negotiations_phases> Negotiation_phases { get; set; }
+        public DbSet<Rejected_negotiations_phase> Rejected_negotiations_phases { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -20,7 +20,16 @@ namespace WebApp1.EF
                  modelBuilder.Entity<Negotiation>()
                 .Property(n => n.DiscountAmount)
                 .HasColumnType("decimal(5,2)");
+             modelBuilder.UseCollation("Arabic_CI_AS");
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var properties = entityType.GetProperties().Where(p => p.ClrType == typeof(string));
+                foreach (var property in properties)
+                {
+                    property.SetIsUnicode(true);
+                }
+            }
         }
-
+      
     }
 }

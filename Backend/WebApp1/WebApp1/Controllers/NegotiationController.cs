@@ -52,7 +52,7 @@ namespace WebApp1.Controllers
         //***************************************************************************
         [Route("saveNegotiations_ByAdmin")]
         [HttpPost]
-        public JsonResult saveNegotiations_ByAdmin([FromBody] Rejected_negotiations_phases ph)
+        public JsonResult saveNegotiations_ByAdmin([FromBody] Rejected_negotiations_phase ph)
         {
             bool saved = false;
             bool cond = Convert.ToBoolean(ph.NegotiationCondition);
@@ -114,12 +114,12 @@ namespace WebApp1.Controllers
             {
                 try
                 {
-                    string sqlup = @"update Negotiations set NegotiationStatus='" + rejectstatement + "' , checkedByAdmin=1 where ClientID=" + ph.ClientID;
+                    string sqlup = @"update Negotiations set NegotiationStatus='" + rejectstatement + "' , checkedByAdmin=1 where ClientID=" + ph.ClientID +" and Unit=";
                     using (SqlCommand cmd = new SqlCommand(sqlup, conn))
-                    {
+                    { 
+                        if (conn.State == ConnectionState.Closed) conn.Open();
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("@ClientID", ph.ClientID);
-                        if (conn.State == ConnectionState.Closed) conn.Open();
                         cmd.ExecuteNonQuery();
                         if (conn.State == ConnectionState.Open) conn.Close();
                         saved = true;

@@ -17,6 +17,7 @@ namespace WebApp1.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .UseCollation("Arabic_CI_AS")
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -25,12 +26,10 @@ namespace WebApp1.Migrations
             modelBuilder.Entity("Unit", b =>
                 {
                     b.Property<int?>("serial")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("serial"));
-
                     b.Property<string>("Floor")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("MeterPrice")
@@ -39,24 +38,34 @@ namespace WebApp1.Migrations
                     b.Property<int>("ProjectCode")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProjectCode1")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProjectName")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<float?>("TotalArea")
                         .HasColumnType("real");
 
                     b.Property<float?>("TotalPrice")
                         .HasColumnType("real");
 
-                    b.Property<string>("Unitstatus")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("unitImage")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("unitName")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("unitStatus")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("serial");
 
-                    b.HasIndex("ProjectCode");
+                    b.HasIndex("ProjectCode1");
 
                     b.ToTable("Units");
                 });
@@ -70,15 +79,19 @@ namespace WebApp1.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientID"));
 
                     b.Property<string>("ClientName")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ClientStatus")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ClientID");
@@ -89,15 +102,13 @@ namespace WebApp1.Migrations
             modelBuilder.Entity("WebApp1.Models.Negotiation", b =>
                 {
                     b.Property<int>("serialCode")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("serialCode"));
 
                     b.Property<int>("ClientID")
                         .HasColumnType("int");
 
                     b.Property<string>("ClientName")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DiscountAmount")
@@ -110,15 +121,18 @@ namespace WebApp1.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NegotiationStatus")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OriginalPrice")
                         .HasColumnType("int");
 
                     b.Property<string>("ProjectName")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Unit")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("checkedByAdmin")
@@ -131,13 +145,10 @@ namespace WebApp1.Migrations
                     b.ToTable("Negotiations");
                 });
 
-            modelBuilder.Entity("WebApp1.Models.Negotiation_Phase", b =>
+            modelBuilder.Entity("WebApp1.Models.Rejected_negotiations_phase", b =>
                 {
                     b.Property<int>("ClientID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientID"));
 
                     b.Property<DateTime>("CheckedDate")
                         .HasColumnType("datetime2");
@@ -147,6 +158,7 @@ namespace WebApp1.Migrations
 
                     b.Property<string>("ReasonOfReject")
                         .IsRequired()
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SuggestedPrice")
@@ -154,7 +166,7 @@ namespace WebApp1.Migrations
 
                     b.HasKey("ClientID");
 
-                    b.ToTable("Negotiation_phases");
+                    b.ToTable("Rejected_negotiations_phases");
                 });
 
             modelBuilder.Entity("WebApp1.Models.project", b =>
@@ -166,18 +178,23 @@ namespace WebApp1.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectCode"));
 
                     b.Property<string>("Location")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProjectImage")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProjectName")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProjectStatus")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProjectType")
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TotalUnits")
@@ -190,13 +207,9 @@ namespace WebApp1.Migrations
 
             modelBuilder.Entity("Unit", b =>
                 {
-                    b.HasOne("WebApp1.Models.project", "Projects")
+                    b.HasOne("WebApp1.Models.project", null)
                         .WithMany("Units")
-                        .HasForeignKey("ProjectCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Projects");
+                        .HasForeignKey("ProjectCode1");
                 });
 
             modelBuilder.Entity("WebApp1.Models.Negotiation", b =>

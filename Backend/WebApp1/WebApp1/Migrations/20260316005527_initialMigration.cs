@@ -28,22 +28,6 @@ namespace WebApp1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Negotiation_phases",
-                columns: table => new
-                {
-                    ClientID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NegotiationCondition = table.Column<bool>(type: "bit", nullable: false),
-                    SuggestedPrice = table.Column<int>(type: "int", nullable: false),
-                    ReasonOfReject = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CheckedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Negotiation_phases", x => x.ClientID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
@@ -62,11 +46,25 @@ namespace WebApp1.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Rejected_negotiations_phases",
+                columns: table => new
+                {
+                    ClientID = table.Column<int>(type: "int", nullable: false),
+                    NegotiationCondition = table.Column<bool>(type: "bit", nullable: false),
+                    SuggestedPrice = table.Column<int>(type: "int", nullable: false),
+                    ReasonOfReject = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CheckedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rejected_negotiations_phases", x => x.ClientID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Negotiations",
                 columns: table => new
                 {
-                    serialCode = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    serialCode = table.Column<int>(type: "int", nullable: false),
                     ProjectName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OriginalPrice = table.Column<int>(type: "int", nullable: false),
@@ -78,41 +76,31 @@ namespace WebApp1.Migrations
                     NegotiationDate = table.Column<DateTime>(type: "date", nullable: false),
                     checkedByAdmin = table.Column<bool>(type: "bit", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Negotiations", x => x.serialCode);
-                    table.ForeignKey(
-                        name: "FK_Negotiations_Clients_ClientID",
-                        column: x => x.ClientID,
-                        principalTable: "Clients",
-                        principalColumn: "ClientID",
-                        onDelete: ReferentialAction.Cascade);
-                });
+               constraints: table =>
+               {
+                   table.PrimaryKey("PK_Negotiations", x => x.ClientID);
+               });
+
 
             migrationBuilder.CreateTable(
                 name: "Units",
                 columns: table => new
                 {
-                    serial = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    serial = table.Column<int>(type: "int", nullable: false),
                     unitName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Floor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TotalArea = table.Column<float>(type: "real", nullable: true),
                     MeterPrice = table.Column<int>(type: "int", nullable: true),
                     TotalPrice = table.Column<float>(type: "real", nullable: true),
-                    Unitstatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    unitStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     unitImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProjectCode = table.Column<int>(type: "int", nullable: false)
+                    ProjectCode = table.Column<int>(type: "int", nullable: false),
+                    ProjectName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                   
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Units", x => x.serial);
-                    table.ForeignKey(
-                        name: "FK_Units_Projects_ProjectCode",
-                        column: x => x.ProjectCode,
-                        principalTable: "Projects",
-                        principalColumn: "ProjectCode",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Projects", x => x.ProjectCode);
                 });
 
             migrationBuilder.CreateIndex(
@@ -121,19 +109,19 @@ namespace WebApp1.Migrations
                 column: "ClientID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Units_ProjectCode",
+                name: "IX_Units_ProjectCode1",
                 table: "Units",
-                column: "ProjectCode");
+                column: "ProjectCode1");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Negotiation_phases");
+                name: "Negotiations");
 
             migrationBuilder.DropTable(
-                name: "Negotiations");
+                name: "Rejected_negotiations_phases");
 
             migrationBuilder.DropTable(
                 name: "Units");
