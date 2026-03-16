@@ -52,8 +52,8 @@ export const GetAllClients=createAsyncThunk("GetAllClients/clients",async()=>{
     .then((res)=>res.data);
     return resp;
 })
-export const GetnegotiationsByclient=createAsyncThunk("GetNegotiationsByClient/clients",async(clientname)=>{
-    const resp=await axios.post(variables.URL_API_C+"GetNegotiationsByClient?clientname="+clientname)
+export const GetnegotiationsByclient=createAsyncThunk("GetNegotiationsByClient/clients",async(clientid)=>{
+    const resp=await axios.post(variables.URL_API_C+"GetNegotiationsByClient?ClientID="+clientid)
     .then((res)=>res.data);
     return resp;
 })
@@ -83,13 +83,6 @@ const clientSlice = createSlice({
                  NegotiationDate:new Date().toISOString().split('T')[0],checkedByAdmin:0};
             state.rowIndex=-1;  
             state.negotiation.serialCode=action.payload;
-             if (state.totalP && state.totalP.TotalPrice) {
-                  state.negotiation.OriginalPrice = state.totalP.TotalPrice; 
-            } 
-            else 
-            {
-               state.negotiation.OriginalPrice = 0;
-            }
             state.showNeg=true; 
           
         },
@@ -113,10 +106,9 @@ const clientSlice = createSlice({
          state.ShowSearchCLientsMdl=action.payload;
 
        },
-       FillCLientsForm:(state,action)=>{
+       FillClientsForm:(state,action)=>{
         const selectedClient = state.clients[action.payload];
         state.client = selectedClient;
-        state.clientId = selectedClient.ClientID;
         state.ShowSearchCLientsMdl = false;
        }
       
@@ -152,7 +144,7 @@ const clientSlice = createSlice({
             })
             .addCase(getpriceByunit.fulfilled, (state, action) => {
                 state.loading = false;
-                state.totalP = action.payload[0];
+                state.negotiation.OriginalPrice = action.payload[0].TotalPrice;
             })
             .addCase(getpriceByunit.rejected, (state) => {
                 state.loading = false;
@@ -212,7 +204,7 @@ const clientSlice = createSlice({
 })
 export const { changeclientsVls, clearinputs,showNegotiationModal ,changeNegotiation_values,
                AddNegotiation,calculateDiscount,AddToNegotiationTable,HandleShowModal,ShowsearchcLientsMdl,
-               FillCLientsForm,Getunit
+               FillClientsForm,Getunit
 } = clientSlice.actions;
 const clientReducer = clientSlice.reducer;
 export default clientReducer;

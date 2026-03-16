@@ -20,7 +20,8 @@ const ModalDeleteClients = () => {
       }     
       dispatch(HandleShowModal(false));
       dispatch(clearinputs());
-   } catch (error) {
+   } 
+   catch (error) {
       toast.error("حدث خطأ في الاتصال بالخادم", {
          theme: "colored",
           position: "top-left",
@@ -28,40 +29,37 @@ const ModalDeleteClients = () => {
     }
   }
   return (
-    <div className="modal-overlay">
-      <div className="modal-container" >
-        <div className="modal-header">
-         <span 
-         style={{fontSize:'25px',cursor:'pointer'}}
-         onClick={()=>dispatch(HandleShowModal(false))}
-         >&times;</span>
-        </div>
+    <div className="delete-client-wrapper">
+          <div className="delete-client-card">
+            
+            <div className="delete-client-close-btn" 
+            onClick={()=>dispatch(HandleShowModal(false))}>
+              <MdClose />
+            </div>
     
-        <div className="modal-body">
-          <div className="warning-icon">
-            <MdWarning />
+            <div className="delete-client-content">
+              <div className="delete-icon-box-c">
+                <MdWarning />
+              </div>
+              <h2 className="delete-client-title">تنبيه الحذف</h2>
+              <p className="delete-client-description">
+                هل أنت متأكد من حذف جميع بيانات هذا العميل؟
+                <br />
+                <span className="client-id">كود العميل: {db.client?.ClientID}</span>
+              </p>
+            </div>
+    
+            <div className="delete-client-actions">
+               <button className="btn-action-c btn-yes-c" onClick={()=>HandleDelete()}>
+                <MdDelete /> نعم، متأكد
+              </button>
+              <button className="btn-action-c btn-no" onClick={()=>dispatch(HandleShowModal(false))}>
+                لا، إلغاء
+              </button>
+            </div>
+    
           </div>
-          <p className="modal-message">
-            هل أنت متأكد من عملية الحذف؟
-          </p>
         </div>
-
-        <div className="modal-footer">
-          <button 
-          className="btn-cancel" 
-          onClick={()=>dispatch(HandleShowModal(false))}
-          >
-            لا
-          </button>
-          <button 
-          className="btn-confirm"
-          onClick={()=>HandleDelete()}
-          >
-            <MdDelete /> نعم 
-          </button>
-        </div>
-      </div>
-    </div>
   );
 };
 

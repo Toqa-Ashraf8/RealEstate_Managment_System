@@ -1,4 +1,4 @@
-/* الحاوية الكبيرة */
+
 .delete-wrapper {
   position: fixed;
   inset: 0;
@@ -10,7 +10,6 @@
   padding: 20px;
 }
 
-/* الكارت الأساسي */
 .delete-card {
   background: #ffffff;
   width: 100%;
@@ -24,7 +23,7 @@
   animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* زر الإغلاق X */
+
 .delete-close-btn {
   position: absolute;
   top: 15px;
@@ -46,7 +45,7 @@
   color: #0f172a;
 }
 
-/* صندوق الأيقونة */
+
 .delete-icon-box {
   font-size: 50px;
   color: #ef4444;
@@ -82,7 +81,7 @@
   margin-top: 5px;
 }
 
-/* منطقة الأزرار */
+
 .delete-actions {
   display: flex;
   gap: 12px;
@@ -113,18 +112,18 @@
   background: #e2e8f0;
 }
 
-.btn-yes {
+.btn-yes-p {
   background: #ef4444;
   color: white;
 }
 
-.btn-yes:hover {
+.btn-yes-p:hover {
   background: #dc2626;
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3);
 }
 
-/* أنيميشن الظهور */
+
 @keyframes popIn {
   from { opacity: 0; transform: scale(0.9) translateY(20px); }
   to { opacity: 1; transform: scale(1) translateY(0); }

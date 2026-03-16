@@ -68,6 +68,8 @@ const AddClients = () => {
  //------------------------------------------------------------------------------------
   const AddnegotiationRequest=()=>{
     dispatch(AddNegotiation(db.negotiations.length +1));
+      dispatch(getprojects());
+     
   }
 
 //------------------------------------------------------------------------------------

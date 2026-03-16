@@ -10,7 +10,7 @@ namespace WebApp1.EF
         public DbSet<Unit> Units { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Negotiation> Negotiations { get; set; }    
-        public DbSet<Negotiation_Phase> Negotiation_phases { get; set; }
+        public DbSet<Rejected_negotiations_phases> Negotiation_phases { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

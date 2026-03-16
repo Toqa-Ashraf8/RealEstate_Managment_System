@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApp1.Models
 {
-    public class Negotiation_Phase
+    public class Rejected_negotiations_phases
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ClientID { get; set; }
         public Boolean NegotiationCondition { get; set; }
         public int SuggestedPrice { get; set; }

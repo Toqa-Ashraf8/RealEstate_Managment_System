@@ -123,13 +123,14 @@ namespace WebApp1.Controllers
                         {
                           
 
-                            string sqlin_dtls = @"insert into Negotiation (serialCode,ProjectName,Unit,OriginalPrice,NegotiationPrice,
+                            string sqlin_dtls = @"insert into Negotiations (serialCode,ProjectName,Unit,OriginalPrice,NegotiationPrice,
                                                         DiscountAmount,ClientID,ClientName,NegotiationStatus,
                                                           NegotiationDate,checkedByAdmin) values(@serialCode,@ProjectName,@Unit,@OriginalPrice,@NegotiationPrice,
                                                            @DiscountAmount,@ClientID,@ClientName,@NegotiationStatus,@NegotiationDate,
                                                            @checkedByAdmin)";
                             using (SqlCommand cmd = new SqlCommand(sqlin_dtls, conn))
                             {
+                                if (conn.State == ConnectionState.Closed) conn.Open();
                                 foreach (var neg in cl.negotiations)
                                 {
                                     cmd.Parameters.Clear();
@@ -144,12 +145,12 @@ namespace WebApp1.Controllers
                                     cmd.Parameters.AddWithValue("@NegotiationStatus", neg.NegotiationStatus);
                                     cmd.Parameters.AddWithValue("@NegotiationDate", neg.NegotiationDate);
                                     cmd.Parameters.AddWithValue("@checkedByAdmin", neg.checkedByAdmin);
-                        }
-                                if (conn.State == ConnectionState.Closed) conn.Open();
-                                cmd.ExecuteNonQuery();
-                                if (conn.State == ConnectionState.Open) conn.Close();
-
-                            }
+                                    cmd.ExecuteNonQuery();
+                                }
+                                   
+                              if (conn.State == ConnectionState.Open) conn.Close();
+                        } 
+                               
                         }
                         catch (Exception) { throw; }
 
@@ -166,7 +167,7 @@ namespace WebApp1.Controllers
             {
                 try
                 {
-                    string sqld_dtls = "delete Negotiation where ClientID=" + id;
+                    string sqld_dtls = "delete Negotiations where ClientID=" + id;
                     using (SqlCommand cmd = new SqlCommand(sqld_dtls, conn))
                     {
                         if (conn.State == ConnectionState.Closed) conn.Open();
@@ -204,11 +205,19 @@ namespace WebApp1.Controllers
         //***************************************************************************
         [Route("GetNegotiationsByClient")]
         [HttpPost]
-        public JsonResult GetNegotiationsByClient(string clientname)
+        public JsonResult GetNegotiationsByClient(int clientid)
         {
             DataTable dt = new DataTable();
-            string sqlg = "select * from Negotiation where ClientName='"+ clientname+"'";
-            SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
+            string sqlg = "select * from Negotiations where ClientID=@ClientID";
+            SqlCommand cmd = new SqlCommand(sqlg, conn);
+            
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@ClientID", clientid);
+            if (conn.State == ConnectionState.Closed) conn.Open();
+            cmd.ExecuteNonQuery();
+            if (conn.State == ConnectionState.Open) conn.Close();
+          
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
             return new JsonResult(dt);
         }

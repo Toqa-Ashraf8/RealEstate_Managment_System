@@ -26,7 +26,7 @@ c.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 //Enable Dbcontext
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(
+        options.UseSqlServer(
         builder.Configuration.GetConnectionString("connT")
     )
 );

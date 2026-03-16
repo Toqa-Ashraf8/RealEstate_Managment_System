@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "../css/NegotiationModal.css";
 import {Building2,Ungroup}from 'lucide-react'
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import { AddToNegotiationTable, calculateDiscount, changeNegotiation_values, get
 const NegotiationModal = () => {
 const db = useSelector((state) => state.clients);
 const dispatch = useDispatch();
+const negotiationpriceRef=useRef();
 
 //-------------------------------------------------------------
 const HandleChange=(e)=>{
@@ -17,27 +18,19 @@ const HandleChange=(e)=>{
      if(e.target.name === "Unit"){
           const unitvalue=e.target.value;
         if (e.target.value !== "-1") dispatch(getpriceByunit(unitvalue));
+         negotiationpriceRef.current.focus();
       }
     dispatch(changeNegotiation_values({[name]:value}));
 }
 console.log(db.negotiation);
-//**************************************************************************/
+//********************************************************************************/
 const AddToTable=()=>{
   dispatch(AddToNegotiationTable())
 }
 //--------------------------------------------
-  useEffect(() => {
-  
-    const loadProjects = async () => {
-      try {
-        await dispatch(getprojects());
-      } catch (error) {
-        console.error("فشل في جلب البيانات:", error);
-      }
-    };
-    loadProjects();
-  }, [dispatch]);
-
+ useEffect(()=>{
+ negotiationpriceRef.current.focus();
+ },[])
   return (
     <div dir="rtl">
       <div className="modaln">
@@ -113,7 +106,7 @@ const AddToTable=()=>{
                     type="text"
                     className="form-control-modern"
                     autoComplete="off"
-                    autoFocus
+                     ref={negotiationpriceRef}
                     name="NegotiationPrice"
                     value={db.negotiation.NegotiationPrice || ""}
                     onChange={HandleChange}

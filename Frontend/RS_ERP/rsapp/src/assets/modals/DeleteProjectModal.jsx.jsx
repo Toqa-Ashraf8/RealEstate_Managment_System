@@ -39,7 +39,7 @@ const DeleteProjectModal = () => {
         </div>
 
         <div className="delete-actions">
-           <button className="btn-action btn-yes" onClick={DeleteAll}>
+           <button className="btn-action btn-yes-p" onClick={DeleteAll}>
             <MdDelete /> نعم، متأكد
           </button>
           <button className="btn-action btn-no" onClick={() => dispatch(showDeleteProjectModal(false))}>

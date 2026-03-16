@@ -7,7 +7,7 @@ namespace WebApp1.Models
     public class Negotiation
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int serialCode { get; set; }
         public string? ProjectName { get; set; }
         public string? Unit { get; set; }

@@ -3,7 +3,7 @@ import '../css/SearchClients.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { variables } from '../variables';
 import { IoMdClose } from "react-icons/io";
-import { FillCLientsForm, GetAllClients, GetnegotiationsByclient, Getunit, getunitsByproject, ShowsearchcLientsMdl } from '../redux/clientSlice';
+import { FillClientsForm, GetAllClients, GetnegotiationsByclient, Getunit, getunitsByproject, ShowsearchcLientsMdl } from '../redux/clientSlice';
 const SearchClients = () => {
   const db = useSelector((state) => state.clients);
   const dispatch = useDispatch();
@@ -11,12 +11,11 @@ const SearchClients = () => {
 const HandleSearch= async(i)=>{
     const selectedClient = db.clients[i];
     if (!selectedClient) return;  
-    const projectName = selectedClient.ProjectName;
-    const clientNamee=selectedClient.ClientName;
-    dispatch(FillCLientsForm(i));
-    await dispatch(getunitsByproject(projectName));
-   if (clientNamee) {
-        await dispatch(GetnegotiationsByclient(clientNamee));
+    const clientid=selectedClient.ClientID;
+    dispatch(FillClientsForm(i));
+    console.log(clientid);
+   if (clientid) {
+        await dispatch(GetnegotiationsByclient(clientid));
     }
 }
  useEffect(() => {
@@ -52,8 +51,6 @@ const HandleSearch= async(i)=>{
                             <th>الكود</th>
                             <th>العميل</th>
                             <th>رقم الموبايل</th>
-                            <th>المشروع المهتم به</th>
-                            <th>الوحدة</th>
                             <th>حالة العميل</th>
                             <th>ملاحظات</th>
                         </tr>
@@ -65,8 +62,6 @@ const HandleSearch= async(i)=>{
                         <td>{client.ClientID}</td>
                         <td>{client.ClientName}</td>
                         <td>{client.PhoneNumber}</td>
-                        <td>{client.ProjectName}</td>
-                        <td>{client.Unit}</td>
                         <td>{client.ClientStatus}</td>
                         <td>{client.Notes}</td>
                         </tr>

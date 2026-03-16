@@ -35,7 +35,7 @@ const AcceptedNegotiations = () => {
                             </div>
                         </div>
 
-                        {/* سكشن المشروع */}
+                
                         <div className="acc-section acc-unit-section">
                             <p><Tag size={12} /> {req.ProjectName} - {req.Unit}</p>
                             <p className="acc-price">العرض: {req.NegotiationPrice}</p>

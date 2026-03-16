@@ -44,7 +44,7 @@ namespace WebApp1.Controllers
         {
           
             DataTable dt = new DataTable();
-            string sqlg = "select * from Negotiation_2 where checkedByAdmin=0";
+            string sqlg = "select * from Negotiations where checkedByAdmin=0";
             SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
             da.Fill(dt);
             return new JsonResult(dt);
@@ -52,7 +52,7 @@ namespace WebApp1.Controllers
         //***************************************************************************
         [Route("saveNegotiations_ByAdmin")]
         [HttpPost]
-        public JsonResult saveNegotiations_ByAdmin([FromBody] Negotiation_Phase ph)
+        public JsonResult saveNegotiations_ByAdmin([FromBody] Rejected_negotiations_phases ph)
         {
             bool saved = false;
             bool cond = Convert.ToBoolean(ph.NegotiationCondition);
@@ -63,7 +63,7 @@ namespace WebApp1.Controllers
 
             try
             {
-                string sqlin = @"insert into Negotiation_Phases (ClientID,NegotiationCondition,
+                string sqlin = @"insert into Rejected_negotiations_phases (ClientID,NegotiationCondition,
                                 SuggestedPrice,ReasonOfReject,CheckedDate) 
                                 values(@ClientID,@NegotiationCondition,@SuggestedPrice,@ReasonOfReject,@CheckedDate)";
                 using (SqlCommand cmd = new SqlCommand(sqlin, conn))
@@ -143,7 +143,7 @@ namespace WebApp1.Controllers
         {
             int count = 0;
             DataTable dt = new DataTable();
-            string sqld = "select * from Negotiation_admin where NegotiationCondition=0";
+            string sqld = "select * from Negotiations_2 where NegotiationCondition=0";
             SqlDataAdapter da = new SqlDataAdapter(sqld, conn);
             da.Fill(dt);
             if (dt.Rows.Count > 0)
@@ -161,7 +161,7 @@ namespace WebApp1.Controllers
         {
             int count_a = 0;
             DataTable dt = new DataTable();
-            string sqld = "select * from Negotiation_admin where NegotiationCondition=1";
+            string sqld = "select * from Negotiations_2 where NegotiationCondition=1";
             SqlDataAdapter da = new SqlDataAdapter(sqld, conn);
             da.Fill(dt);
             if (dt.Rows.Count > 0)
