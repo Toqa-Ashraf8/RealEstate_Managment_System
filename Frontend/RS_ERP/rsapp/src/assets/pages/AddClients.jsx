@@ -69,9 +69,7 @@ const AddClients = () => {
   const AddnegotiationRequest=()=>{
     dispatch(AddNegotiation(db.negotiations.length +1));
       dispatch(getprojects());
-     
   }
-
 //------------------------------------------------------------------------------------
   const SaveForm=async()=>{
   
@@ -89,7 +87,10 @@ const AddClients = () => {
          });
        }
   }
-
+  //------------------------------------------------------------------------------------
+useEffect(()=>{
+    nameRef.current.focus();
+},[])
  
  //******************************************************************** */
   return (

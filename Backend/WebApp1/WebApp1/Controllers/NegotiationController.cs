@@ -63,18 +63,20 @@ namespace WebApp1.Controllers
 
             try
             {
-                string sqlin = @"insert into Rejected_negotiations_phases (ClientID,NegotiationCondition,
+                string sqlin = @"insert into Rejected_negotiations_phases (ClientID,ProjectName,Unit,NegotiationCondition,
                                 SuggestedPrice,ReasonOfReject,CheckedDate) 
-                                values(@ClientID,@NegotiationCondition,@SuggestedPrice,@ReasonOfReject,@CheckedDate)";
+                                values(@ClientID,@ProjectName,@Unit,@NegotiationCondition,@SuggestedPrice,@ReasonOfReject,@CheckedDate)";
                 using (SqlCommand cmd = new SqlCommand(sqlin, conn))
                 {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("@ClientID", ph.ClientID);
+                    cmd.Parameters.AddWithValue("@ProjectName", ph.ProjectName);
+                    cmd.Parameters.AddWithValue("@Unit", ph.Unit);
                     cmd.Parameters.AddWithValue("@NegotiationCondition", ph.NegotiationCondition);
                     cmd.Parameters.AddWithValue("@SuggestedPrice", ph.SuggestedPrice);
                     cmd.Parameters.AddWithValue("@ReasonOfReject", string.IsNullOrEmpty(ph.ReasonOfReject) ? DBNull.Value : ph.ReasonOfReject);
                     cmd.Parameters.AddWithValue("@CheckedDate",ph.CheckedDate);
-                     if (conn.State == ConnectionState.Closed) conn.Open();
                     cmd.ExecuteNonQuery();
                     if (conn.State == ConnectionState.Open) conn.Close();
                     saved = true;
@@ -92,15 +94,17 @@ namespace WebApp1.Controllers
                     
                 try
                 {
-                    string sqlup = @"update Negotiations set NegotiationStatus='" + approvedstatement + "' , checkedByAdmin=1 where ClientID=" + ph.ClientID;
+                    string sqlup = @"update Negotiations set NegotiationStatus='" + approvedstatement + "' , checkedByAdmin=1 where ClientID=@ClientID AND ProjectName=@ProjectName AND Unit=@Unit";
                     using (SqlCommand cmd = new SqlCommand(sqlup, conn))
                     {
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@ClientID", ph.ClientID);
-                        if (conn.State == ConnectionState.Closed) conn.Open();
-                        cmd.ExecuteNonQuery();
-                        if (conn.State == ConnectionState.Open) conn.Close();
-                        saved = true;
+                            if (conn.State == ConnectionState.Closed) conn.Open();
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@ClientID", ph.ClientID);
+                            cmd.Parameters.AddWithValue("@ProjectName", ph.ProjectName);
+                            cmd.Parameters.AddWithValue("@Unit", ph.Unit);
+                            cmd.ExecuteNonQuery();
+                            if (conn.State == ConnectionState.Open) conn.Close();
+                            saved = true;
                     }
                 }
                 catch 
@@ -114,13 +118,16 @@ namespace WebApp1.Controllers
             {
                 try
                 {
-                    string sqlup = @"update Negotiations set NegotiationStatus='" + rejectstatement + "' , checkedByAdmin=1 where ClientID=" + ph.ClientID +" and Unit=";
+                    string sqlup = @"update Negotiations set NegotiationStatus='" + rejectstatement + "' , checkedByAdmin=1 where ClientID=@ClientID AND ProjectName=@ProjectName AND Unit=@Unit";
                     using (SqlCommand cmd = new SqlCommand(sqlup, conn))
                     { 
                         if (conn.State == ConnectionState.Closed) conn.Open();
                         cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@ClientID", ph.ClientID);
-                        cmd.ExecuteNonQuery();
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@ClientID", ph.ClientID);
+                            cmd.Parameters.AddWithValue("@ProjectName", ph.ProjectName);
+                            cmd.Parameters.AddWithValue("@Unit", ph.Unit);
+                            cmd.ExecuteNonQuery();
                         if (conn.State == ConnectionState.Open) conn.Close();
                         saved = true;
                     }

@@ -26,7 +26,7 @@ const AcceptedNegotiations = () => {
                 {db.acceptedRequests.map((req, index) => (
                     <div key={index} className="acc-item-row">
                         
-                        {/* سكشن العميل */}
+                     
                         <div className="acc-section acc-client-section">
                             <div className="acc-avatar"><User size={16}/></div>
                             <div>

@@ -22,7 +22,7 @@ const HandleChange=(e)=>{
       }
     dispatch(changeNegotiation_values({[name]:value}));
 }
-console.log(db.negotiation);
+
 //********************************************************************************/
 const AddToTable=()=>{
   dispatch(AddToNegotiationTable())

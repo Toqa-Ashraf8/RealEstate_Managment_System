@@ -9,6 +9,8 @@ namespace WebApp1.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ClientID { get; set; }
+        public string ProjectName { get; set; }
+        public string Unit { get; set; }
         public Boolean NegotiationCondition { get; set; }
         public int SuggestedPrice { get; set; }
         public string ReasonOfReject { get; set; }

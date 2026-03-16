@@ -8,7 +8,7 @@ const initialState={
         Allnegotiations:[],
         rejectmodal:false,
         detailsOfRow:{},
-        negotiationRow:{ClientID:"",NegotiationCondition:0,SuggestedPrice:0,ReasonOfReject:"",CheckedDate:new Date().toISOString()},
+        negotiationRow:{ClientID:"",ProjectName:"",Unit:"",NegotiationCondition:0,SuggestedPrice:0,ReasonOfReject:"",CheckedDate:new Date().toISOString()},
         confirmModal:false,
         savedRequest:false,
         rejected_neg:0,
@@ -17,6 +17,7 @@ const initialState={
         acceptedRequests:[],
         rejectedRequests:[],
         Re_confirmModal:false,
+        CurrentDate:""
 }
 export const negotiationCount=createAsyncThunk("negotiationCount/negotiaion",async()=>{
     const resp=await axios.get(variables.URL_API_N+"GetNegotationsCount")
@@ -51,10 +52,8 @@ const negotiationSlice=createSlice({
             state.rejectmodal=action.payload;
         },
         GetClientDetails:(state,action)=>{
-            state.detailsOfRow=state.Allnegotiations[action.payload];
-            const id=state.Allnegotiations[action.payload].ClientID;
-            state.negotiationRow.ClientID=id;
-            
+            state.negotiationRow=state.Allnegotiations[action.payload];
+           state.CurrentDate=new Date().toISOString().split('T')[0];
         },
         RejectModal_values:(state,action)=>{
             state.negotiationRow={...state.negotiationRow,...action.payload};
@@ -115,8 +114,8 @@ const negotiationSlice=createSlice({
             state.loading=false;
             state.savedRequest=action.payload.saved;
             if(state.savedRequest){
-                const idd=state.negotiationRow.ClientID
-                state.Allnegotiations = state.Allnegotiations.filter(neg => neg.ClientID !== idd);
+                const unitidentity=state.negotiationRow.Unit;
+                state.Allnegotiations = state.Allnegotiations.filter(neg => neg.Unit !== unitidentity);
                 if (state.negotiationNo > 0) {
                    state.negotiationNo -= 1;
                    

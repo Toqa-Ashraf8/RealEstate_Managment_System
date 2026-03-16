@@ -50,6 +50,8 @@ namespace WebApp1.Migrations
                 columns: table => new
                 {
                     ClientID = table.Column<int>(type: "int", nullable: false),
+                    ProjectName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NegotiationCondition = table.Column<bool>(type: "bit", nullable: false),
                     SuggestedPrice = table.Column<int>(type: "int", nullable: false),
                     ReasonOfReject = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -76,11 +78,16 @@ namespace WebApp1.Migrations
                     NegotiationDate = table.Column<DateTime>(type: "date", nullable: false),
                     checkedByAdmin = table.Column<bool>(type: "bit", nullable: false)
                 },
-               constraints: table =>
-               {
-                   table.PrimaryKey("PK_Negotiations", x => x.ClientID);
-               });
-
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Negotiations", x => x.serialCode);
+                    table.ForeignKey(
+                        name: "FK_Negotiations_Clients_ClientID",
+                        column: x => x.ClientID,
+                        principalTable: "Clients",
+                        principalColumn: "ClientID",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Units",
@@ -96,22 +103,26 @@ namespace WebApp1.Migrations
                     unitImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProjectCode = table.Column<int>(type: "int", nullable: false),
                     ProjectName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                   
+                    
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.ProjectCode);
+                    table.PrimaryKey("PK_Units", x => x.serial);
+                    table.ForeignKey(
+                       name: "FK_Units_Projects_ProjectCode",
+                       column: x => x.ProjectCode,
+                       principalTable: "Projects",
+                       principalColumn: "ProjectCode",
+                       onDelete: ReferentialAction.Cascade);
                 });
+
 
             migrationBuilder.CreateIndex(
                 name: "IX_Negotiations_ClientID",
                 table: "Negotiations",
                 column: "ClientID");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Units_ProjectCode1",
-                table: "Units",
-                column: "ProjectCode1");
+          
         }
 
         /// <inheritdoc />

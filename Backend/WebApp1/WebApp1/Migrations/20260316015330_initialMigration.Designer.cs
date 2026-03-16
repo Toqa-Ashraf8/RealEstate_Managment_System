@@ -12,7 +12,7 @@ using WebApp1.EF;
 namespace WebApp1.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20260316005527_initialMigration")]
+    [Migration("20260316015330_initialMigration")]
     partial class initialMigration
     {
         /// <inheritdoc />
@@ -159,6 +159,11 @@ namespace WebApp1.Migrations
                     b.Property<bool>("NegotiationCondition")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProjectName")
+                        .IsRequired()
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ReasonOfReject")
                         .IsRequired()
                         .IsUnicode(true)
@@ -166,6 +171,11 @@ namespace WebApp1.Migrations
 
                     b.Property<int>("SuggestedPrice")
                         .HasColumnType("int");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ClientID");
 

@@ -156,6 +156,11 @@ namespace WebApp1.Migrations
                     b.Property<bool>("NegotiationCondition")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProjectName")
+                        .IsRequired()
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ReasonOfReject")
                         .IsRequired()
                         .IsUnicode(true)
@@ -163,6 +168,11 @@ namespace WebApp1.Migrations
 
                     b.Property<int>("SuggestedPrice")
                         .HasColumnType("int");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ClientID");
 

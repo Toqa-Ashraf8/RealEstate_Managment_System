@@ -7,12 +7,18 @@ import { SaveRequestByAdmin, showconfirmModal } from '../redux/negotiationSlice'
 const ConfirmModal = () => {
      const db = useSelector((state) => state.negotiation);
     const dispatch = useDispatch();
-    const row=db.negotiationRow;
+    const row={ClientID:db.negotiationRow.ClientID,
+      ProjectName:db.negotiationRow.ProjectName,
+      Unit:db.negotiationRow.Unit,
+      NegotiationCondition:db.negotiationRow.NegotiationCondition,
+      SuggestedPrice:db.negotiationRow.SuggestedPrice || 0,
+      ReasonOfReject:db.negotiationRow.ReasonOfReject || ""
+      ,CheckedDate:db.CurrentDate}
     //******************************************************************* */
 const AcceptRequest=()=>{
   const FetchData=async()=>{
     try {
-    await dispatch(SaveRequestByAdmin(row));
+      if(row) await dispatch(SaveRequestByAdmin(row));
       toast.success("تم قبول الطلب وسيتم ارساله للموظف!", {
         theme: "colored",
         position: "top-left",

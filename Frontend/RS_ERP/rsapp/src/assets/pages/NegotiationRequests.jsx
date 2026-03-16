@@ -21,7 +21,9 @@ const Reject=(i)=>{
    dispatch(showModal_reject(true));
      dispatch(GetClientDetails(i));
       dispatch(ChangeConditionOfRequest(0));
+      
 }
+console.log(db.negotiationRow);
 const Accepted=(i)=>{
      dispatch(GetClientDetails(i));
      dispatch(ChangeConditionOfRequest(1));
@@ -41,7 +43,7 @@ const Accepted=(i)=>{
       }
       Fetch();
     }, [dispatch]);
-console.log(db.negotiationRow);
+console.log(db.negotiationRow.NegotiationCondition);
     return (
       
         <div className="dashboard-wrapper animate__animated animate__fadeIn">
