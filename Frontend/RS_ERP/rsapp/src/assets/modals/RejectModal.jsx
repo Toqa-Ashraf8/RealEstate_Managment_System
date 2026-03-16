@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { clearValuesOfRow, GetAllnegotiations,  negotiationCount, RejectModal_values, SaveRequestByAdmin, showModal_reject } from '../redux/negotiationSlice';
+import { ApprovedtoReject, clearValuesOfRow, GetAllnegotiations,  GetRejectModalvalues,  negotiationCount, RejectModal_values, SaveRequestByAdmin, showModal_reject } from '../redux/negotiationSlice';
 import { AiTwotoneEdit } from "react-icons/ai";
 import { toast } from 'react-toastify';
 const RejectModal = () => {
      const db = useSelector((state) => state.negotiation);
     const dispatch = useDispatch();
-    const SelectedRow=db.negotiationRow;
     const RequestRow=db.detailsOfRow;
     const suggestedPrice=useRef();
+   const acceptedobj=db.acceptedRow;
 
   //***************************************************** */
   const AddsuggestedPrice=()=>{
@@ -19,19 +19,47 @@ const RejectModal = () => {
 const HandleChange=(e)=>{
     const {name,value}=e.target;
     dispatch(RejectModal_values({[name]:value}));
+    dispatch(GetRejectModalvalues({[name]:value}));
 }
 const CloseModal=()=>{
     dispatch(showModal_reject(false));
     dispatch(clearValuesOfRow());
 }
-const RejectConfirming=()=>{
-    dispatch(SaveRequestByAdmin(SelectedRow));
-     toast.success("تم رفض الطلب وسيتم ارساله للموظف!", {
+const RejectConfirming=async()=>{
+     const row={ClientID:db.negotiationRow.ClientID,
+      ProjectName:db.negotiationRow.ProjectName,
+      Unit:db.negotiationRow.Unit,
+      NegotiationCondition:db.negotiationRow.NegotiationCondition,
+      SuggestedPrice:db.negotiationRow.SuggestedPrice || 0,
+      ReasonOfReject:db.negotiationRow.ReasonOfReject || ""
+      ,CheckedDate:db.CurrentDate}
+    try{
+    if(db.defineRow===0){
+    await dispatch(SaveRequestByAdmin(row)).unwrap();
+     toast.error("تم رفض الطلب!", {
         theme: "colored",
         position: "top-left",
       });  
-      dispatch(showModal_reject(false));
+     
+    }
+    else if(db.defineRow===1){
+      await dispatch(ApprovedtoReject(acceptedobj)).unwrap();
+       toast.error("تم إعادة رفض الطلب!", {
+        theme: "colored",
+        position: "top-left",
+      });  
+     
+    }
+
+      dispatch(showModal_reject(false)); 
+    }       
+   
+    catch (error) {
+        console.error("خطأ في العملية:", error);
+        toast.warning("حدث خطأ، يرجى التأكد من البيانات");
+    }
 }
+
  
   return (
     <div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { acceptedCount, ChangeConditionOfRequest, GetAllnegotiations, GetClientDetails, negotiationCount, rejectedCount, rejectedRequests_show, showconfirmModal, showModal_reject } from '../redux/negotiationSlice';
+import { acceptedCount, ChangeConditionOfRequest, DefineApproveRow, DefineRejectRow, GetAllnegotiations, GetClientDetails, negotiationCount, rejectedCount, rejectedRequests_show, showconfirmModal, showModal_reject } from '../redux/negotiationSlice';
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { CgCloseR } from "react-icons/cg";
 import 'animate.css';
@@ -19,13 +19,15 @@ const NegotiationRequests = () => {
 //***************************************************** */
 const Reject=(i)=>{
    dispatch(showModal_reject(true));
-     dispatch(GetClientDetails(i));
-      dispatch(ChangeConditionOfRequest(0));
+    dispatch(GetClientDetails(i));
+    dispatch(DefineApproveRow(0));
+    dispatch(ChangeConditionOfRequest(0));
       
 }
-console.log(db.negotiationRow);
+
 const Accepted=(i)=>{
      dispatch(GetClientDetails(i));
+     dispatch(DefineRejectRow(0));
      dispatch(ChangeConditionOfRequest(1));
      dispatch(showconfirmModal(true));
 } 
@@ -43,7 +45,7 @@ const Accepted=(i)=>{
       }
       Fetch();
     }, [dispatch]);
-console.log(db.negotiationRow.NegotiationCondition);
+
     return (
       
         <div className="dashboard-wrapper animate__animated animate__fadeIn">

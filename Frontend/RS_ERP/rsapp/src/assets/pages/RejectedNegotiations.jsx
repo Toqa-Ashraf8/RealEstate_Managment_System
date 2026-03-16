@@ -2,23 +2,30 @@ import React, { useEffect } from 'react';
 import { RotateCcw, User, Tag, Info, CalendarCheck } from 'lucide-react';
 import '../css/RejectedNegotiations.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { rejectedCount, showModal_reconfrim } from '../redux/negotiationSlice';
+import { DefineRejectRow, GetRejectedrowByIndex, rejectedCount, showconfirmModal, showModal_reconfrim } from '../redux/negotiationSlice';
 import ReConfirmModal from '../modals/ReConfirmModal';
+import ConfirmModal from '../modals/ConfirmModal';
 
 const RejectedNegotiations = () => {
     const db = useSelector((state) => state.negotiation);
     const dispatch = useDispatch();
-
+//**************************************************************************** */
+const Re_Approve=(index)=>{
+    dispatch(GetRejectedrowByIndex(index))
+    dispatch(dispatch(DefineRejectRow(1)));
+    dispatch(showconfirmModal(true));
+}
     useEffect(() => {
         const getData = async () => {
             await dispatch(rejectedCount());
         }
         getData();
     }, [dispatch]);
-
+//**************************************************************************** */
     return (
         <div className="clean-page-wrapper">
             {db.Re_confirmModal && <ReConfirmModal />}
+            {db.confirmModal && <ConfirmModal/>}
             <div className="clean-header">
                 <h2>قائمة الطلبات المستبعدة</h2>
                 <div className="clean-badge_r">{db.rejected_neg} طلب مرفوض</div>
@@ -60,9 +67,13 @@ const RejectedNegotiations = () => {
                             <p className="rejected-date">{req.CheckedDate ? req.CheckedDate.split('T')[0] : ""}</p>
                         </div>
 
-                        {/* زر الاسترجاع - أيقونة شيك */}
+                     
                         <div className="section action-section">
-                          <button className="btn btn-success" style={{width:'120px',height:'30px',fontSize:'13px'}}>
+                          <button 
+                          className="btn btn-success" 
+                          style={{width:'120px',height:'30px',fontSize:'13px'}}
+                          onClick={()=>Re_Approve(index)}
+                          >
                                 استرجاع للقبول
                             </button>
                         </div>

@@ -2,35 +2,51 @@ import React, { useState } from 'react';
 import '../css/ConfirmModal.css';
 import { useDispatch, useSelector } from 'react-redux';
 import {toast} from 'react-toastify'
-import { SaveRequestByAdmin, showconfirmModal } from '../redux/negotiationSlice';
+import { ApprovedtoReject, SaveRequestByAdmin, showconfirmModal } from '../redux/negotiationSlice';
 
 const ConfirmModal = () => {
      const db = useSelector((state) => state.negotiation);
     const dispatch = useDispatch();
-    const row={ClientID:db.negotiationRow.ClientID,
+    const rejectobj=db.rejectedrow;
+    
+    //******************************************************************* */
+const AcceptRequest=()=>{
+  const row={ClientID:db.negotiationRow.ClientID,
       ProjectName:db.negotiationRow.ProjectName,
       Unit:db.negotiationRow.Unit,
       NegotiationCondition:db.negotiationRow.NegotiationCondition,
       SuggestedPrice:db.negotiationRow.SuggestedPrice || 0,
       ReasonOfReject:db.negotiationRow.ReasonOfReject || ""
       ,CheckedDate:db.CurrentDate}
-    //******************************************************************* */
-const AcceptRequest=()=>{
   const FetchData=async()=>{
     try {
-      if(row) await dispatch(SaveRequestByAdmin(row));
-      toast.success("تم قبول الطلب وسيتم ارساله للموظف!", {
-        theme: "colored",
-        position: "top-left",
-      });
+      if(db.Re_approveRow===0)
+      {
+        await dispatch(SaveRequestByAdmin(row)).unwrap();
+        toast.error("تم  قبول الطلب!", {
+          theme: "colored",
+          position: "top-left",
+        });     
+
+      } 
+        else if(db.Re_approveRow===1){
+          await dispatch(ApprovedtoReject(rejectobj)).unwrap();
+          toast.error("تم إعادة قبول الطلب!", {
+          theme: "colored",
+          position: "top-left",
+        });  
+        }
+     
       dispatch(showconfirmModal(false));
-   } catch (error) {
-    console.log("حدث خطأ في تنفيذ الطلب",error)
+   } 
+   catch (error) {
+     console.log("حدث خطأ في تنفيذ الطلب",error)
+     toast.warning("حدث خطأ، يرجى التأكد من البيانات");
   }
   }
   FetchData();
 }
-console.log("row",row);
+
   return (
     <div className="modal-o">
       <div className="modal-container">

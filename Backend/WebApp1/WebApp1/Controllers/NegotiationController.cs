@@ -44,7 +44,7 @@ namespace WebApp1.Controllers
         {
           
             DataTable dt = new DataTable();
-            string sqlg = "select * from Negotiations where checkedByAdmin=0";
+            string sqlg = "select * from Negotiations_2 where checkedByAdmin=0";
             SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
             da.Fill(dt);
             return new JsonResult(dt);
@@ -142,6 +142,103 @@ namespace WebApp1.Controllers
             }
             var data = new { saved = saved };
             return new JsonResult(data);
+        }
+
+        [Route("Approved_Rejected")]
+        [HttpPost]
+        public JsonResult Approved_Rejected([FromBody] Rejected_negotiations_phase ph2)
+        {
+            bool cond = Convert.ToBoolean(ph2.NegotiationCondition);
+            string rejectstatement = "مرفوض";
+            string approvedstatement = "مقبول";
+            bool updated = true;
+            try
+            {
+                string sqlMerge = @" MERGE INTO Rejected_negotiations_phases AS Target
+                                 USING (SELECT @ClientID AS CID, @ProjectName AS PN, @Unit AS U) AS Source
+                                ON (Target.ClientID = Source.CID AND Target.ProjectName = Source.PN AND Target.Unit = Source.U)
+                            WHEN MATCHED THEN
+                                UPDATE SET 
+                                NegotiationCondition = @NegotiationCondition,
+                                SuggestedPrice = @SuggestedPrice,
+                                ReasonOfReject = @ReasonOfReject,
+                                CheckedDate = @CheckedDate
+                           WHEN NOT MATCHED THEN
+                    INSERT (ClientID, ProjectName, Unit, NegotiationCondition, SuggestedPrice, ReasonOfReject, CheckedDate)
+                    VALUES (@ClientID, @ProjectName, @Unit, @NegotiationCondition, @SuggestedPrice, @ReasonOfReject, @CheckedDate);";
+
+                using (SqlCommand cmd = new SqlCommand(sqlMerge, conn))
+                {
+                    cmd.Parameters.AddWithValue("@ClientID", ph2.ClientID);
+                    cmd.Parameters.AddWithValue("@ProjectName", ph2.ProjectName);
+                    cmd.Parameters.AddWithValue("@Unit", ph2.Unit);
+                    cmd.Parameters.AddWithValue("@NegotiationCondition", ph2.NegotiationCondition);
+                    cmd.Parameters.AddWithValue("@SuggestedPrice", ph2.SuggestedPrice);
+                    cmd.Parameters.AddWithValue("@ReasonOfReject", (object)ph2.ReasonOfReject ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@CheckedDate", ph2.CheckedDate);
+
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    cmd.ExecuteNonQuery();
+                    if (conn.State == ConnectionState.Open) conn.Close();
+                }
+                if (cond == false)
+                {
+
+                    try
+                    {
+                        string sqlup = @"update Negotiations set NegotiationStatus='" + rejectstatement + "' where ClientID=@ClientID AND ProjectName=@ProjectName AND Unit=@Unit";
+                        using (SqlCommand cmd = new SqlCommand(sqlup, conn))
+                        {
+                            if (conn.State == ConnectionState.Closed) conn.Open();
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@ClientID", ph2.ClientID);
+                            cmd.Parameters.AddWithValue("@ProjectName", ph2.ProjectName);
+                            cmd.Parameters.AddWithValue("@Unit", ph2.Unit);
+                            cmd.ExecuteNonQuery();
+                            if (conn.State == ConnectionState.Open) conn.Close();
+
+                        }
+                    }
+
+
+                    catch (Exception ex)
+                    {
+                        return new JsonResult(new { error = ex.Message });
+                    }
+                }
+                if (cond == true)
+                {
+
+                    try
+                    {
+                        string sqlup = @"update Negotiations set NegotiationStatus='" + approvedstatement + "' where ClientID=@ClientID AND ProjectName=@ProjectName AND Unit=@Unit";
+                        using (SqlCommand cmd = new SqlCommand(sqlup, conn))
+                        {
+                            if (conn.State == ConnectionState.Closed) conn.Open();
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@ClientID", ph2.ClientID);
+                            cmd.Parameters.AddWithValue("@ProjectName", ph2.ProjectName);
+                            cmd.Parameters.AddWithValue("@Unit", ph2.Unit);
+                            cmd.ExecuteNonQuery();
+                            if (conn.State == ConnectionState.Open) conn.Close();
+
+                        }
+                    }
+
+
+                    catch (Exception ex)
+                    {
+                        return new JsonResult(new { error = ex.Message });
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { error = ex.Message });
+            }
+
+            return new JsonResult(updated);
         }
         //***************************************************************************
         [Route("rejected_Requests")]
