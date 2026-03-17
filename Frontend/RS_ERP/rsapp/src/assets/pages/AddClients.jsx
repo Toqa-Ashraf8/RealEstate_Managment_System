@@ -48,6 +48,7 @@ import SearchClients from "../modals/SearchClients";
 import { IoClose } from "react-icons/io5";
 import ModalDeleteClients from "../modals/ModalDeleteClients";
 import DeleteNegotiation from "../modals/DeleteNegotiation";
+import NegotiationModal from "../modals/NegotiationModal";
 
 
 const AddClients = () => {
@@ -81,8 +82,8 @@ const AddClients = () => {
 //------------------------------------------------------------------------------------
 const EditRow=(index)=>{
 dispatch(IdentifyEditorAddNew(index));
-console.log(db.negotiation);
-console.log(db.negotiations[index]);
+console.log("object",db.negotiation.NegotiationPrice);
+console.log("Array",db.negotiations[index].NegotiationPrice);
 }
 //------------------------------------------------------------------------------------
   const SaveForm=async()=>{
@@ -126,7 +127,7 @@ const getnext=()=>{
 useEffect(()=>{
   nameRef.current.focus();
 },[])
-console.log(db.deleteRowIndex);
+
  //******************************************************************** */
   return (
     <div
@@ -263,7 +264,7 @@ console.log(db.deleteRowIndex);
                 <th>السعر الأصلي للوحدة</th>
                 <th>سعر التفاوض</th>
                 <th>قيمة الخصم</th>
-               {db.rowIndex===-1 || db.negotiations.length > 0 ? 
+               { db.negotiations.length > 0 ? 
                ( <>  
                <th>حالة الطلب</th>
                <th>تاريخ الطلب</th>
@@ -282,7 +283,7 @@ console.log(db.deleteRowIndex);
                 <td>{neg.OriginalPrice} ج</td>
                 <td>{neg.NegotiationPrice} ج</td>
                 <td>{neg.DiscountAmount} %</td>
-              {db.rowIndex === -1 || db.negotiations.length > 0 ? (
+              { db.negotiations.length > 0 ? (
           <>
             <td style={{ fontWeight: 'bold' }}>
            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

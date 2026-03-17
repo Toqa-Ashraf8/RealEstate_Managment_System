@@ -21,7 +21,7 @@ const initialState = {
     showdModal:false,
     searchclientsMdl:false,
     deleteNegoModal:false,
-    deleteRowIndex:-1,
+    deleteRowIndex:"",
     
 }
 //*************************************************************************************/
@@ -114,13 +114,10 @@ const clientSlice = createSlice({
        },
        IdentifyEditorAddNew:(state,action)=>{
          state.rowIndex=action.payload;
-         if(action.payload!==-1){
-            state.negotiation=state.negotiations[action.payload];
-            state.negotiation.ProjectName=state.negotiations[action.payload].ProjectName;
-            state.negotiation.Unit=state.negotiations[action.payload].Unit
+         if(state.rowIndex!==-1){
+            state.negotiation = { ...state.negotiations[action.payload]};
          }
          state.showNeg=true; 
-         
        },
        AddToNegotiationTable:(state,action)=>{
             if(state.rowIndex===-1){state.negotiations=[...state.negotiations,state.negotiation];}
@@ -143,11 +140,11 @@ const clientSlice = createSlice({
             state.deleteNegoModal=action.payload;
         },
         GetIndexofRemovednegotiation:(state,action)=>{
-             state.deleteNegoModal=true;
              state.deleteRowIndex=action.payload;
+             state.deleteNegoModal=true;
         },
         DeleteNegotiationRow:(state,action)=>{
-            state.negotiations=state.negotiations.filter((neg,index)=> index !==state.deleteRowIndex);
+            state.negotiations=state.negotiations.filter((items,index)=> index !==state.deleteRowIndex);
             state.deleteNegoModal=false;
         }
       
