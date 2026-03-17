@@ -123,9 +123,19 @@ namespace WebApp1.Controllers
             { 
                         try
                         {
-                          
 
-                            string sqlin_dtls = @"insert into Negotiations (serialCode,ProjectName,Unit,OriginalPrice,NegotiationPrice,
+                            string sqld = @"delete Negotiations where ClientID=@ClientID";
+                            using (SqlCommand cmd = new SqlCommand(sqld, conn))
+                            {
+                                cmd.Parameters.Clear();
+                                cmd.Parameters.AddWithValue("@ClientID", id);
+                                if (conn.State == ConnectionState.Closed) conn.Open();
+                                cmd.ExecuteNonQuery();
+                                if (conn.State == ConnectionState.Open) conn.Close();
+
+                            }
+
+                         string sqlin_dtls = @"insert into Negotiations (serialCode,ProjectName,Unit,OriginalPrice,NegotiationPrice,
                                                         DiscountAmount,ClientID,ClientName,NegotiationStatus,
                                                           NegotiationDate,checkedByAdmin) values(@serialCode,@ProjectName,@Unit,@OriginalPrice,@NegotiationPrice,
                                                            @DiscountAmount,@ClientID,@ClientName,@NegotiationStatus,@NegotiationDate,
