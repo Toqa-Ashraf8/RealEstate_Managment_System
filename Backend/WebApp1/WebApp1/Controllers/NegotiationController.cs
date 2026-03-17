@@ -37,7 +37,7 @@ namespace WebApp1.Controllers
             }
 
         }
-        //***************************************************************************
+        //************************ Get Count Number Of Unchecked Requests By Admin *********
         [Route("GetNegotiations")]
         [HttpGet]
         public JsonResult GetNegotiations()
@@ -49,8 +49,7 @@ namespace WebApp1.Controllers
             da.Fill(dt);
             return new JsonResult(dt);
         }
-        //***************************************************************************
-        [Route("saveNegotiations_ByAdmin")]
+        //********************** Approve Or Reject Negotiation Request By Admin ************
         [HttpPost]
         public JsonResult saveNegotiations_ByAdmin([FromBody] Rejected_negotiations_phase ph)
         {
@@ -143,7 +142,7 @@ namespace WebApp1.Controllers
             var data = new { saved = saved };
             return new JsonResult(data);
         }
-
+        //********************* Re_Approve Or Re_Reject Negotiation Request By Admin *******
         [Route("Approved_Rejected")]
         [HttpPost]
         public JsonResult Approved_Rejected([FromBody] Rejected_negotiations_phase ph2)
@@ -240,7 +239,7 @@ namespace WebApp1.Controllers
 
             return new JsonResult(updated);
         }
-        //***************************************************************************
+        //************************* Get Rejected Requests And Their Count Number **********
         [Route("rejected_Requests")]
         [HttpGet]
         public JsonResult rejected_Requests()
@@ -257,8 +256,7 @@ namespace WebApp1.Controllers
             var data = new { count = count, dt = dt };
             return new JsonResult(data);
         }
-         
-        //***************************************************************************
+        //************************ Get Accepted Requests And Their Count Number ***********
         [Route("accepted_Requests")]
         [HttpGet]
         public JsonResult accepted_Requests()
@@ -277,7 +275,7 @@ namespace WebApp1.Controllers
             return new JsonResult(data);
 
         }
-        //***************************************************************************
+        //------------------------------------------- END ------------------------------------------------
        
 
     }

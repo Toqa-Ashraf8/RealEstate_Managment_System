@@ -21,7 +21,7 @@ namespace WebApp1.Controllers
              _env=env;
             conn = new SqlConnection(_context.Database.GetConnectionString());
         }
-        //*********************** Get Projects to put in a Select ******************
+        //*********************** Get Projects to put in a Select **************
         [Route("GetProjects")]
         [HttpGet]
         public JsonResult GetProjects()
@@ -33,7 +33,7 @@ namespace WebApp1.Controllers
             return new JsonResult(dt);
 
         }
-        //**************************** Get Units By Project Name ******************
+        //**************************** Get Units By Project Name *************
         [Route("getUnits")]
         [HttpPost]
         public JsonResult getUnits(string projectname)
@@ -46,7 +46,7 @@ namespace WebApp1.Controllers
 
         }
 
-        //********************************** Get Price Of Unit ********************
+        //***************************** Get Price Of Unit ********************
         [Route("getPriceOfUnit")]
         [HttpPost]
         public JsonResult getPriceOfUnit(string unitname)
@@ -58,7 +58,7 @@ namespace WebApp1.Controllers
             return new JsonResult(dt);
 
         }
-        //******************* Save Clients with their negotiation requests ********
+        //*******************Save Clients with their negotiation requests ********
         [Route("SaveClients")]
         [HttpPost]
         public JsonResult SaveClients([FromBody] Client cl)
@@ -442,7 +442,7 @@ namespace WebApp1.Controllers
             var data = new { dt = dt, negotiations_p = negotiations_p,isfirst=isfirst , empty_db = empty_db };
             return new JsonResult(data);
         }
-
+        //----------------------------------------------- END ------------------------------------------------------
 
     }
 }

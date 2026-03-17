@@ -12,18 +12,19 @@ namespace WebApp1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ProjectController : ControllerBase
     {
         private readonly DataContext _context;
         private readonly IWebHostEnvironment _env;
         SqlConnection conn;
-        public ValuesController(DataContext context, IWebHostEnvironment env)
+        public ProjectController(DataContext context, IWebHostEnvironment env)
         {
             _context=context;
             _env=env;
              conn=new SqlConnection(_context.Database.GetConnectionString());
 
         }
+        //***************************** Save Images Of Projects **************************
         [Route("SaveImages")]
         [HttpPost]
         public JsonResult SaveImages ([FromForm] uploadImg uploadimg)
@@ -38,7 +39,7 @@ namespace WebApp1.Controllers
             }
             return new JsonResult(fileName);
         }
-        //***********************************************************************************
+        //***************************** Save Images Of Units *****************************
         [Route("SaveImagesUnits")]
         [HttpPost]
         public JsonResult SaveImagesUnits([FromForm] UploadImgu imgu)
@@ -53,7 +54,7 @@ namespace WebApp1.Controllers
             return new JsonResult(fileName);
         }
 
-        //***********************************************************************************
+        //********************** Save Projects (Master) With Units (Details) **************
         [Route("SaveAll")]
         [HttpPost]
         public JsonResult SaveAll([FromBody]project prj)
@@ -179,7 +180,7 @@ namespace WebApp1.Controllers
                 var data = new { id = id , errorOccured = errorOccured};
                 return new JsonResult(data);
         }
-        //***********************************************************************************
+        //********************** Delete Projects (Master) With Units (Details) **************
 
         [Route("DeleteAll")]
         [HttpPost]
@@ -223,7 +224,7 @@ namespace WebApp1.Controllers
             }
             return new JsonResult(delOk);
         }
-        //***********************************************************************************
+        //************************ Get Projects (Master) To Search ***************************
         [Route("SearchMaster")]
         [HttpGet]
         public JsonResult SearchMaster()
@@ -235,6 +236,7 @@ namespace WebApp1.Controllers
             return new JsonResult(dt);
 
         }
+        //************************ Get Units (Details) ****************************************
         [Route("GetDtls")]
         [HttpPost]
         public JsonResult GetDtls(int projectId)
@@ -249,6 +251,6 @@ namespace WebApp1.Controllers
             return new JsonResult(dt);
 
         }
-
+        //---------------------------------------------- END -----------------------------------------------------
     }
 }

@@ -2,7 +2,7 @@
 
 .final_page_wrapper {
     background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
-    font-family: 'Cairo', sans-serif;
+    font-family: 'Cairo', sans-serif!important;
     direction: rtl;
     padding: 40px ;
 }
