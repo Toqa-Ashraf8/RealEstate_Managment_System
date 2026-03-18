@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { User, CreditCard, Phone, MapPin, Building2, Calendar, Image as ImageIcon, CheckCircle, FileText, Hash, Activity } from 'lucide-react';
+import { User, CreditCard, Phone, MapPin, FilePenLine ,Building2, Calendar, Image as ImageIcon, CheckCircle, FileText, Hash, Activity } from 'lucide-react';
 import '../css/CompleteBooking.css';
 import { RiSave3Fill } from "react-icons/ri";
 import { AiOutlineClear } from "react-icons/ai";
@@ -72,8 +72,6 @@ const SavedData=async()=>{
         });
     }
    
-
-
 }
 //*******************************************************************************
     useEffect(() => {
@@ -90,7 +88,7 @@ const SavedData=async()=>{
         <div className="final_page_wrapper">
             <div className="final_booking_container">
                 <div className="final_header_area">
-                    <h2 className="final_main_title">استكمال بيانات الحجز المبدئي</h2>
+                    <h2 className="final_main_title">استكمال بيانات الحجز والأقساط</h2>
                 </div>
 
                 <div className="final_content_box animate__animated animate__fadeIn">
@@ -207,6 +205,27 @@ const SavedData=async()=>{
                                         onChange={HandleChange}
                                     />
                                 </div>
+                                <div className="final_field_group mt-3">
+                                    <label className="final_label"><CreditCard size={18} />المقدم (25%)</label>
+                                    <input
+                                        type="text"
+                                        name="DownPayment"
+                                        className="final_input_modern"
+                                        value={db_b.bookingClient.DownPayment || ""}
+                                        onChange={HandleChange}
+                                    />
+                                </div>
+
+                                <div className="final_field_group mt-3">
+                                    <label className="final_label"><Calendar size={18} /> تاريخ أول قسط</label>
+                                    <input
+                                        type="date"
+                                        name="FirstInstallmentDate"
+                                        className="final_input_modern"
+                                        value={db_b.bookingClient.FirstInstallmentDate || ""}
+                                        onChange={HandleChange}
+                                    />
+                                </div>
                                 <div className="final_field_group">
                                     <label 
                                     className="final_label"><Calendar size={18} /> طريقة الدفع</label>
@@ -223,18 +242,26 @@ const SavedData=async()=>{
                                 </div>
                                 <div className="final_field_group mt-3">
                                     <label className="final_label"><Calendar size={18} /> مدة التقسيط (بالسنوات)</label>
-                                    <select 
-                                    name="InstallmentYears" 
-                                    className="final_select_modern"
-                                    value={db_b.bookingClient.InstallmentYears}
-                                    onChange={HandleChange}
-                                    >
-                                    <option value="-1">-إختر-</option>
-                                    <option value="1">1</option>
-                                    <option value="3">3</option>
-                                    <option value="5">5</option>
-                                    <option value="7">7</option>
-                                    </select>
+                                    
+                                    <div className="d-flex gap-2 flex-grow-1">
+                                        <select
+                                            name="InstallmentYears"
+                                            className="final_select_modern"
+                                            value={db_b.bookingClient.InstallmentYears}
+                                            onChange={HandleChange}
+                                        >
+                                            <option value="-1">-إختر السنين-</option>
+                                            <option value="1">1 سنة</option>
+                                            <option value="3">3 سنوات</option>
+                                            <option value="5">5 سنوات</option>
+                                            <option value="7">7 سنوات</option>
+                                        </select>
+                                        {db_b.bookingClient.InstallmentYears !== "-1" && (
+                                            <button type="button" className="final_small_generate_btn animate__animated animate__zoomIn">
+                                                <CheckCircle size={16} /> إنشاء الأقساط
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="final_field_group mt-3 animate__animated animate__fadeIn">
                                     <label className="final_label"><FileText size={18} /> إرفاق صورة الشيك</label>

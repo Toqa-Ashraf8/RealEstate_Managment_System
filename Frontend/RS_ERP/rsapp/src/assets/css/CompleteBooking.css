@@ -200,3 +200,38 @@
 }
 
 .final_circle_btn:hover { transform: scale(1.1); border-color: #4f46e5; }
+/* الأجزاء الإضافية فقط لدمجها مع كودك */
+.final_small_generate_btn {
+    flex: 0.6; /* عشان مياخدش مساحة كبيرة جنب السلكت */
+    padding: 10px 15px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    transition: 0.3s all ease;
+}
+
+.final_small_generate_btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+    filter: brightness(1.1);
+}
+
+/* لضمان توسيط الأيقونات في الأنبوتس الجديدة */
+.final_label svg {
+    min-width: 20px;
+}
+
+/* حالة الـ Error في الصور */
+.final_img_fluid[style*="display: none"] + .final_empty_msg {
+    display: flex !important;
+}
