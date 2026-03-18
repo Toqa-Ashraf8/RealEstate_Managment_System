@@ -88,9 +88,9 @@ namespace WebApp1.Controllers
             bool saved = false;
             if (id == 0)
             {
-                string sqlinsert = @"insert into ClientBookingDetails (NationalID,NationalIdImagePath,SecondaryPhone,Address,PaymentMethod,
+                string sqlinsert = @"insert into ClientBookingDetails (NationalID,NationalIdImagePath,SecondaryPhone,Address,ReservationAmount,PaymentMethod,
                                     InstallmentYears,CheckImagePath,ClientID,ClientName,ProjectName,Unit) 
-                                    values (@NationalID,@NationalIdImagePath,@SecondaryPhone,@Address,@PaymentMethod,@InstallmentYears,@CheckImagePath
+                                    values (@NationalID,@NationalIdImagePath,@SecondaryPhone,@Address,@ReservationAmount,@PaymentMethod,@InstallmentYears,@CheckImagePath
                                             ,@ClientID,@ClientName,@ProjectName,@Unit)SELECT SCOPE_IDENTITY()";
                 using(SqlCommand cmd=new SqlCommand(sqlinsert, conn))
                 {
@@ -100,6 +100,7 @@ namespace WebApp1.Controllers
                     cmd.Parameters.AddWithValue("@NationalIdImagePath", client.NationalIdImagePath);
                     cmd.Parameters.AddWithValue("@SecondaryPhone", client.SecondaryPhone);
                     cmd.Parameters.AddWithValue("@Address", client.Address);
+                    cmd.Parameters.AddWithValue("@ReservationAmount", client.ReservationAmount);
                     cmd.Parameters.AddWithValue("@PaymentMethod", client.PaymentMethod);
                     cmd.Parameters.AddWithValue("@InstallmentYears", client.InstallmentYears);
                     cmd.Parameters.AddWithValue("@CheckImagePath", string.IsNullOrEmpty(client.CheckImagePath) ? DBNull.Value : client.CheckImagePath);

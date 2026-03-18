@@ -90,7 +90,7 @@ const SavedData=async()=>{
         <div className="final_page_wrapper">
             <div className="final_booking_container">
                 <div className="final_header_area">
-                    <h2 className="final_main_title">استكمال بيانات الحجز النهائي</h2>
+                    <h2 className="final_main_title">استكمال بيانات الحجز المبدئي</h2>
                 </div>
 
                 <div className="final_content_box animate__animated animate__fadeIn">
@@ -197,6 +197,16 @@ const SavedData=async()=>{
 
                         <div className="row mt-4">
                             <div className="col-lg-8">
+                                 <div className="final_field_group mt-3">
+                                    <label className="final_label"><CreditCard size={18} />مبلغ الحجز</label>
+                                    <input
+                                        type="text"
+                                        name="ReservationAmount"
+                                        className="final_input_modern"
+                                        value={db_b.bookingClient.ReservationAmount || 0}
+                                        onChange={HandleChange}
+                                    />
+                                </div>
                                 <div className="final_field_group">
                                     <label 
                                     className="final_label"><Calendar size={18} /> طريقة الدفع</label>
