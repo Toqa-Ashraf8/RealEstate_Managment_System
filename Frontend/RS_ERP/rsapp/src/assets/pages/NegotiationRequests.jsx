@@ -53,7 +53,7 @@ const Accepted=(i)=>{
           {db.confirmModal && <ConfirmModal/>}
             <div className="custom-glass-header">
                 <div className="title-section">
-                    <h3>طلبات التفاوض <span className="badge-count">{db.negotiationNo || 0}</span></h3>
+                    <h3>طلبات التفاوض / الشراء <span className="badge-count">{db.negotiationNo || 0}</span></h3>
                 </div>
                 <div className="status-container" style={{cursor:'pointer'}}>
                     <div 

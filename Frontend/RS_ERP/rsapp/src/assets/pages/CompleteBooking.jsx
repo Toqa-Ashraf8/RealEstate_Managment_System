@@ -344,7 +344,7 @@ const createInstallments=()=>{
                     className="final_circle_btn"
                     title="تنظيف"> <AiOutlineClear size={28} color="#14213d" onClick={()=>ClearValues()} /></div>
                     <div className="final_circle_btn" title="حفظ"><RiSave3Fill size={24} color="#10b981" onClick={()=>SavedData()} /></div>
-                    <div className="final_circle_btn" title="طباعة" onClick={() => window.print()}><FiPrinter size={24} color="#00b4d8" /></div>
+                     <div className="final_circle_btn" title="جدول الاقساط"><Banknote size={24} color="#1026b9" onClick={()=>navigate('/installments_schedule')}/></div>
                 </div>
             </div>
         </div>

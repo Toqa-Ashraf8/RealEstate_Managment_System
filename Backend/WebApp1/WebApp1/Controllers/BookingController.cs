@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlClient;
@@ -284,5 +285,38 @@ namespace WebApp1.Controllers
             }
             return new JsonResult(saved);
         }
+        //*************************** Get Reserved Data ******************************************
+        [Route("GetReservedClients")]
+        [HttpGet]
+        public JsonResult GetReservedClients()
+        {
+            DataTable dt = new DataTable();
+            string sqls = "Select * from reserved_clients_details";
+            SqlDataAdapter da = new SqlDataAdapter(sqls, conn);
+            if (conn.State == ConnectionState.Closed) conn.Open();
+            da.Fill(dt);
+            if (conn.State == ConnectionState.Open) conn.Close();
+            return new JsonResult(dt);
+        }
+        [Route("GetReservedClients_installments")]
+        [HttpPost]
+        public JsonResult GetReservedClients_installments(int bookingid)
+        {
+            DataTable dt = new DataTable();
+            string sqlg = "Select * from reserved_clients_installments where BookingID=@BookingID";
+            using(SqlCommand cmd=new SqlCommand(sqlg, conn))
+            {  
+                if (conn.State == ConnectionState.Closed) conn.Open();
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@BookingID", bookingid);
+                cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            if (conn.State == ConnectionState.Open) conn.Close();
+            return new JsonResult(dt);
+        }
+
+
     }
 }

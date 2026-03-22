@@ -42,12 +42,12 @@ const Header = () => {
         </li>
           <li className="nav-item">
           <Link className="nav-link" to="/addclients">
-             العملاء والمهتمين     
+              إضافة العملاء     
           </Link>
         </li>
        <li className="nav-item">
           <Link className="nav-link" to="/negotiation_requests">
-           طلبات التفاوض-الشراء
+           طلبات الشراء
           </Link>
         </li>  
         <li className="nav-item">

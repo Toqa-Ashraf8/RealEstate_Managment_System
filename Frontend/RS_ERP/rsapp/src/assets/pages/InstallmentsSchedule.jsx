@@ -9,8 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import PaymentTypeModal from '../modals/PaymentTypeModal';
 import { toast } from 'react-toastify';
 
-
-
 const InstallmentsSchedule = () => {
     const db = useSelector((state) => state.negotiation);
     const db_b = useSelector((state) => state.booking);
@@ -70,7 +68,6 @@ const saveAllData=async()=>{
      
         await navigate('/booking'); 
 }
-
 //-----------------------------------------------------------------------------------
     useEffect(() => {
      
@@ -141,9 +138,8 @@ const saveAllData=async()=>{
                                         <div className="ins_td">
                                             <button 
                                             className="pay_btn"
-                                            onClick={()=>GetInstallmentRowIndex(idx)}
-                                            >
-                                                <Banknote size={14} /> دفع
+                                            onClick={()=>GetInstallmentRowIndex(idx)}>
+                                            <Banknote size={14} /> دفع
                                             </button>
                                         </div>}
                                     </div>

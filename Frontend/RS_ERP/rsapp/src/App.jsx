@@ -9,7 +9,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ProjectsCard from './assets/pages/ProjectsCard'
 import NegotiationRequests from './assets/pages/NegotiationRequests'
-import ReservationControl from './assets/pages/ReservationControl';
 import RejectedNegotiations from './assets/pages/RejectedNegotiations';
 import AcceptedNegotiations from './assets/pages/AcceptedNegotiations';
 import BookingsManager from './assets/pages/BookingsManager';
@@ -22,7 +21,6 @@ import BookedClients from './assets/pages/BookedClients';
 
 
 function App() {
-
 
   return (
     <>
@@ -48,7 +46,6 @@ function App() {
               <Route path='/complete_booking' element={<CompleteBooking/>}/>
               <Route path='/installments_schedule' element={<InstallmentsSchedule/>}/>
               <Route path='/booked_clients' element={<BookedClients/>}/>
-
       </Routes>
     </>
   )

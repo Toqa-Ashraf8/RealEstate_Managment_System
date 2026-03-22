@@ -32,7 +32,7 @@ const initialState = {
     successSaveInstallmentData:false,
     successUpdate:false,
     bookingClientIndex:-1,
-   
+    reservedClients:[]
 }
 //*********************************************************************** */
 export const FillClientData = createAsyncThunk("FillClientData/booking", async (Clientdata) => {
@@ -71,6 +71,12 @@ export const changetoReserved = createAsyncThunk("changetoReserved/booking", asy
         .then((res) => res.data);
     return resp;
 })
+export const getreservedClients = createAsyncThunk("getreservedClients/booking", async () => {
+    const resp = await axios.get(variables.URL_API_B + "GetReservedClients")
+        .then((res) => res.data);
+    return resp;
+})
+
 const bookingSlice = createSlice({
     name: 'booking',
     initialState,
@@ -98,7 +104,6 @@ const bookingSlice = createSlice({
         getInstallmentData: (state, action) => {
             state.InstallmentInformation = { ...state.InstallmentInformation, ...action.payload };
         },
-       
         showPaymentModal:(state,action)=>
         {
             state.paymentModal=action.payload;
@@ -119,8 +124,6 @@ const bookingSlice = createSlice({
             }
             state.paymentModal=false;
         },
-       
-       
     },
     extraReducers: (builder) => {
         builder
@@ -202,7 +205,7 @@ const bookingSlice = createSlice({
                 state.loading = false;
                 state.error = true;
             })
-             //-------------------------------------------------------------
+            //-------------------------------------------------------------
             .addCase(changetoReserved.pending, (state) => {
                 state.loading = true;
             })
@@ -210,6 +213,18 @@ const bookingSlice = createSlice({
                 state.loading = false;
             })
             .addCase(changetoReserved.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
+            //-------------------------------------------------------------
+            .addCase(getreservedClients.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getreservedClients.fulfilled, (state, action) => {
+                state.loading = false;
+                state.reservedClients=action.payload;
+            })
+            .addCase(getreservedClients.rejected, (state) => {
                 state.loading = false;
                 state.error = true;
             })

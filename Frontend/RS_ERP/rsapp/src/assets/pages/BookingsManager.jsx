@@ -33,7 +33,7 @@ useEffect(()=>{
                 <h2><UserCheck size={24} /> إدارة الحجوزات (استكمال التعاقد)</h2>
                 <p>الطلبات المعتمدة من الإدارة وبانتظار جدولة الأقساط</p>
             </div>
-           <div style={{display:'flex',justifyContent:'space-around',marginBottom:'20px',marginLeft:'20px'}}>
+           <div style={{display:'flex',justifyContent:'space-around',marginBottom:'20px',marginLeft:'20px',alignItems:'center'}}>
             <div></div>
             <div></div>
             <div></div>  
@@ -53,7 +53,7 @@ useEffect(()=>{
                      <h3>لا توجد طلبات معتمدة حالياً</h3>
                      <p>بمجرد الموافقة على طلبات التفاوض، ستظهر جميعها هنا لاستكمال بيانات الحجز.</p>
                      </div>): 
-                 (db.acceptedRequests.map((req,index)=>
+                   (db.acceptedRequests.map((req,index)=>
                     <div key={index} className="bk-card">
                         <div className="bk-main-info">
                             <div className="bk-user-avatar"><User size={20} /></div>
