@@ -3,7 +3,7 @@ import { UserCheck, FileEdit, Calculator, Printer, User ,ArrowLeft } from 'lucid
 import '../css/BookingsManager.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { acceptedCount, GetBookngClient } from '../redux/negotiationSlice';
+import { acceptedCount, GetBookngClient} from '../redux/negotiationSlice';
 import { clearInputs, FillClientData } from '../redux/bookingSlice';
 
 
@@ -14,11 +14,12 @@ const BookingsManager = () => {
     const navigate=useNavigate();
     
  //----------------------------------------------------------
-const CompleteBooking=async(index)=>{
-   await dispatch(GetBookngClient(index));
-   await navigate('/complete_booking');
-   await dispatch(clearInputs());
-}
+const CompleteBooking=(index)=>{
+    dispatch(GetBookngClient(index));
+    navigate('/complete_booking');
+    dispatch(clearInputs());
+}   
+
 //********************************************************* */
 useEffect(()=>{
     const Fetch=async()=>{
@@ -32,13 +33,14 @@ useEffect(()=>{
                 <h2><UserCheck size={24} /> إدارة الحجوزات (استكمال التعاقد)</h2>
                 <p>الطلبات المعتمدة من الإدارة وبانتظار جدولة الأقساط</p>
             </div>
-           <div style={{display:'flex',justifyContent:'space-around',marginBottom:'20px'}}>
+           <div style={{display:'flex',justifyContent:'space-around',marginBottom:'20px',marginLeft:'20px'}}>
             <div></div>
             <div></div>
             <div></div>  
             <button 
-            className='btn btn-primary' style={{width:'150px'}}
-            >الحجوزات
+            className='btn btn-primary' style={{width:'220px'}}
+            onClick={()=>navigate("/booked_clients")}
+            >عرض جميع الحجوزات
             <ArrowLeft size={20} style={{marginRight:'10px'}}/>
             </button>
             </div>
@@ -73,7 +75,7 @@ useEffect(()=>{
                             >
                                 <FileEdit size={16} /> استكمال بيانات الحجز
                             </button>
-                           
+                            
                         </div>
                     </div>
                 ))}

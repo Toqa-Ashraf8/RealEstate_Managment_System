@@ -31,6 +31,7 @@ const initialState = {
     successSaveBookingData:false,
     successSaveInstallmentData:false,
     successUpdate:false,
+    bookingClientIndex:-1,
    
 }
 //*********************************************************************** */
@@ -62,6 +63,11 @@ export const saveinstallmentCheck = createAsyncThunk("saveinstallmentCheck/booki
 })
 export const saveBookingandInstallment = createAsyncThunk("saveBookingandInstallment/booking", async (sentdata) => {
     const resp = await axios.post(variables.URL_API_B + "SaveBookingClient", sentdata)
+        .then((res) => res.data);
+    return resp;
+})
+export const changetoReserved = createAsyncThunk("changetoReserved/booking", async (row) => {
+    const resp = await axios.post(variables.URL_API_B + "ChangeToReserved", row)
         .then((res) => res.data);
     return resp;
 })
@@ -113,6 +119,7 @@ const bookingSlice = createSlice({
             }
             state.paymentModal=false;
         },
+       
        
     },
     extraReducers: (builder) => {
@@ -192,6 +199,17 @@ const bookingSlice = createSlice({
 
             })
             .addCase(saveBookingandInstallment.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
+             //-------------------------------------------------------------
+            .addCase(changetoReserved.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(changetoReserved.fulfilled, (state, action) => {
+                state.loading = false;
+            })
+            .addCase(changetoReserved.rejected, (state) => {
                 state.loading = false;
                 state.error = true;
             })

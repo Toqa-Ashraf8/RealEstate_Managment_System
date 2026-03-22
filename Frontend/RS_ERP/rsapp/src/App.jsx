@@ -17,6 +17,7 @@ import UnitsCard from './assets/pages/UnitsCard';
 import AddClients from './assets/pages/AddClients';
 import CompleteBooking from './assets/pages/CompleteBooking';
 import InstallmentsSchedule from './assets/pages/InstallmentsSchedule';
+import BookedClients from './assets/pages/BookedClients';
 
 
 
@@ -46,6 +47,8 @@ function App() {
               <Route path='/accepted_negotiations' element={<AcceptedNegotiations/>}/>  
               <Route path='/complete_booking' element={<CompleteBooking/>}/>
               <Route path='/installments_schedule' element={<InstallmentsSchedule/>}/>
+              <Route path='/booked_clients' element={<BookedClients/>}/>
+
       </Routes>
     </>
   )

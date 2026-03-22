@@ -4,10 +4,12 @@ import {
 } from 'lucide-react';
 import '../css/InstallmentsSchedule.css';
 import { useDispatch, useSelector} from 'react-redux';
-import { clearpaymentModal, FillClientData, generateInstallments, getInstallmentIndexRow, saveBookingandInstallment, showPaymentModal } from '../redux/bookingSlice';
+import { changetoReserved, clearpaymentModal, FillClientData, generateInstallments, getInstallmentIndexRow, saveBookingandInstallment, showPaymentModal } from '../redux/bookingSlice';
 import { useNavigate } from 'react-router-dom';
 import PaymentTypeModal from '../modals/PaymentTypeModal';
 import { toast } from 'react-toastify';
+
+
 
 const InstallmentsSchedule = () => {
     const db = useSelector((state) => state.negotiation);
@@ -31,6 +33,7 @@ const saveAllData=async()=>{
     const downpay=db_b.InstallmentInformation.DownPayment;
     const firstinstallmentDate=db_b.InstallmentInformation.FirstInstallmentDate;
     const yearsCount=db_b.InstallmentInformation.InstallmentYears;
+    const reservedobject={ClientID:bookingclientID,ProjectName:bookingclientProject,Unit:bookingclientUnit};
     const updatedArray = db_b.InstallmentDetails.map((item) => {
     if (item.Paid === 1) {
     return {
@@ -56,19 +59,21 @@ const saveAllData=async()=>{
                theme: "colored",
                position: "top-left",
            });
-        
+           await dispatch(changetoReserved(reservedobject));
        } 
        catch (error) {
            toast.error("حدث خطأ في الاتصال الخادم", {
                theme: "colored",
                position: "top-left",
            });
-       }  
+       } 
+     
+        await navigate('/booking'); 
 }
 
 //-----------------------------------------------------------------------------------
     useEffect(() => {
-      
+     
         const FetchClientData = async () => {
             if (Clientdata) {
                 await dispatch(FillClientData(Clientdata));
@@ -78,6 +83,8 @@ const saveAllData=async()=>{
         FetchClientData();
     }, [dispatch, Clientdata,installmentdata]);
 //------------------------------------------------------------------------------------
+
+
     return (
         <div className="mini_ins_wrapper"> 
         {db_b.paymentModal && <PaymentTypeModal/>}

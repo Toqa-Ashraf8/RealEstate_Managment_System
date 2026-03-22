@@ -19,5 +19,6 @@ namespace WebApp1.Models
         public string? NegotiationStatus { get; set; }
         public DateTime NegotiationDate { get; set; }  
         public Boolean checkedByAdmin { get; set; }
+        public Boolean Reserved { get; set; }
     }
 }

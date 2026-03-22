@@ -105,7 +105,6 @@ namespace WebApp1.Controllers
             bool saved_m = false;
             bool saved_d = false;
             bool updated = false;
-            int installment_id = 0;
 
             if (booking_id == 0)
             {
@@ -263,6 +262,27 @@ namespace WebApp1.Controllers
             }
             return new JsonResult(installments);
 
+        }
+        //*************************** Updated Negotiation Requests to Reserved ******************
+        [Route("ChangeToReserved")]
+        [HttpPost]
+        public JsonResult ChangeToReserved([FromBody] NegotiationViewModel neg)
+        {
+            bool saved = false;
+            string sqlup = @"Update Negotiations set Reserved=1 where ClientID=@ClientID AND ProjectName=@ProjectName
+                            And Unit=@Unit";
+            using(SqlCommand cmd=new SqlCommand(sqlup, conn))
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@ClientID", neg.ClientID);
+                cmd.Parameters.AddWithValue("@ProjectName",neg.ProjectName);
+                cmd.Parameters.AddWithValue("@Unit", neg.Unit);
+                cmd.ExecuteNonQuery();
+                if (conn.State == ConnectionState.Open) conn.Close();
+                saved = true;
+            }
+            return new JsonResult(saved);
         }
     }
 }

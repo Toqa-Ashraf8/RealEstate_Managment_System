@@ -25,7 +25,6 @@ const initialState={
         Re_approveRow:0,
         deleteModal:false,
         bookingClient:{},
-        
 }
 export const negotiationCount=createAsyncThunk("negotiationCount/negotiaion",async()=>{
     const resp=await axios.get(variables.URL_API_N+"GetNegotationsCount")
@@ -118,13 +117,11 @@ const negotiationSlice=createSlice({
              state.rejectedrow=row;
         },
          DefineRejectRow:(state,action)=>{
-            state.Re_approveRow=action.payload;
-           
+            state.Re_approveRow=action.payload;     
         },
         GetBookngClient:(state,action)=>{
-            state.bookingClient=state.acceptedRequests[action.payload];
-        }
-       
+            state.bookingClient=state.acceptedRequests[action.payload];  
+        },
     },
     //****************************************************************************** */
     extraReducers:(builder)=>{
@@ -194,17 +191,17 @@ const negotiationSlice=createSlice({
             state.error=true;
          })
           //--------------------------------------------
-          .addCase(acceptedCount.pending,(state)=>{
-            state.loading=true;
+             .addCase(acceptedCount.pending,(state)=>{
+                state.loading=true;
              })
             .addCase(acceptedCount.fulfilled,(state,action)=>{
-            state.loading=false;
-            state.accepted_neg=action.payload.count_a;
-            state.acceptedRequests=action.payload.dt;
+                state.loading=false;
+                state.accepted_neg=action.payload.count_a;
+                state.acceptedRequests=action.payload.dt;
              })
              .addCase(acceptedCount.rejected,(state)=>{
-            state.loading=false;
-            state.error=true;
+                state.loading=false;
+                state.error=true;
              })
            //--------------------------------------------
           .addCase(ApprovedtoReject.pending,(state)=>{
@@ -241,7 +238,7 @@ const negotiationSlice=createSlice({
 export const{showModal_reject,GetClientDetails,RejectModal_values,ChangeConditionOfRequest,clearValuesOfRow,
             showconfirmModal,rejectedRequests_show,showModal_reconfrim,GetAdcceptedrowByIndex,
             GetRejectModalvalues,DefineApproveRow,DefineRejectRow,GetRejectedrowByIndex,
-            GetBookngClient
+             GetBookngClient,         
 }=negotiationSlice.actions;
 const negotiationReducer=negotiationSlice.reducer;
 export default negotiationReducer;
