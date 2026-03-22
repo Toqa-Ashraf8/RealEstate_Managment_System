@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp1.EF;
 
@@ -11,9 +12,11 @@ using WebApp1.EF;
 namespace WebApp1.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20260322052940_updateInstallments6")]
+    partial class updateInstallments6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,17 +310,11 @@ namespace WebApp1.Migrations
 
             modelBuilder.Entity("WebApp1.Models.Rejected_negotiations_phase", b =>
                 {
-                    b.Property<int>("PhaseID")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("ClientID")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhaseID"));
 
                     b.Property<DateTime>("CheckedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("ClientID")
-                        .HasColumnType("int");
 
                     b.Property<bool>("NegotiationCondition")
                         .HasColumnType("bit");
@@ -340,7 +337,7 @@ namespace WebApp1.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PhaseID");
+                    b.HasKey("ClientID");
 
                     b.ToTable("Rejected_negotiations_phases");
                 });

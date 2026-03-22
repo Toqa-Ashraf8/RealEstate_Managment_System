@@ -23,7 +23,7 @@ namespace WebApp1.Models
         public string ClientName { get; set; }
         public string ProjectName { get; set; }
         public string Unit { get; set; }
-
+        public List<Installment> installments { get; set; }
 
     }
 }

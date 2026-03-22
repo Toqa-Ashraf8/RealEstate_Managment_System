@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios';
 import { variables } from '../variables';
+import { act } from 'react';
 const initialState = {
     loading: false,
     error: false,
@@ -27,7 +28,9 @@ const initialState = {
     installmentCheckImageName:"",
     paymentRowIndex:-1,
     paid:0,
-    installmentId:0
+    successSaveBookingData:false,
+    successSaveInstallmentData:false,
+    successUpdate:false,
    
 }
 //*********************************************************************** */
@@ -46,11 +49,7 @@ export const saveChecksImages = createAsyncThunk("saveChecksImages/booking", asy
         .then((res) => res.data);
     return resp;
 })
-export const savebookingClient = createAsyncThunk("savebookingClient/booking", async (parms) => {
-    const resp = await axios.post(variables.URL_API_B + "SaveBookingClient", parms)
-        .then((res) => res.data);
-    return resp;
-})
+
 export const generateInstallments = createAsyncThunk("generateInstallments/booking", async (request) => {
     const resp = await axios.post(variables.URL_API_B + "GenerateInstallments", request)
         .then((res) => res.data);
@@ -58,6 +57,11 @@ export const generateInstallments = createAsyncThunk("generateInstallments/booki
 })
 export const saveinstallmentCheck = createAsyncThunk("saveinstallmentCheck/booking", async (formData) => {
     const resp = await axios.post(variables.URL_API_B + "SaveInstallmentChecks_Images", formData)
+        .then((res) => res.data);
+    return resp;
+})
+export const saveBookingandInstallment = createAsyncThunk("saveBookingandInstallment/booking", async (sentdata) => {
+    const resp = await axios.post(variables.URL_API_B + "SaveBookingClient", sentdata)
         .then((res) => res.data);
     return resp;
 })
@@ -108,7 +112,8 @@ const bookingSlice = createSlice({
               state.InstallmentDetails[state.paymentRowIndex].Paid=1;  
             }
             state.paymentModal=false;
-        }
+        },
+       
     },
     extraReducers: (builder) => {
         builder
@@ -147,19 +152,7 @@ const bookingSlice = createSlice({
                 state.loading = false;
                 state.error = true;
             })
-            //-------------------------------------------------------------
-            .addCase(savebookingClient.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(savebookingClient.fulfilled, (state, action) => {
-                state.loading = false;
-                state.bookingClient.BookingID = action.payload.id;
-                state.savedData = action.payload.saved;
-            })
-            .addCase(savebookingClient.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
+           
              //-------------------------------------------------------------
             .addCase(generateInstallments.pending, (state) => {
                 state.loading = true;
@@ -167,13 +160,14 @@ const bookingSlice = createSlice({
             .addCase(generateInstallments.fulfilled, (state, action) => {
                 state.loading = false;
                 state.InstallmentDetails = action.payload;
+               
 
             })
             .addCase(generateInstallments.rejected, (state) => {
                 state.loading = false;
                 state.error = true;
             })
-              //-------------------------------------------------------------
+            //-------------------------------------------------------------
             .addCase(saveinstallmentCheck.pending, (state) => {
                 state.loading = true;
             })
@@ -186,10 +180,25 @@ const bookingSlice = createSlice({
                 state.loading = false;
                 state.error = true;
             })
+             //-------------------------------------------------------------
+            .addCase(saveBookingandInstallment.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(saveBookingandInstallment.fulfilled, (state, action) => {
+                state.loading = false;
+                state.bookingClient.BookingID = action.payload.booking_id;
+                state.successSaveBookingData=action.payload.saved_m;
+                state.successSaveInstallmentData=action.payload.saved_d;
+
+            })
+            .addCase(saveBookingandInstallment.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
 
     }
 })
-export const { GetClientDataForbooking, ChangevaluesOfBookingClient, clearInputs, caluclateDownPayment,
+export const {GetClientDataForbooking, ChangevaluesOfBookingClient, clearInputs, caluclateDownPayment,
     getInstallmentData,showPaymentModal,getPaymentModalvalues,changepaymentStatus,getInstallmentIndexRow,
     clearpaymentModal
 } = bookingSlice.actions;

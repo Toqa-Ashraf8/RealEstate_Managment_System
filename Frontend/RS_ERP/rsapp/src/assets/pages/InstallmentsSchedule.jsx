@@ -4,9 +4,10 @@ import {
 } from 'lucide-react';
 import '../css/InstallmentsSchedule.css';
 import { useDispatch, useSelector} from 'react-redux';
-import { clearpaymentModal, FillClientData, generateInstallments, getInstallmentIndexRow, showPaymentModal } from '../redux/bookingSlice';
+import { clearpaymentModal, FillClientData, generateInstallments, getInstallmentIndexRow, saveBookingandInstallment, showPaymentModal } from '../redux/bookingSlice';
 import { useNavigate } from 'react-router-dom';
 import PaymentTypeModal from '../modals/PaymentTypeModal';
+import { toast } from 'react-toastify';
 
 const InstallmentsSchedule = () => {
     const db = useSelector((state) => state.negotiation);
@@ -15,16 +16,59 @@ const InstallmentsSchedule = () => {
     const navigate=useNavigate();
     const Clientdata = db.bookingClient;
     const installmentdata=db_b.InstallmentInformation;
-    const array=db_b.InstallmentDetails
+  
 //-----------------------------------------------------------------------------------
 const GetInstallmentRowIndex=(i)=>{
     dispatch(getInstallmentIndexRow(i));
     dispatch(showPaymentModal(true));
     dispatch(clearpaymentModal());
 }
+const saveAllData=async()=>{
+    const bookingclientID=db.bookingClient.ClientID;
+    const bookingclientName=db.bookingClient.ClientName;
+    const bookingclientProject=db.bookingClient.ProjectName;
+    const bookingclientUnit=db.bookingClient.Unit;
+    const downpay=db_b.InstallmentInformation.DownPayment;
+    const firstinstallmentDate=db_b.InstallmentInformation.FirstInstallmentDate;
+    const yearsCount=db_b.InstallmentInformation.InstallmentYears;
+    const updatedArray = db_b.InstallmentDetails.map((item) => {
+    if (item.Paid === 1) {
+    return {
+      ...item,
+      ...db_b.paymentType
+    };
+    } 
+    else {
+    return {
+      ...item,
+      PaymentType: "",
+      CheckImage: ""
+    };
+   }
+ });
+    const data={...db_b.bookingClient,DownPayment:downpay,FirstInstallmentDate:firstinstallmentDate,InstallmentYears:yearsCount,
+                    ClientID:bookingclientID,ClientName:bookingclientName,
+                    ProjectName:bookingclientProject,Unit:bookingclientUnit,installments:updatedArray}
+    
+          try {
+           const result=await dispatch(saveBookingandInstallment(data)).unwrap();
+            toast.success("تم الحجز بنجاح!", {
+               theme: "colored",
+               position: "top-left",
+           });
+        
+       } 
+       catch (error) {
+           toast.error("حدث خطأ في الاتصال الخادم", {
+               theme: "colored",
+               position: "top-left",
+           });
+       }  
+}
 
 //-----------------------------------------------------------------------------------
     useEffect(() => {
+      
         const FetchClientData = async () => {
             if (Clientdata) {
                 await dispatch(FillClientData(Clientdata));
@@ -47,11 +91,14 @@ const GetInstallmentRowIndex=(i)=>{
                         <div className="mini_ins_actions">
                             <button className="mini_btn secundary" onClick={()=>navigate('/complete_booking')}><ArrowRight  size={16} /> الرجوع لصفحة الحجز</button>
                             <button className="mini_btn btn-info" style={{color:'#fff'}} ><Printer size={16} /> طباعة</button>
-                            <button className="mini_btn btn-success"><Save size={16} /> حفظ التغييرات</button>
+                            <button 
+                            className="mini_btn btn-success"
+                            onClick={()=>saveAllData()}
+                            ><Save size={16} /> حفظ التغييرات</button>
                         </div>
                     </header>
                     <div className="mini_ins_summary_strip">
-                        <div className="mini_stat_card blue"><div><span>كود القسط</span><strong>{db_b.installmentId}</strong></div></div>
+                      
                         <div className="mini_stat_card blue"><User className="card_icon" /><div><span>العميل</span><strong>{client.ClientName}</strong></div></div>
                         <div className="mini_stat_card green"><DollarSign className="card_icon" /><div><span>الإجمالي</span><strong>{client.NegotiationPrice} ج.م</strong></div></div>
                         <div className="mini_stat_card highlight"><CalendarDays className="card_icon" /><div><span>المقدم</span><strong>{db_b.InstallmentInformation.DownPayment} ج.م</strong></div></div>

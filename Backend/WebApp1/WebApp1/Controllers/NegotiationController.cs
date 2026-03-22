@@ -50,6 +50,7 @@ namespace WebApp1.Controllers
             return new JsonResult(dt);
         }
         //********************** Approve Or Reject Negotiation Request By Admin ************
+        [Route("saveNegotiations_ByAdmin")]
         [HttpPost]
         public JsonResult saveNegotiations_ByAdmin([FromBody] Rejected_negotiations_phase ph)
         {

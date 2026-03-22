@@ -25,6 +25,7 @@ const initialState={
         Re_approveRow:0,
         deleteModal:false,
         bookingClient:{},
+        
 }
 export const negotiationCount=createAsyncThunk("negotiationCount/negotiaion",async()=>{
     const resp=await axios.get(variables.URL_API_N+"GetNegotationsCount")
@@ -36,8 +37,8 @@ export const GetAllnegotiations=createAsyncThunk("GetAllnegotiations/negotiaion"
     .then((res)=>res.data);
     return resp;
 })
-export const SaveRequestByAdmin=createAsyncThunk("SaveRequestByAdmin/negotiaion",async(request)=>{
-    const resp=await axios.post(variables.URL_API_N+"saveNegotiations_ByAdmin",request)
+export const SaveRequestByAdmin=createAsyncThunk("SaveRequestByAdmin/negotiaion",async(acceptedrow)=>{
+    const resp=await axios.post(variables.URL_API_N+"saveNegotiations_ByAdmin",acceptedrow)
     .then((res)=>res.data);
     return resp;
 })
@@ -65,7 +66,7 @@ const negotiationSlice=createSlice({
             state.rejectmodal=action.payload;
         },
         GetClientDetails:(state,action)=>{
-          state.negotiationRow=state.Allnegotiations[action.payload];
+           state.negotiationRow=state.Allnegotiations[action.payload];
            state.CurrentDate=new Date().toISOString().split('T')[0];
         },
         RejectModal_values:(state,action)=>{

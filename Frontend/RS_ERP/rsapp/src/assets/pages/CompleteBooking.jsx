@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { User,  CreditCard,  Phone,  MapPin,  FilePenLine ,CircleDollarSign,Building2,  Calendar,Image as ImageIcon, CheckCircle,  FileText, Hash,  Activity ,  Banknote } from 'lucide-react';
+import { User,  CreditCard,  Phone,  MapPin,  FilePenLine ,CircleDollarSign,Building2, BriefcaseBusiness , Calendar,Image as ImageIcon, CheckCircle,  FileText, Hash,  Activity ,  Banknote } from 'lucide-react';
 import '../css/CompleteBooking.css';
 import { RiSave3Fill } from "react-icons/ri";
 import { AiOutlineClear } from "react-icons/ai";
 import { FiPrinter } from "react-icons/fi";
-import { caluclateDownPayment,  ChangevaluesOfBookingClient,  clearInputs,  FillClientData, generateInstallments, getInstallmentData, savebookingClient, saveChecksImages, saveNationalidImage} from '../redux/bookingSlice';
+import { caluclateDownPayment,  ChangevaluesOfBookingClient,  clearInputs,  FillClientData, generateInstallments, getInstallmentData, saveBookingandInstallment, saveChecksImages, saveNationalidImage} from '../redux/bookingSlice';
 import { variables } from '../variables';
 import {toast} from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
@@ -19,13 +19,11 @@ const CompleteBooking = () => {
     const downPaymentRef=useRef();
     const navigate=useNavigate();
     const obj={...db_b.bookingClient,...db_b.InstallmentInformation}
-    console.log("obj",obj);
+   
 //************************************************************************ 
 const HandleChange=(e)=>{
     const {name,value}=e.target;
     dispatch(ChangevaluesOfBookingClient({[name]:value}));
-    
-  
 }
 //************************************************************************ 
 const ClearValues=()=>{
@@ -64,9 +62,9 @@ const SavedData=async()=>{
     const client_name=Clientdata.ClientName;
     const project_name=Clientdata.ProjectName;
     const unit=Clientdata.Unit;
-    const parms={...db.bookingClient,ClientID:client_id,ClientName:client_name,ProjectName:project_name,Unit:unit};
+    const parms={...db_b.bookingClient,...db_b.InstallmentInformation,ClientID:client_id,ClientName:client_name,ProjectName:project_name,Unit:unit,installments:[]};
     try {
-        const result=await dispatch(savebookingClient(parms)).unwrap();
+        const result=await dispatch(saveBookingandInstallment(parms)).unwrap();
         if(result.saved===true){
          toast.success("تم الحجز بنجاح!", {
             theme: "colored",
@@ -120,7 +118,7 @@ const createInstallments=()=>{
                 <div className="final_header_area">
                     <h2 className="final_main_title">استكمال بيانات الحجز والأقساط</h2>
                 </div>
-                
+              
                 <div className="final_content_box animate__animated animate__fadeIn">
                     <form className="final_form_body">
                         
@@ -210,10 +208,10 @@ const createInstallments=()=>{
                                     />
                                 </div>
                                  <div className="final_field_group mt-3">
-                                    <label className="final_label"><MapPin size={18} />الوظيفة</label>
+                                    <label className="final_label"><BriefcaseBusiness  size={18} />الوظيفة</label>
                                     <input 
                                     type="text" 
-                                    name="Address" 
+                                    name="Job" 
                                     className="final_input_modern"
                                     value={db_b.bookingClient.Job || ""}
                                     onChange={HandleChange}

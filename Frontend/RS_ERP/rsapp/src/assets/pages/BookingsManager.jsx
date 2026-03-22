@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { UserCheck, FileEdit, Calculator, Printer, User } from 'lucide-react';
+import { UserCheck, FileEdit, Calculator, Printer, User ,ArrowLeft } from 'lucide-react';
 import '../css/BookingsManager.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +32,16 @@ useEffect(()=>{
                 <h2><UserCheck size={24} /> إدارة الحجوزات (استكمال التعاقد)</h2>
                 <p>الطلبات المعتمدة من الإدارة وبانتظار جدولة الأقساط</p>
             </div>
-
+           <div style={{display:'flex',justifyContent:'space-around',marginBottom:'20px'}}>
+            <div></div>
+            <div></div>
+            <div></div>  
+            <button 
+            className='btn btn-primary' style={{width:'150px'}}
+            >الحجوزات
+            <ArrowLeft size={20} style={{marginRight:'10px'}}/>
+            </button>
+            </div>
             <div className="bk-container">
                 {db.acceptedRequests.length===0 ?
                 (<div className="empty-state-container">

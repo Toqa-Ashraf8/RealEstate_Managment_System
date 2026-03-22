@@ -10,42 +10,36 @@ const ConfirmModal = () => {
     const rejectobj=db.rejectedrow;
     
     //******************************************************************* */
-const AcceptRequest=()=>{
-  const row={ClientID:db.negotiationRow.ClientID,
-      ProjectName:db.negotiationRow.ProjectName,
-      Unit:db.negotiationRow.Unit,
-      NegotiationCondition:db.negotiationRow.NegotiationCondition,
-      SuggestedPrice:db.negotiationRow.SuggestedPrice || 0,
-      ReasonOfReject:db.negotiationRow.ReasonOfReject || ""
-      ,CheckedDate:db.CurrentDate}
-  const FetchData=async()=>{
-    try {
-      if(db.Re_approveRow===0)
-      {
-        await dispatch(SaveRequestByAdmin(row)).unwrap();
-        toast.success("تم  قبول الطلب!", {
-          theme: "colored",
-          position: "top-left",
-        });     
+const AcceptRequest = async () => {
 
-      } 
-        else if(db.Re_approveRow===1){
-          await dispatch(ApprovedtoReject(rejectobj)).unwrap();
-          toast.error("تم إعادة قبول الطلب!", {
-          theme: "colored",
-          position: "top-left",
-        });  
-        }
-     
-      dispatch(showconfirmModal(false));
-   } 
-   catch (error) {
-     console.log("حدث خطأ في تنفيذ الطلب",error)
-     toast.warning("حدث خطأ، يرجى التأكد من البيانات");
+  const acceptedrow = {
+    ClientID: db.negotiationRow.ClientID,
+    ProjectName: db.negotiationRow.ProjectName,
+    Unit: db.negotiationRow.Unit,
+    NegotiationCondition: db.negotiationRow.NegotiationCondition,
+    SuggestedPrice: db.negotiationRow.SuggestedPrice || 0,
+    ReasonOfReject: db.negotiationRow.ReasonOfReject || "",
+    CheckedDate: db.CurrentDate
+  };
+  try {
+  
+    if (db.Re_approveRow === 0) {
+      await dispatch(SaveRequestByAdmin(acceptedrow)).unwrap();
+      toast.success("تم قبول الطلب!");
+    } 
+    else if (db.Re_approveRow === 1) {
+    
+      await dispatch(ApprovedtoReject(rejectobj)).unwrap();
+      toast.success("تم تحديث الطلب!");
+    }
+
+    dispatch(showconfirmModal(false));
+
+  } catch (error) {
+    console.error("Submission Error:", error);
+    toast.warning("حدث خطأ أثناء الحفظ");
   }
-  }
-  FetchData();
-}
+};
 
   return (
     <div className="modal-o">

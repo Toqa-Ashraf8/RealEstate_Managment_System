@@ -7,7 +7,7 @@ namespace WebApp1.Models
     public class Rejected_negotiations_phase
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int PhaseID { get; set; }
         public int ClientID { get; set; }
         public string ProjectName { get; set; }
         public string Unit { get; set; }

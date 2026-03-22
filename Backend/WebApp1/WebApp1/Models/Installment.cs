@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApp1.Models
 {
     public class Installment
     {
+        
         [Key]
         public int InstallmentID { get; set; }
         public int InstallmentNumber { get; set; }
@@ -11,13 +13,9 @@ namespace WebApp1.Models
         public int Months { get; set; }
         public int MonthlyAmount { get; set; }
         public Boolean Paid { get; set; }
-        public int ClientID { get; set; }
-        public string ClientName { get; set; }
-        public string ProjectName { get; set; }
-        public string Unit { get; set; }
-        public int BookingID { get; set; }
         public string PaymentType { get; set; }
-        public string CheckImage { get; set; }
+        public string CheckImage { get; set; }  
+        public int BookingID { get; set; }
 
     }
 }
