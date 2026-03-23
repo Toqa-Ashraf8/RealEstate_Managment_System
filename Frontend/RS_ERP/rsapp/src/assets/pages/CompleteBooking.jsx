@@ -21,9 +21,6 @@ const CompleteBooking = () => {
     const obj={...db_b.bookingClient,...db_b.InstallmentInformation}
     const reservationRef=useRef();
   
-    
-   
-
 //************************************************************************
 const HandleChange=(e)=>{
     const {name,value}=e.target;
@@ -102,16 +99,23 @@ const SavedData=async()=>{
         if (focusRef.current) {
             focusRef.current.focus();
         } 
-        const savedclient = localStorage.getItem('cachedClient');
-       if (savedclient) {
-        const parsedData = JSON.parse(savedclient); 
-        console.log("db_b.bookingClient",db_b.bookingClient) 
+        console.log("db_b.bookingClient",db_b.bookingClient)
+        //دي اللي تتحط لما ندوس عليedit عشان نعدل البيانات للحجز 
+        const reservedClient = localStorage.getItem('cachedClient'); 
+        const parsedData = JSON.parse(reservedClient);
+        //دي تتحط لو هدوس استكمال بيانات الحجز 
+       
+       if (reservedClient) {
+        const parsedfirstReserveClientData = JSON.parse(reservedClient);
         console.log("parsedData",parsedData)
-        console.log("db.indexdata",db.indexdata)
         if (db_b.bookingClients.length === 0 || db_b.reserved===0){ 
-            dispatch(FillClientData(parsedData));
+            dispatch(FillClientData(parsedfirstReserveClientData));
         }
-     }       
+        }
+        if (parsedData) {
+             dispatch(FillClientData(parsedData));
+         }
+            
 
  }, [dispatch]);
 
@@ -168,9 +172,9 @@ const getinstallmentsData=(id)=>{
                                 <div className="row mb-4">
                                     <div className="col-md-4">
                                         <div className="final_field_group">
-                                             <input type="text" value={db_b.bookingClient.ClientID} hidden className="final_input_modern final_disabled" />
+                                             <input type="text" value={db_b.bookingClient.ClientID } hidden className="final_input_modern final_disabled" />
                                             <label className="final_label"><User size={18} /> إسم العميل</label>
-                                            <input type="text" value={db_b.bookingClient.ClientName} readOnly className="final_input_modern final_disabled" />
+                                            <input type="text" value={db_b.bookingClient.ClientName } readOnly className="final_input_modern final_disabled" />
                                         </div>
                                     </div>
                                     <div className="col-md-4">

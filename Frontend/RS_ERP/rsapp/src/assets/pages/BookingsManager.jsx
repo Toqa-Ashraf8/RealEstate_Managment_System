@@ -16,7 +16,7 @@ const BookingsManager = () => {
  //----------------------------------------------------------
 const CompleteBooking=(index)=>{
     const selectedClient = db.acceptedRequests[index];
-    dispatch(GetBookngClient(index));
+   /*  dispatch(GetBookngClient(index)); */
     dispatch(reservedOrnot(0))
     localStorage.setItem('cachedClientData',JSON.stringify(selectedClient));
     navigate('/complete_booking');

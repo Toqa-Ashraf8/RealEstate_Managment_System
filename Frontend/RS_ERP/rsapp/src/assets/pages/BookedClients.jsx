@@ -14,10 +14,11 @@ const BookedClients = () => {
 useEffect(()=>{ 
     dispatch(getreservedClients());
 },[db_b.reservedClients])
-const editReservedClients=async(id)=>{
+const editReservedClients=async(id,index)=>{
+    const selectedClient=db_b.reservedClients[index];
     await dispatch(getreservedClientsByID(id));
     await dispatch(reservedOrnot(1));
-    localStorage.setItem('cachedClient', JSON.stringify(db_b.reservedClients));
+    localStorage.setItem('cachedClient', JSON.stringify(selectedClient));
     await navigate('/complete_booking?clientId='+id);
 }
 //----------------------------------------------------------------------
@@ -73,7 +74,7 @@ const editReservedClients=async(id)=>{
                                 </td> */}
                                 <td>
                                     <div className="table_actions">
-                                        <button className="action_icon view" title="تعديل" onClick={()=>editReservedClients(client.BookingID)}><SquarePen  size={18} color='blue' /></button>
+                                        <button className="action_icon view" title="تعديل" onClick={()=>editReservedClients(client.BookingID,index)}><SquarePen  size={18} color='blue' /></button>
                                         <button className="action_icon print" title="طباعة"><Printer size={18} color='teal' /></button>
                                     </div>
                                 </td>

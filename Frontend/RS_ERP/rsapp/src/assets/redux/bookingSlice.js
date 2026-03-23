@@ -151,7 +151,7 @@ const bookingSlice = createSlice({
             })
             .addCase(FillClientData.fulfilled, (state, action) => {
                 state.loading = false;
-                state.bookingClients = action.payload;
+                state.bookingClient= action.payload[0];
             })
             .addCase(FillClientData.rejected, (state) => {
                 state.loading = false;
@@ -253,7 +253,7 @@ const bookingSlice = createSlice({
             })
             .addCase(getreservedClientsByID.fulfilled, (state, action) => {
                 state.loading = false;
-                state.bookingClients=action.payload.clientdata;
+               /*  state.bookingClients=action.payload.clientdata; */
                 state.InstallmentInformation=action.payload.installmentdata[0];
                 state.bookingClient=action.payload.clientdt[0];
                 state.InstallmentDetails=action.payload.installmentdt;
