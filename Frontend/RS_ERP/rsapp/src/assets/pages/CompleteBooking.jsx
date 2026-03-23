@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { User,  CreditCard,  Phone,  MapPin,  FilePenLine ,CircleDollarSign,Building2, BriefcaseBusiness , Calendar,Image as ImageIcon, CheckCircle,  FileText, Hash,  Activity ,  Banknote } from 'lucide-react';
+import { User,  CreditCard,  Phone,  MapPin,  FilePenLine ,Banknote,CircleDollarSign,Building2, BriefcaseBusiness , Calendar,Image as ImageIcon, CheckCircle,  FileText, Hash,  Activity ,  NotepadText  } from 'lucide-react';
 import '../css/CompleteBooking.css';
 import { RiSave3Fill } from "react-icons/ri";
 import { AiOutlineClear } from "react-icons/ai";
 import { FiPrinter } from "react-icons/fi";
-import { caluclateDownPayment,  ChangevaluesOfBookingClient,  clearInputs,  FillClientData, generateInstallments, getInstallmentData, saveBookingandInstallment, saveChecksImages, saveNationalidImage} from '../redux/bookingSlice';
+import { calculatenewDownPayment, caluclateDownPayment,  ChangevaluesOfBookingClient,  clearInputs,  FillClientData, generateInstallments, getInstallmentData, getreservedClientsByID, saveBookingandInstallment, saveChecksImages, saveNationalidImage, updateDownPaymentManual} from '../redux/bookingSlice';
 import { variables } from '../variables';
 import {toast} from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +19,7 @@ const CompleteBooking = () => {
     const downPaymentRef=useRef();
     const navigate=useNavigate();
     const obj={...db_b.bookingClient,...db_b.InstallmentInformation}
+    const reservationRef=useRef();
    
 //************************************************************************ 
 const HandleChange=(e)=>{
@@ -32,7 +33,9 @@ const ClearValues=()=>{
 }
 const HandleChangeinstallmentValues=(e)=>{
     const {name,value}=e.target;
-   dispatch(getInstallmentData({[name]:value}));
+     const totalamount=db_b.bookingClients[0].NegotiationPrice;
+    dispatch(getInstallmentData({[name]:value}));
+
 }
 //************************************************************************
  const handleFileChange =async (e) => {
@@ -70,7 +73,14 @@ const SavedData=async()=>{
             theme: "colored",
             position: "top-left",
         });
-    } 
+        
+        } 
+        if (result.updated===true){
+        toast.success("تم تحديث البيانات بنجاح!", {
+            theme: "colored",
+            position: "top-left",
+        });
+        }
     } catch (error) {
          toast.error("حدث خطأ في الاتصال بالخادم!", {
             theme: "colored",
@@ -84,17 +94,28 @@ const SavedData=async()=>{
         if (focusRef.current) {
             focusRef.current.focus();
         }
-        const FetchClientData = async () => {
+        if(db_b.reserved===0){
+            const FetchClientData = async () => {
             await dispatch(FillClientData(Clientdata));
-            
+        } 
+         FetchClientData();
         }
-        FetchClientData();
-    }, [dispatch, Clientdata]);
+          
+ }, [dispatch, Clientdata]);
 //***********************************************************************************
-const calcutlateDownpayment=()=>{
-    const totalamount=db_b.bookingClients[0].NegotiationPrice;
-   dispatch(caluclateDownPayment(totalamount));
 
+const calcutlateDownpayment=()=>{
+    //في حالة اول مرة اسجل بيانات للحجز 
+    const totalamount=db_b.bookingClients[0].NegotiationPrice;
+    if(db_b.bookingClient.BookingID===0 ){
+       dispatch(caluclateDownPayment(totalamount));
+    }
+    else{
+        // ياخد قيمة الحجز المدخلة الجديده ويحسب قيمة المقدم منها ويضع القيمة الجديده(API)في حالة انه جايب بيانات من
+        const newtotalPrice=db_b.bookingClient.NegotiationPrice;
+        dispatch(calculatenewDownPayment({total:newtotalPrice,newReservationAmount:reservationRef.current.value}))
+        console.log(newtotalPrice);
+    }
 }
 //***********************************************************************************
 const createInstallments=()=>{
@@ -110,6 +131,14 @@ const createInstallments=()=>{
             position: "top-left",
         });
     }
+}
+//***********************************************************************************
+const getinstallmentsData=(id)=>{
+    if(db_b.reserved===1){
+         dispatch(getreservedClientsByID(id));
+         navigate('/installments_schedule');
+    }
+   
 }
 //***********************************************************************************
     return (
@@ -221,7 +250,7 @@ const createInstallments=()=>{
                             <div className="col-lg-4">
                                 <div className="final_image_preview_big">
                                    
-                                        <img src={variables.URL_IMGN+db_b.nationalidImage} className="final_img_fluid" alt="" />
+                                        <img src={variables.URL_IMGN+db_b.nationalidImage ||variables.URL_IMGN+db_b.showreservedNationalIdPath} className="final_img_fluid" alt="" />
                                         <div className="final_empty_msg">
                                             <ImageIcon size={40} className="final_icon_fade" />
                                             <p>معاينة البطاقة</p>
@@ -240,6 +269,7 @@ const createInstallments=()=>{
                                         type="text"
                                         name="ReservationAmount"
                                         className="final_input_modern"
+                                        ref={reservationRef}
                                         value={db_b.bookingClient.ReservationAmount || ""} 
                                         onBlur={()=>calcutlateDownpayment()}
                                         onChange={HandleChange}
@@ -251,8 +281,7 @@ const createInstallments=()=>{
                                     <input
                                         type="text"
                                         name="DownPayment"
-                                        className="final_input_modern"
-                                        disabled
+                                        className="final_input_modern"         
                                         ref={downPaymentRef}
                                         value={db_b.InstallmentInformation.DownPayment || ""}
                                         onChange={HandleChangeinstallmentValues}
@@ -265,7 +294,7 @@ const createInstallments=()=>{
                                         type="date"
                                         name="FirstInstallmentDate"
                                         className="final_input_modern"
-                                        value={db_b.InstallmentInformation.FirstInstallmentDate || ""}
+                                        value={db_b.InstallmentInformation.FirstInstallmentDate?.split('T')[0] || ""}
                                         onChange={HandleChangeinstallmentValues}
                                     />
                                 </div>
@@ -309,14 +338,14 @@ const createInstallments=()=>{
                                             <option value="5">5 سنوات</option>
                                             <option value="7">7 سنوات</option>
                                         </select>
-                                        {db_b.InstallmentInformation.InstallmentYears !== "-1" && (
-                                            <button 
-                                            type="button" 
-                                            className="mini_btn primary"
-                                            onClick={()=>createInstallments()}
-                                            >
-                                                <CheckCircle size={16} /> إنشاء الأقساط
-                                            </button>
+                                        {db_b.InstallmentInformation.InstallmentYears !== "-1"&&
+                                        (<button 
+                                        type="button" 
+                                        className="mini_btn primary"
+                                        onClick={()=>createInstallments()}
+                                        >
+                                        <CheckCircle size={16} /> إنشاء الأقساط
+                                        </button>
                                         )}
                                     </div>
                                 </div>
@@ -325,7 +354,7 @@ const createInstallments=()=>{
                             <div className="col-lg-4">
                                 <div className="final_image_preview_big" style={{ height: '220px' }}>
                                     
-                                        <img src={variables.URL_IMGC+db_b.checkImage? variables.URL_IMGC+db_b.checkImage:""} className="final_img_fluid" alt="" />
+                                        <img src={variables.URL_IMGC+db_b.checkImage || variables.URL_IMGC+db_b.showreservedCheckPath || ""} className="final_img_fluid" alt="" />
                                         <div className="final_empty_msg" >
                                             <FileText size={40} className="final_icon_fade" />
                                             <p>معاينة الشيك</p>
@@ -342,9 +371,11 @@ const createInstallments=()=>{
                 <div className="final_floating_actions">
                     <div 
                     className="final_circle_btn"
-                    title="تنظيف"> <AiOutlineClear size={28} color="#14213d" onClick={()=>ClearValues()} /></div>
+                    title="تنظيف"> <AiOutlineClear size={28} color="#14213d" onClick={()=>ClearValues()} /></div>       
                     <div className="final_circle_btn" title="حفظ"><RiSave3Fill size={24} color="#10b981" onClick={()=>SavedData()} /></div>
-                     <div className="final_circle_btn" title="جدول الاقساط"><Banknote size={24} color="#1026b9" onClick={()=>navigate('/installments_schedule')}/></div>
+                     {db_b.reserved===1 && 
+                     <div className="final_circle_btn" title="جدول الاقساط"><NotepadText  size={24} color="#1026b9" onClick={()=>getinstallmentsData(db_b.bookingClient.BookingID)}/></div>
+                     }
                 </div>
             </div>
         </div>

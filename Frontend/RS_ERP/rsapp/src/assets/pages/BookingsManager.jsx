@@ -4,7 +4,7 @@ import '../css/BookingsManager.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { acceptedCount, GetBookngClient} from '../redux/negotiationSlice';
-import { clearInputs, FillClientData } from '../redux/bookingSlice';
+import { clearInputs, FillClientData, reservedOrnot } from '../redux/bookingSlice';
 
 
 const BookingsManager = () => {
@@ -16,6 +16,7 @@ const BookingsManager = () => {
  //----------------------------------------------------------
 const CompleteBooking=(index)=>{
     dispatch(GetBookngClient(index));
+    dispatch(reservedOrnot(0));
     navigate('/complete_booking');
     dispatch(clearInputs());
 }   

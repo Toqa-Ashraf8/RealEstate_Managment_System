@@ -2,21 +2,23 @@ import React, { useEffect } from 'react';
 import { Users, User, Eye, Printer, Search, Calendar, Landmark, MoreVertical, ArrowUpDown,SquarePen  } from 'lucide-react';
 import '../css/BookedClients.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { getreservedClients } from '../redux/bookingSlice';
+import { getreservedClients, getreservedClientsByID, reservedOrnot } from '../redux/bookingSlice';
+import { useNavigate } from 'react-router-dom';
 
 const BookedClients = () => {
 
     const db_b=useSelector((state)=>state.booking);
     const dispatch=useDispatch();
+    const navigate=useNavigate();
 //---------------------------------------------------------------------
-useEffect(()=>{
-    const getclients=async()=>{
-    await dispatch(getreservedClients());
-    }
-    getclients();
-
+useEffect(()=>{ 
+    dispatch(getreservedClients());
 },[db_b.reservedClients])
-
+const editReservedClients=async(id)=>{
+    await dispatch(getreservedClientsByID(id));
+    await dispatch(reservedOrnot(1));
+    await navigate('/complete_booking');
+}
 //----------------------------------------------------------------------
     return (
         <div className="booked_list_wrapper">
@@ -70,7 +72,7 @@ useEffect(()=>{
                                 </td> */}
                                 <td>
                                     <div className="table_actions">
-                                        <button className="action_icon view" title="تعديل"><SquarePen  size={18} color='blue' /></button>
+                                        <button className="action_icon view" title="تعديل" onClick={()=>editReservedClients(client.BookingID)}><SquarePen  size={18} color='blue' /></button>
                                         <button className="action_icon print" title="طباعة"><Printer size={18} color='teal' /></button>
                                     </div>
                                 </td>

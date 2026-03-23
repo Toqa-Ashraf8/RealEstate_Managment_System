@@ -291,24 +291,10 @@ namespace WebApp1.Controllers
         public JsonResult GetReservedClients()
         {
             DataTable dt = new DataTable();
-            string sqls = "Select * from reserved_clients_details";
-            SqlDataAdapter da = new SqlDataAdapter(sqls, conn);
-            if (conn.State == ConnectionState.Closed) conn.Open();
-            da.Fill(dt);
-            if (conn.State == ConnectionState.Open) conn.Close();
-            return new JsonResult(dt);
-        }
-        [Route("GetReservedClients_installments")]
-        [HttpPost]
-        public JsonResult GetReservedClients_installments(int bookingid)
-        {
-            DataTable dt = new DataTable();
-            string sqlg = "Select * from reserved_clients_installments where BookingID=@BookingID";
-            using(SqlCommand cmd=new SqlCommand(sqlg, conn))
-            {  
+            string sqls = "Select * from reserved_clients_details where 1=1";
+            using (SqlCommand cmd = new SqlCommand(sqls, conn))
+            {
                 if (conn.State == ConnectionState.Closed) conn.Open();
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@BookingID", bookingid);
                 cmd.ExecuteNonQuery();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
@@ -316,7 +302,54 @@ namespace WebApp1.Controllers
             if (conn.State == ConnectionState.Open) conn.Close();
             return new JsonResult(dt);
         }
-
-
+        [Route("GetReservedClients_byID")]
+        [HttpPost]
+        public JsonResult GetReservedClients_byID(int id)
+        {
+            var clientdata = new List<BookingClient>();
+            var installmentdata = new List<InstallmentData>();
+            DataTable clientdt = new DataTable();
+            DataTable installmentdt = new DataTable();
+            string sqls = "Select * from reserved_clients_details where BookingID=@BookingID"; 
+            if (conn.State == ConnectionState.Closed) conn.Open();
+            using (SqlCommand cmd = new SqlCommand(sqls, conn))
+            {
+               
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@BookingID", id);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(clientdt);
+                if (clientdt.Rows.Count > 0)
+                {
+                    clientdata.Add(new BookingClient
+                    {
+                        ClientID = Convert.ToInt32(clientdt.Rows[0]["ClientID"]),
+                        ClientName = clientdt.Rows[0]["ClientName"].ToString(),
+                        ProjectName = clientdt.Rows[0]["ProjectName"].ToString(),
+                        Unit = clientdt.Rows[0]["Unit"].ToString()
+                    });
+                    installmentdata.Add(new InstallmentData
+                    {
+                        DownPayment = Convert.ToInt32(clientdt.Rows[0]["DownPayment"]),
+                        FirstInstallmentDate = Convert.ToDateTime(clientdt.Rows[0]["FirstInstallmentDate"]),
+                        InstallmentYears = Convert.ToInt32(clientdt.Rows[0]["InstallmentYears"]),
+                        
+                    });
+                }
+            }
+            string sqlg = "Select * from reserved_clients_installments where BookingID=@BookingID";
+            using (SqlCommand cmd = new SqlCommand(sqlg, conn))
+            {
+         
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@BookingID", id);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(installmentdt);
+            }
+            if (conn.State == ConnectionState.Open) conn.Close();
+            var data = new { clientdata = clientdata, installmentdata= installmentdata, clientdt = clientdt, installmentdt= installmentdt };
+            return new JsonResult(data);
+        }
+       
     }
 }

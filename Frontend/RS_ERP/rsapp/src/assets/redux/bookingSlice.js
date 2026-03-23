@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios';
 import { variables } from '../variables';
-import { act } from 'react';
 const initialState = {
     loading: false,
     error: false,
@@ -32,7 +31,10 @@ const initialState = {
     successSaveInstallmentData:false,
     successUpdate:false,
     bookingClientIndex:-1,
-    reservedClients:[]
+    reservedClients:[],
+    reserved:-1,
+    showreservedNationalIdPath:"",
+    showreservedCheckPath:"",
 }
 //*********************************************************************** */
 export const FillClientData = createAsyncThunk("FillClientData/booking", async (Clientdata) => {
@@ -76,7 +78,11 @@ export const getreservedClients = createAsyncThunk("getreservedClients/booking",
         .then((res) => res.data);
     return resp;
 })
-
+export const getreservedClientsByID = createAsyncThunk("getreservedClientsByID/booking", async (id) => {
+    const resp = await axios.post(variables.URL_API_B + "GetReservedClients_byID?id="+id)
+        .then((res) => res.data);
+    return resp;
+})
 const bookingSlice = createSlice({
     name: 'booking',
     initialState,
@@ -101,6 +107,12 @@ const bookingSlice = createSlice({
                 state.InstallmentInformation.DownPayment = downpaymentBeforeReservation * (25 / 100);
             }
         },
+        calculatenewDownPayment:(state,action)=>{
+            const negoiationPrice = action.payload.total;
+            state.InstallmentInformation.TotalAmount = negoiationPrice;
+             const NewdownpaymentBeforeReservation = state.InstallmentInformation.TotalAmount - action.payload.newReservationAmount;
+             state.InstallmentInformation.DownPayment = NewdownpaymentBeforeReservation * (25 / 100);
+        },
         getInstallmentData: (state, action) => {
             state.InstallmentInformation = { ...state.InstallmentInformation, ...action.payload };
         },
@@ -123,6 +135,15 @@ const bookingSlice = createSlice({
               state.InstallmentDetails[state.paymentRowIndex].Paid=1;  
             }
             state.paymentModal=false;
+        },
+        reservedOrnot:(state,action)=>{
+            state.reserved=action.payload;
+        },
+       updateDownPaymentManual: (state, action) => {
+            state.InstallmentInformation = {
+                ...state.InstallmentInformation,
+                DownPayment: action.payload
+            };
         },
     },
     extraReducers: (builder) => {
@@ -228,12 +249,29 @@ const bookingSlice = createSlice({
                 state.loading = false;
                 state.error = true;
             })
+             //-------------------------------------------------------------
+            .addCase(getreservedClientsByID.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getreservedClientsByID.fulfilled, (state, action) => {
+                state.loading = false;
+                state.bookingClients=action.payload.clientdata;
+                state.InstallmentInformation=action.payload.installmentdata[0];
+                state.bookingClient=action.payload.clientdt[0];
+                state.showreservedNationalIdPath=action.payload.clientdt[0].NationalIdImagePath;
+                state.showreservedCheckPath=action.payload.clientdt[0].CheckImagePath;
+                state.InstallmentDetails=action.payload.installmentdt;
+            })
+            .addCase(getreservedClientsByID.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
 
     }
 })
 export const {GetClientDataForbooking, ChangevaluesOfBookingClient, clearInputs, caluclateDownPayment,
     getInstallmentData,showPaymentModal,getPaymentModalvalues,changepaymentStatus,getInstallmentIndexRow,
-    clearpaymentModal
+    clearpaymentModal,reservedOrnot,updateDownPaymentManual,calculatenewDownPayment
 } = bookingSlice.actions;
 const bookingReducer = bookingSlice.reducer;
 export default bookingReducer;
