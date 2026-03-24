@@ -1,24 +1,25 @@
 import React, { useEffect } from 'react'
 import '../css/SearchProjectsModal.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { getdtlsByMaster, getRowIndexOfS, searchMaster, showSearchm } from '../redux/projectSlice';
+import { selectProjectFromSearch, toggleSearchModal } from '../redux/projectSlice';
 import { variables } from '../variables';
+import { fetchProjectsList, fetchProjectUnits } from '../projectService';
 const SearchProjectsModal = () => {
   const db = useSelector((state) => state.projects);
   const dispatch = useDispatch();
 useEffect(() => {
    const fetchData =async  () => { 
-    await dispatch(searchMaster());
+    await dispatch(fetchProjectsList());
   }; 
   fetchData(); 
 }, []);
 const getDataInInputs=async(i)=>{
-     await dispatch(getRowIndexOfS(i));
+     await dispatch(selectProjectFromSearch(i));
 }
 useEffect(() => {
   if (db.searchRowI) {
-    dispatch(getdtlsByMaster(db.searchRowI));
-    dispatch(showSearchm(false));
+    dispatch(fetchProjectUnits(db.selectedProjectRowIndex));
+    dispatch(toggleSearchModal(false));
   }
 }, [db.searchRowI]);
 
@@ -31,7 +32,7 @@ useEffect(() => {
                 <div className='hrdtitles'>
                       <span 
                       style={{color:'#fff',cursor:'pointer',fontSize:'40px',marginTop:'-10px',marginRight:'15px'}}
-                      onClick={()=>dispatch(showSearchm(false))}
+                      onClick={()=>dispatch(toggleSearchModal(false))}
                       >&times;</span>
                 </div> 
                 <h3 className='hds_title'>المشاريع</h3>
@@ -100,7 +101,7 @@ useEffect(() => {
                 <div style={{display:'flex',justifyContent:'flex-end'}}>
                     <button 
                     className='btn btn-danger btn_closes'
-                    onClick={()=>dispatch(showSearchm(false))}
+                    onClick={()=>dispatch(toggleSearchModal(false))}
                     >إغلاق</button>
                 </div>
             </div>

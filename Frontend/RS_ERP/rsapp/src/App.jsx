@@ -16,10 +16,21 @@ import AddClients from './assets/pages/AddClients';
 import CompleteBooking from './assets/pages/CompleteBooking';
 import InstallmentsSchedule from './assets/pages/InstallmentsSchedule';
 import BookedClients from './assets/pages/BookedClients';
-
-
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import {clearGlobalError} from './assets/redux/uiSlice'
 
 function App() {
+const dispatch = useDispatch();
+const { globalError, globalMessage } = useSelector((state) => state.ui);
+
+useEffect(() => {
+    if (globalError) {
+      toast.error(globalMessage || "حدث خطأ في السيرفر");
+      dispatch(clearGlobalError());
+    }
+  }, [globalError, globalMessage, dispatch]);
 
   return (
     <>
@@ -31,6 +42,7 @@ function App() {
         draggable
         pauseOnHover
       />
+
     <Header/>
       <Routes>
               <Route path="/addprojects" element={<AddProjects/>}/>

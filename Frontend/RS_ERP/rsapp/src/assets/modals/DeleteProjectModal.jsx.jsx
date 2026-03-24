@@ -2,17 +2,18 @@ import React from 'react';
 import { MdClose, MdWarning, MdDelete } from "react-icons/md";
 import '../css/DeleteProjectModal.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { ClearInputs, deleteAll, showDeleteProjectModal } from '../redux/projectSlice';
+import { resetProjectForm, showDeleteProjectModal } from '../redux/projectSlice';
 import { toast } from 'react-toastify';
+import { deleteProject } from '../projectService';
 
 const DeleteProjectModal = () => {
   const db = useSelector((state) => state.projects);
   const dispatch = useDispatch();
 
   const DeleteAll = async () => {
-    await dispatch(deleteAll(db.project.ProjectCode));
+    await dispatch(deleteProject(db.project.ProjectCode));
     await dispatch(showDeleteProjectModal(false));
-    await dispatch(ClearInputs());
+    await dispatch(resetProjectForm());
     toast.error("تم حذف البيانات !", {
       theme: "colored",
     });

@@ -4,228 +4,208 @@ import { variables } from "../variables";
 import { toast } from 'react-toastify';
 import { formatCurrency } from "../helpers";
 const initialState = {
-    project: { ProjectCode: 0, ProjectName: '', ProjectType: '-1', Location: '', TotalUnits: 0, ProjectStatus: '-1', ProjectImage: '' },
-    projects: [],
-    unit: {},
-    unitss: [],
-    loading: false,
-    error: false,
-    showmdl: false,
-    imgName: '',
-    imgName_u: '',
-    rowI: -1,
-    tblLength: '',
-    index: '',
-    rowSel: '',
-    deleteUnitRow: false,
-    TotalP: '',
-    deleted: '',
-    deleteProjectModal: false,
-    showmdl_s: false,
-    searchRowI: '',
-    comeunits: [],
-    errorSave: false,
-    formattedtotalprice:"",
-    fillprojectcode:"",
-    available:"متاحة",
+    project: {
+         ProjectCode: 0, ProjectName:"", ProjectType: "-1", 
+         Location: "", TotalUnits: 0, ProjectStatus: "-1", ProjectImage: "" 
+        },
+    projectsList: [],
+    selectedUnit: {},
+    unitsList: [], 
+    //set variables
+    projectImageName: "", 
+    unitImageName: "",
+    calculatedUnitTotalPrice: "",
+    //Modal state
+    isUnitModalOpen: false,
+    isDeleteUnitModalOpen: false,
+    isDeleteProjectModalOpen: false,
+    isSearchModalOpen: false,
+    // pending and rejected status
+    isLoading: false,
+    hasError: false,
+    // create status 
+    unitFormMode: -1, 
+    isDeleted:false, 
+    saveErrorStatus: false,
+    isAvailableUnit:"متاحة",
+    //set row indexs and row id 
+    unitTableRowIndex:"",
+    selectedProjectRowIndex: "",
+    selectedProjectCode:"",
+    
 }
-//******************************************************************************* */
-export const saveimgs = createAsyncThunk("saveimgs/projects", async (formdata) => {
-    const resp = await axios.post(variables.URL_API + "SaveImages", formdata)
-        .then((res) => res.data);
-    return resp;
-})
-export const save_all = createAsyncThunk("save_all/projects", async (parms) => {
-    const resp = await axios.post(variables.URL_API + "SaveAll", parms)
-        .then((res) => res.data)
-    return resp;
-})
-export const saveimg_u = createAsyncThunk("saveimg_u/projects", async (formDatau) => {
-    const resp = await axios.post(variables.URL_API + "SaveImagesUnits", formDatau)
-        .then((res) => res.data);
-    return resp;
-})
-export const deleteAll = createAsyncThunk("deleteAll/projects", async (id) => {
-    const resp = await axios.post(variables.URL_API + "DeleteAll?id=" + id)
-        .then((res) => res.data);
-    return resp;
-})
-export const searchMaster = createAsyncThunk("searchMaster/projects", async () => {
-    const resp = await axios.get(variables.URL_API + "SearchMaster")
-        .then((res) => res.data);
-    return resp;
-})
-export const getdtlsByMaster = createAsyncThunk("getdtlsByMaster/projects", async (id) => {
-    const resp = await axios.post(variables.URL_API + "GetDtls?projectId=" + id)
-        .then((res) => res.data);
-    return resp;
-})
 //********************************************************************************** */
 const projectSlice = createSlice({
     name: 'projects',
     initialState,
     reducers: {
-        showunitMdl: (state, action) => {
-            state.showmdl = action.payload;
+        toggleUnitModal: (state, action) => {
+            state.isUnitModalOpen = action.payload;
         },
-        changeVls: (state, action) => {
+        setProjectData: (state, action) => {
             state.project = { ...state.project, ...action.payload }
         },
-        ClearInputs: (state) => {
+        resetProjectForm: (state) => {
             state.project = { ProjectCode: 0, ProjectName: '', ProjectType: '-1', Location: '', TotalUnits: 0, ProjectStatus: '-1', ProjectImage: '' };
-            state.imgName = '';
-            state.unitss = [];
+            state.projectImageName = '';
+            state.unitsList = [];
         },
-        changeVls_U: (state, action) => {
-            state.unit = { ...state.unit, ...action.payload };
+        setUnitData: (state, action) => {
+            state.selectedUnit = { ...state.selectedUnit, ...action.payload };
         },
-        ClearModalvls: (state, action) => {
-            state.imgName_u = '';
-            state.unit = {};
-            state.unit.serial = action.payload;
-            state.unit.unitStatus=state.available;
+        prepareUnitModal: (state, action) => {
+            state.unitImageName = '';
+            state.selectedUnit = {};
+            state.selectedUnit.serial = action.payload;
+            state.selectedUnit.unitStatus=state.isAvailableUnit;
         },
-        SetRowIndexvalue:(state,action)=>{
-                state.rowI = action.payload;
+        setUnitEditingIndex:(state,action)=>{
+            state.unitFormMode = action.payload;
                 if (action.payload !== -1) {
-                    state.unit = state.unitss[action.payload];
-                    state.imgName_u = state.unitss[action.payload].unitImage;
+                    state.selectedUnit = state.unitsList[action.payload];
+                    state.unitImageName = state.unitsList[action.payload].unitImage;
                  }
-          }
-       ,
-        fromMdlTotbl: (state, action) => {
-            
-            if (state.rowI === -1) {
-                state.unitss = [...state.unitss, state.unit];
-                
+          },
+        saveUnitToTable: (state, action) => {
+            if (state.unitFormMode === -1) {
+                state.unitsList = [...state.unitsList, state.selectedUnit];
             }
             else {
-                state.unitss[state.rowI] = state.unit;
+                state.unitsList[state.unitFormMode] = state.selectedUnit;
             }
-            state.showmdl = false;
+            state.isUnitModalOpen = false;
         },
-        showdeleteUnitRowModal: (state, action) => {
-            state.rowSel = action.payload;
-            state.deleteUnitRow = true;
+        showDeleteUnitModal: (state, action) => {
+            state.unitTableRowIndex = action.payload;
+            state.isDeleteUnitModalOpen = true;
         },
-        hidedeleteUnitRowModal:(state)=>{
-            state.deleteUnitRow = false;
+        deleteUnitFromList: (state, action) => {
+            state.unitsList = state.unitsList.filter((items, index) => index !== state.unitTableRowIndex);
+            state.isDeleteUnitModalOpen = false;
         },
-        DeleteRow: (state, action) => {
-            state.unitss = state.unitss.filter((items, index) => index !== state.rowSel);
-            state.deleteUnitRow = false;
+        hideDeleteUnitModal: (state) => {
+            state.isDeleteUnitModalOpen = false;
         },
-        hideDelmdl: (state) => {
-            state.deleteUnitRow = false;
-        },
-        calcTotalPrice: (state) => {
-            if (state.unit.TotalArea.length > 0 && state.unit.MeterPrice.length > 0) {
-                state.TotalP = state.unit.TotalArea * state.unit.MeterPrice;
-                state.unit.TotalPrice = state.TotalP;
+        calculateUnitTotalPrice: (state) => {
+            if (state.selectedUnit.TotalArea.length > 0 && state.selectedUnit.MeterPrice.length > 0) {
+                state.calculatedUnitTotalPrice = state.selectedUnit.TotalArea * state.selectedUnit.MeterPrice;
+                state.selectedUnit.TotalPrice = state.calculatedUnitTotalPrice;
             } else {
-
-                state.TotalP = 0;
-                state.unit.TotalPrice = 0;
+                state.calculatedUnitTotalPrice = 0;
+                state.selectedUnit.TotalPrice = 0;
             }
         },
-        showDeleteProjectModal: (state, action) => {
-            state.deleteProjectModal= action.payload;
+        toggleDeleteProjectModal: (state, action) => {
+            state.isDeleteProjectModalOpen= action.payload;
         },
-        showSearchm: (state, action) => {
-            state.showmdl_s = action.payload;
-            state.searchRowI = "";
+        toggleSearchModal: (state, action) => {
+            state.isSearchModalOpen = action.payload;
+            state.selectedProjectRowIndex = "";
         },
-        getRowIndexOfS: (state, action) => {
-            state.project = state.projects[action.payload]
-            state.searchRowI = state.projects[action.payload].ProjectCode;
+         selectProjectFromSearch: (state, action) => {
+            state.project = state.projectsList[action.payload]
+            state.selectedProjectRowIndex = state.projectsList[action.payload].ProjectCode;
 
-        },
-        GetProjectCode:(state,action)=>{
-            state.fillprojectcode=state.projects[action.payload].ProjectCode;
-        }
+        }, 
+        updateSelectedProjectCode:(state,action)=>{
+            state.selectedProjectCode=state.projectsList[action.payload].ProjectCode;
+        } 
        
     },
     extraReducers: (builder) => {
         builder.
-            addCase(saveimgs.pending, (state) => {
+            addCase(uploadProjectImage.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(saveimgs.fulfilled, (state, action) => {
+            .addCase(uploadProjectImage.fulfilled, (state, action) => {
                 state.loading = false;
                 state.imgName = action.payload;
                 
             })
-            .addCase(saveimgs.rejected, (state) => {
+            .addCase(uploadProjectImage.rejected, (state) => {
                 state.loading = false;
                 state.error = true;
             })
             //******************************************************* */
-            .addCase(save_all.pending, (state) => {
+            .addCase(saveCompleteProject.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(save_all.fulfilled, (state, action) => {
+            .addCase(saveCompleteProject.fulfilled, (state, action) => {
                 state.loading = false;
                 state.errorSave = action.payload.errorOccured;
                 state.project.ProjectCode = action.payload.id;
 
             })
-            .addCase(save_all.rejected, (state) => {
+            .addCase(saveCompleteProject.rejected, (state) => {
                 state.loading = false;
                 state.error = true;
             })
             //******************************************************* */
-            .addCase(saveimg_u.pending, (state) => {
+            .addCase(uploadUnitImage.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(saveimg_u.fulfilled, (state, action) => {
+            .addCase(uploadUnitImage.fulfilled, (state, action) => {
                 state.loading = false;
                 state.imgName_u = action.payload;
             })
-            .addCase(saveimg_u.rejected, (state) => {
+            .addCase(uploadUnitImage.rejected, (state) => {
                 state.loading = false;
                 state.error = true;
             })
             //******************************************************* */
-            .addCase(deleteAll.pending, (state) => {
+            .addCase(deleteProject.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(deleteAll.fulfilled, (state, action) => {
+            .addCase(deleteProject.fulfilled, (state, action) => {
                 state.loading = false;
                 state.deleted = action.payload;
             })
-            .addCase(deleteAll.rejected, (state) => {
+            .addCase(deleteProject.rejected, (state) => {
                 state.loading = false;
                 state.error = true;
             })
             //******************************************************* */
-            .addCase(searchMaster.pending, (state) => {
+            .addCase(fetchProjectsList.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(searchMaster.fulfilled, (state, action) => {
+            .addCase(fetchProjectsList.fulfilled, (state, action) => {
                 state.loading = false;
-                state.projects = action.payload;
+                state.projectsList = action.payload;
             })
-            .addCase(searchMaster.rejected, (state) => {
+            .addCase(fetchProjectsList.rejected, (state) => {
                 state.loading = false;
                 state.error = true;
             })
             //******************************************************* */
-            .addCase(getdtlsByMaster.pending, (state) => {
+            .addCase(fetchProjectUnits.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(getdtlsByMaster.fulfilled, (state, action) => {
+            .addCase(fetchProjectUnits.fulfilled, (state, action) => {
                 state.loading = false;
-                state.unitss = action.payload;
+                state.unitsList = action.payload;
             })
-            .addCase(getdtlsByMaster.rejected, (state) => {
+            .addCase(fetchProjectUnits.rejected, (state) => {
                 state.loading = false;
                 state.error = true;
             })
     }
 })
-export const { showunitMdl, changeVls, ClearInputs, changeVls_U, ClearModalvls,
-    fromMdlTotbl, showdeleteUnitRowModal, DeleteRow, hideDelmdl, calcTotalPrice, showDeleteProjectModal,
-    showSearchm, getRowIndexOfS,SetRowIndexvalue,GetProjectCode,hidedeleteUnitRowModal
+export const { 
+    toggleUnitModal, 
+    setProjectData, 
+    resetProjectForm, 
+    setUnitData, 
+    prepareUnitModal,
+    setUnitEditingIndex, 
+    saveUnitToTable, 
+    showDeleteUnitModal,
+    deleteUnitFromList,
+    hideDeleteUnitModal,
+    calculateUnitTotalPrice,
+    toggleDeleteProjectModal,
+    toggleSearchModal, 
+    selectProjectFromSearch,
+    updateSelectedProjectCode,
 } = projectSlice.actions;
 const projReducer = projectSlice.reducer;
 export default projReducer;

@@ -23,17 +23,9 @@ import { useDispatch, useSelector } from "react-redux";
 import UnitModal from "../modals/UnitModal";
 import { MdOutlineDomainAdd } from "react-icons/md";
 import {
-  changeVls,
-  ClearInputs,
-  ClearModalvls,
-  fromMdlTotbl,
-  save_all,
-  saveimgs,
-  SetRowIndexvalue,
-  showDeleteProjectModal,
-  showdeleteUnitRowModal,
-  showSearchm,
-  showunitMdl,
+  showDeleteUnitModal,
+  toggleDeleteProjectModal,
+  toggleSearchModal,
 } from "../redux/projectSlice";
 import { CiEdit } from "react-icons/ci";
 import { variables } from "../variables";
@@ -43,6 +35,7 @@ import SearchProjectsModal from "../modals/SearchProjectsModal";
 import { formatCurrency } from '../helpers'
 import DeleteProjectModal from "../modals/DeleteProjectModal.jsx";
 import DeleteUnitRowModal from "../modals/DeleteUnitRowModal.jsx";
+import { saveCompleteProject, uploadProjectImage } from "../projectService.js";
 const AddProjects = () => {
   const db = useSelector((state) => state.projects);
   const dispatch = useDispatch();
@@ -57,24 +50,24 @@ const AddProjects = () => {
     const formData = new FormData();
     const fileName = file.name;
     formData.append("file", file, fileName);
-    await dispatch(saveimgs(formData));
-    await dispatch(changeVls({ [name]: fileName }));
+    await dispatch(uploadProjectImage(formData));
+    await dispatch(setProjectData({ [name]: fileName }));
   };
   //--------------- HandleChange Master Values  ----------------------------
   const handleChange = (e) => {
     const { name, value } = e.target;
-    dispatch(changeVls({ [name]: value }));
+    dispatch(setProjectData({ [name]: value }));
   };
   //--------------- Clear Master Values  -----------------------------------
   const HandleClear = () => {
-    dispatch(ClearInputs());
+    dispatch(resetProjectForm());
     NameRef.current.focus();
   };
  
   //--------------- Save Master--------------------------------------------
   const HandleSave = async () => {
     try {
-      const result = await dispatch(save_all(parms)).unwrap();
+      const result = await dispatch(saveCompleteProject(parms)).unwrap();
       if (result.errorOccured) {
         toast.error("أدخل بيانات لإتمام عملية الحفظ!", {
           theme: "colored",
@@ -96,22 +89,22 @@ const AddProjects = () => {
 
   //----------------------Add To Table Button Action----------------------
   const AddToTable = () => {
-    dispatch(ClearModalvls(db.unitss.length + 1));
-    dispatch(showunitMdl(true));
-    dispatch(SetRowIndexvalue(-1));
+    dispatch(prepareUnitModal(db.unitsList.length + 1));
+    dispatch(toggleUnitModal(true));
+    dispatch(setUnitEditingIndex(-1));
   };
   //-----------------------Edit Button Table Action ------------------/
   const EditTblRow = (index) => {
-    dispatch(showunitMdl(true));
+    dispatch(toggleUnitModal(true));
     dispatch(SetRowIndexvalue(index));
   };
 
   //****************************************************************** */
   return (
     <div className="page-container">
-      {db.showmdl && <UnitModal />}
-      {db.deleteUnitRow && <DeleteUnitRowModal/>}
-      {db.deleteProjectModal && <DeleteProjectModal/>}
+      {db.isUnitModalOpen && <UnitModal />}
+      {db.isDeleteUnitModalOpen && <DeleteUnitRowModal/>}
+      {db.isDeleteProjectModalOpen && <DeleteProjectModal/>}
       {db.showmdl_s && <SearchProjectsModal />}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -158,7 +151,7 @@ const AddProjects = () => {
           <span
             className="btn_c"
             title="حذف"
-            onClick={() => dispatch(showDeleteProjectModal(true))}
+            onClick={() => dispatch(toggleDeleteProjectModal(true))}
           >
             <RiDeleteBinLine
               size={28}
@@ -168,7 +161,7 @@ const AddProjects = () => {
           <span
             className="btn_c"
             title="بحث"
-            onClick={() => dispatch(showSearchm(true))}
+            onClick={() => dispatch(toggleSearchModal(true))}
           >
             <FaSearch
               size={24}
@@ -410,7 +403,7 @@ const AddProjects = () => {
                           <MdDeleteOutline
                             size={25}
                             color="red"
-                            onClick={() => dispatch(showdeleteUnitRowModal(index))}
+                            onClick={() => dispatch(showDeleteUnitModal(index))}
                           />
                         </span>
                       </div>

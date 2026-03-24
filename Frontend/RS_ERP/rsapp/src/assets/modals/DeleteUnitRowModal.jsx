@@ -1,7 +1,7 @@
 import React from 'react';
 import { MdClose, MdWarning, MdDelete } from "react-icons/md";
 import '../css/DeleteUnitRowModal.css';
-import { DeleteRow, hidedeleteUnitRowModal, showdeleteUnitRowModal } from '../redux/projectSlice';
+import {  deleteUnitFromList, hidedeleteUnitRowModal } from '../redux/projectSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const DeleteUnitRowModal = () => {
@@ -34,7 +34,7 @@ const DeleteUnitRowModal = () => {
             لا
           </button>
           <button className="row-btn-confirm"
-          onClick={()=>dispatch(DeleteRow())}
+          onClick={()=>dispatch(deleteUnitFromList())}
           >
             <MdDelete /> نعم
           </button>

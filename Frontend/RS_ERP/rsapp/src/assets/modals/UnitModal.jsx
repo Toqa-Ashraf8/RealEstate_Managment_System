@@ -1,9 +1,10 @@
 import React from 'react'
 import '../css/UnitModal.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { calcTotalPrice, changeVls_U, fromMdlTotbl, saveimg_u, showunitMdl } from '../redux/projectSlice';
+import { calculateUnitTotalPrice, saveUnitToTable} from '../redux/projectSlice';
 import { CiImageOn } from "react-icons/ci";
 import { variables } from '../variables';
+import { uploadUnitImage } from '../projectService';
 
 const UnitModal = () => {
 
@@ -13,7 +14,7 @@ const UnitModal = () => {
 //******************************************************************* */
 const HandleChangeV=(e)=>{
   const {name,value}=e.target;
-  dispatch(changeVls_U({[name]:value}));
+  dispatch(setUnitData({[name]:value}));
 }
 const HandleChangeImage=async(e)=>{
   const{name}=e.target;
@@ -22,8 +23,8 @@ const HandleChangeImage=async(e)=>{
   const formDatau = new FormData();
   const fileName=file.name;
   formDatau.append("fileu", file,fileName );
-   await dispatch(changeVls_U({[name]:fileName}));
-  await dispatch(saveimg_u(formDatau));
+   await dispatch(setUnitData({[name]:fileName}));
+  await dispatch(uploadUnitImage(formDatau));
 }
 
 /***************************************************************************** */
@@ -53,7 +54,7 @@ const HandleChangeImage=async(e)=>{
                 className='form-control-modern'
                 name='serial'
                 disabled
-                value={db.unit.serial}
+                value={db.selectedUnit.serial}
                 onChange={HandleChangeV}
                 />
               </div>
@@ -65,7 +66,7 @@ const HandleChangeImage=async(e)=>{
                 className='form-control-modern'
                 autoFocus
                 name='unitName'
-                value={db.unit.unitName}
+                value={db.selectedUnit.unitName}
                 onChange={HandleChangeV}
                 autoComplete='off'
                 />
@@ -75,7 +76,7 @@ const HandleChangeImage=async(e)=>{
                 <select 
                 className='form-select-modern'
                 name='Floor'
-                value={db.unit.Floor}
+                value={db.selectedUnit.Floor}
                 onChange={HandleChangeV}
                 >
                   <option value="-1">-إختر-</option>
@@ -92,7 +93,7 @@ const HandleChangeImage=async(e)=>{
                 type="text" 
                 className='form-control-modern'
                 name='TotalArea'
-                value={db.unit.TotalArea}
+                value={db.selectedUnit.TotalArea}
                 onChange={HandleChangeV}
                 autoComplete='off'
                 />
@@ -104,10 +105,10 @@ const HandleChangeImage=async(e)=>{
                 type="text" 
                 className='form-control-modern'
                 name='MeterPrice'
-                value={db.unit.MeterPrice}
+                value={db.selectedUnit.MeterPrice}
                 onChange={HandleChangeV}
                 autoComplete='off'
-                onBlur={()=>dispatch(calcTotalPrice())}
+                onBlur={()=>dispatch(calculateUnitTotalPrice())}
                 />
               </div>
                <div className="input-group-modern data_cntu">
@@ -116,7 +117,7 @@ const HandleChangeImage=async(e)=>{
                 type="text" 
                 className='form-control-modern'
                 name='TotalPrice'
-                value={db.unit.TotalPrice}
+                value={db.selectedUnit.TotalPrice}
                 onChange={HandleChangeV}
                 autoComplete='off'
                 />
@@ -154,7 +155,7 @@ const HandleChangeImage=async(e)=>{
                 <div style={{display:'flex',justifyContent:'space-between',marginLeft:'40px',marginTop:'-15px'}}>
                     <button 
                     className='btn btn-primary btn_addu'
-                    onClick={()=> dispatch(fromMdlTotbl())}
+                    onClick={()=> dispatch(saveUnitToTable())}
                     >إضافة</button>
                     <button 
                     className='btn btn-danger'
