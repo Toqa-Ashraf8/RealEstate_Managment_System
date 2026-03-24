@@ -156,7 +156,7 @@ const bookingSlice = createSlice({
             .addCase(FillClientData.fulfilled, (state, action) => {
                 state.loading = false;
                 state.initialClientData= action.payload[0];
-               /*  state.bookingClient = { ...state.bookingClient, ...action.payload[0] } */
+              
             })
             .addCase(FillClientData.rejected, (state) => {
                 state.loading = false;
