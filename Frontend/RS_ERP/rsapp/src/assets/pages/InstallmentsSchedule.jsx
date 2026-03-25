@@ -1,63 +1,69 @@
 import React, { useEffect } from 'react';
 import { 
-    CalendarDays, DollarSign, User, Printer, Save, Banknote ,ArrowRight 
-} from 'lucide-react';
+    CalendarDays, 
+    DollarSign, 
+    User, 
+    Printer, 
+    Save, 
+    Banknote ,
+    ArrowRight ,
+    SquarePen} from 'lucide-react';
 import '../css/InstallmentsSchedule.css';
 import { useDispatch, useSelector} from 'react-redux';
-import { changetoReserved, clearpaymentModal, FillClientData, generateInstallments, getInstallmentIndexRow, saveBookingandInstallment, showPaymentModal } from '../redux/bookingSlice';
+import { 
+    changetoReserved, 
+    clearpaymentModal, 
+    FillClientData, 
+    generateInstallments, 
+    openRevertModal, 
+    saveBookingandInstallment, 
+    setPendingPayment, 
+    showPaymentModal, 
+} from '../redux/bookingSlice';
 import { useNavigate } from 'react-router-dom';
 import PaymentTypeModal from '../modals/PaymentTypeModal';
 import { toast } from 'react-toastify';
+import RevertPaymentModal from '../modals/RevertPaymentModal';
+import { MdDeleteOutline } from "react-icons/md";
 
 const InstallmentsSchedule = () => {
-    const db = useSelector((state) => state.negotiation);
-    const db_b = useSelector((state) => state.booking);
     const dispatch = useDispatch();
     const navigate=useNavigate();
-    const Clientdata = db.bookingClient;
-    const installmentdata=db_b.InstallmentInformation;
-  
+    const { 
+        bookingClient,
+        initialClientData, 
+        InstallmentInformation, 
+        InstallmentDetails, 
+        isRevertPaymentModalOpen, 
+        paymentModal,
+        reserved 
+    } = useSelector((state) => state.booking);
 //-----------------------------------------------------------------------------------
-const GetInstallmentRowIndex=(i)=>{
-    dispatch(getInstallmentIndexRow(i));
+const payInstallment=(i)=>{
+    dispatch(setPendingPayment({ index: i, isEdit: 0 }));
     dispatch(showPaymentModal(true));
     dispatch(clearpaymentModal());
 }
 const saveAllData=async()=>{
-    const bookingclientID=db_b.initialClientData.ClientID;
-    const bookingclientName=db_b.initialClientData.ClientName;
-    const bookingclientProject=db_b.initialClientData.ProjectName;
-    const bookingclientUnit=db_b.initialClientData.Unit;
-    const downpay=db_b.InstallmentInformation.DownPayment;
-    const firstinstallmentDate=db_b.InstallmentInformation.FirstInstallmentDate;
-    const yearsCount=db_b.InstallmentInformation.InstallmentYears;
-    const reservedobject={ClientID:bookingclientID,ProjectName:bookingclientProject,Unit:bookingclientUnit};
-    const updatedArray = db_b.InstallmentDetails.map((item) => {
-    if (item.Paid === 1) {
-    return {
-      ...item,
-      ...db_b.paymentType
-    };
-    } 
-    else {
-    return {
-      ...item,
-      PaymentType: "",
-      CheckImage: ""
-    };
-   }
- });
-    const data={...db_b.bookingClient,DownPayment:downpay,FirstInstallmentDate:firstinstallmentDate,InstallmentYears:yearsCount,
-                    ClientID:bookingclientID,ClientName:bookingclientName,
-                    ProjectName:bookingclientProject,Unit:bookingclientUnit,installments:updatedArray}
-
-          try {
+    const data={
+        ...initialClientData, 
+        ...bookingClient, 
+        ...InstallmentInformation, 
+        installments:InstallmentDetails.map(item => ({
+            ...item,
+            Paid: item.Paid ? 1 : 0 ,
+            PaymentType: item.PaymentType || "", 
+            CheckImage: item.CheckImage || ""
+        }))
+    }
+ 
+       try {
            const result=await dispatch(saveBookingandInstallment(data)).unwrap();
             toast.success("تم الحجز بنجاح!", {
                theme: "colored",
                position: "top-left",
            });
-           await dispatch(changetoReserved(reservedobject));
+           await dispatch(changetoReserved(initialClientData));
        } 
        catch (error) {
            toast.error("حدث خطأ في الاتصال الخادم", {
@@ -65,39 +71,39 @@ const saveAllData=async()=>{
                position: "top-left",
            });
        } 
-       if(db_b.reserved===0){
+       if(reserved===0){
         await navigate('/booking');
-       } 
-       else{
-        await navigate('/booked_clients');
-       }
+       }     
+        
+}
+
+const handleEdit=(i)=>{
+     dispatch(setPendingPayment({ index: i, isEdit: 1 }));
+     dispatch(showPaymentModal(true));
 }
 //-----------------------------------------------------------------------------------
     useEffect(() => {
-     
         const FetchClientData = async () => {
          const savedData = localStorage.getItem('activeBookingClient');
-         console.log("db_b.reserved",db_b.reserved)
-            if (savedData && db_b.reserved===0 && !db_b.bookingClient.ClientID) {
+            if (savedData && reserved===0 && !bookingClient.ClientID) {
                 const parsedData = JSON.parse(savedData);
                 await  dispatch(FillClientData(parsedData));
-                await dispatch(generateInstallments(installmentdata));
+                await dispatch(generateInstallments(InstallmentInformation));
             }
         }
         FetchClientData();
-    }, [dispatch, Clientdata,installmentdata]);
+    }, [dispatch, InstallmentInformation]);
 //------------------------------------------------------------------------------------
-
 
     return (
         <div className="mini_ins_wrapper"> 
-        {db_b.paymentModal && <PaymentTypeModal/>}
-         
+        {paymentModal && <PaymentTypeModal/>}
+         {isRevertPaymentModalOpen && <RevertPaymentModal/>}
                 <div className="mini_ins_container">
                     <header className="mini_ins_header">
                         <div className="mini_ins_title_section">  
                             <h1>إدارة تحصيل الأقساط</h1>
-                            <p>الوحدة: <mark>{db_b.initialClientData.Unit}</mark> - مشروع <mark>{db_b.initialClientData.ProjectName}</mark></p>
+                            <p>الوحدة: <mark>{initialClientData.Unit}</mark> - مشروع <mark>{initialClientData.ProjectName}</mark></p>
                         </div>
                         <div className="mini_ins_actions">
                             <button className="mini_btn secundary" onClick={()=>navigate(-1)}><ArrowRight  size={16} /> الرجوع لصفحة الحجز</button>
@@ -110,13 +116,13 @@ const saveAllData=async()=>{
                     </header>
                     <div className="mini_ins_summary_strip">
                       
-                        <div className="mini_stat_card blue"><User className="card_icon" /><div><span>العميل</span><strong>{db_b.initialClientData.ClientName}</strong></div></div>
-                        <div className="mini_stat_card green"><DollarSign className="card_icon" /><div><span>الإجمالي</span><strong>{db_b.initialClientData.NegotiationPrice} ج.م</strong></div></div>
-                        <div className="mini_stat_card highlight"><CalendarDays className="card_icon" /><div><span>المقدم</span><strong>{db_b.InstallmentInformation.DownPayment}ج.م</strong></div></div>
+                        <div className="mini_stat_card blue"><User className="card_icon" /><div><span>العميل</span><strong>{initialClientData.ClientName}</strong></div></div>
+                        <div className="mini_stat_card green"><DollarSign className="card_icon" /><div><span>الإجمالي</span><strong>{initialClientData.NegotiationPrice} ج.م</strong></div></div>
+                        <div className="mini_stat_card highlight"><CalendarDays className="card_icon" /><div><span>المقدم</span><strong>{InstallmentInformation.DownPayment}ج.م</strong></div></div>
                     </div>      
                     <div className="mini_table_section">
                         <div className="mini_table_header">
-                            <h2>جدول الدفعات ({db_b.InstallmentDetails[0]?.Months || 0} شهر)</h2>
+                            <h2>جدول الدفعات ({InstallmentDetails[0]?.Months || 0} شهر)</h2>
                         </div>
                         <div className="mini_table_box">   
                             <div className="mini_thead sticky_th">
@@ -125,34 +131,56 @@ const saveAllData=async()=>{
                                 <div className="ins_th">القيمة</div>
                                 <div className="ins_th">الحالة</div>
                                 <div className="ins_th">الإجراء</div>
-                            </div>
-
-                       
+                            </div>                   
                             <div className="mini_tbody scrollable_body">
-                                {db_b.InstallmentDetails.map((item, idx) => (
+                            {InstallmentDetails.length===0 ? <div className="empty-msg" style={{textAlign:'center'}}> لا يوجد أقساط لعرضها</div> :
+                                InstallmentDetails.map((item, idx) => (
                                     <div className="mini_trow" key={idx}>
                                         <div className="ins_td muted">{item.InstallmentNumber}</div>
                                         <div className="ins_td">{item.DueDate.split('T')[0]}</div>
                                         <div className="ins_td bold">{item.MonthlyAmount} ج.م</div>
                                         <div className="ins_td">
-                                            {item.Paid===0 || item.Paid===false ? 
+                                            {Number(item.Paid)===0 ? 
                                             (<span className="mini_badge warning">مستحق</span>)
                                             :
                                             (<span className="mini_badge success">تم الدفع</span>)
                                             }
                                         </div>
-                                        {Number(item.Paid)===0  && 
-                                        <div className="ins_td">
+                                        {Number(item.Paid)===0  ? 
+                                        (<div className="ins_td">
                                             <button 
                                             className="pay_btn"
-                                            onClick={()=>GetInstallmentRowIndex(idx)}>
+                                            onClick={()=>payInstallment(idx)}>
                                             <Banknote size={14} /> دفع
-                                            </button>
-                                        </div>}
+                                        </button>
+                                            
+                                        </div>):
+                                          <div style={{cursor:'pointer',display:'flex',justifyContent:'center',alignItems:'center',gap:'10px'}}>
+                                                 <span>
+                                                    <MdDeleteOutline 
+                                                    size={22} 
+                                                    color='red'
+                                                    onClick={()=>dispatch(openRevertModal(idx))}
+                                                    />
+                                                 </span>
+                                                 <span>
+                                                    <SquarePen  
+                                                    size={20} 
+                                                    color='blue'
+                                                    onClick={()=>handleEdit(idx)}
+                                                    />
+                                                 </span>
+                                            </div>
+                                        }
+                                        <div>
+                                        </div>
                                     </div>
                                 ))}
+                              
                             </div>
+                             
                         </div>
+                        
                     </div>
                 </div>
            

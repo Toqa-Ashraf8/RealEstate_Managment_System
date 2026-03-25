@@ -4,6 +4,7 @@ import { variables } from "../variables";
 import { toast } from 'react-toastify';
 import { formatCurrency } from "../helpers";
 import { deleteProject, fetchProjectsList, fetchProjectUnits, saveCompleteProject, uploadProjectImage, uploadUnitImage } from "../projectService";
+import { CitrusIcon } from "lucide-react";
 const initialState = {
     project: {
          ProjectCode: 0, ProjectName:"", ProjectType: "-1", 
@@ -106,6 +107,9 @@ const projectSlice = createSlice({
         }, 
         updateSelectedProjectCode:(state,action)=>{
             state.selectedProjectCode=state.projectsList[action.payload].ProjectCode;
+        },
+        SetRowIndexvalue:(state,action)=>{
+            state.selectedUnit=state.unitsList[action.payload];
         } 
        
     },
@@ -153,6 +157,7 @@ export const {
     toggleSearchModal, 
     selectProjectFromSearch,
     updateSelectedProjectCode,
+    SetRowIndexvalue
 } = projectSlice.actions;
 const projReducer = projectSlice.reducer;
 export default projReducer;

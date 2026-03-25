@@ -26,14 +26,18 @@ const initialState = {
     paymentModal:false,
     paymentType:{PaymentType:"",CheckImage:""},
     installmentCheckImageName:"",
-    paymentRowIndex:-1,
-    paid:0,
+    rIndex:-1,
     successSaveBookingData:false,
     successSaveInstallmentData:false,
     successUpdate:false,
     bookingClientIndex:-1,
     reservedClients:[],
     reserved:-1,
+    isRevertPaymentModalOpen:false,
+    selectedInstallmentrow:-1,
+    isRevertPaymentModalOpen: false,
+    selectedDeleteIndex: -1,
+   
 }
 //*********************************************************************** */
 export const FillClientData = createAsyncThunk("FillClientData/booking", async (Clientdata) => {
@@ -126,15 +130,6 @@ const bookingSlice = createSlice({
             state.paymentType={PaymentType:"",CheckImage:""};
             state.installmentCheckImageName="";
         },
-        getInstallmentIndexRow:(state,action)=>{
-            state.paymentRowIndex=action.payload;
-        },
-        changepaymentStatus:(state,action)=>{
-            if(state.paymentType.PaymentType!==""){
-              state.InstallmentDetails[state.paymentRowIndex].Paid=1;  
-            }
-            state.paymentModal=false;
-        },
         reservedOrnot:(state,action)=>{
             state.reserved=action.payload;
         },
@@ -144,134 +139,121 @@ const bookingSlice = createSlice({
                 DownPayment: action.payload
             };
         },
-         GetBookngClient:(state,action)=>{
+        GetBookngClient:(state,action)=>{
             state.initialClientData=action.payload;    
         },
+        
+        toggleRevertPymentModal:(state,action)=>{
+            state.isRevertPaymentModalOpen=action.payload;
+        },
+         setPendingPayment: (state, action) => {
+        const {index,isEdit} = action.payload;
+        state.selectedInstallmentrow=index;
+        if(isEdit===1){
+            const rowData = state.InstallmentDetails[index];
+            state.paymentType = {
+            PaymentType: rowData.PaymentType || "",
+            CheckImage: rowData.CheckImage || ""
+         };
+        }
+      
+        else {
+          state.paymentType = { PaymentType: "", CheckImage: "" };
+         }
+            
+        },
+        confirmpaidStatus: (state) => {
+        const index = state.selectedInstallmentrow;
+        if (index !== -1) {
+         state.InstallmentDetails[index] = {
+            ...state.InstallmentDetails[index],
+            Paid: 1, 
+            PaymentType: state.paymentType.PaymentType,
+            CheckImage: state.paymentType.CheckImage
+        };
+          state.selectedInstallmentrow = -1;
+        }
+         state.paymentModal = false; 
+        },
+        openRevertModal:(state,action)=>{
+             state.selectedDeleteIndex=action.payload;
+            state.isRevertPaymentModalOpen=true;
+        },
+       
+        confirmRevertPayment: (state) => {
+        const index = state.selectedDeleteIndex;
+         if (index !== -1) {
+        state.InstallmentDetails[index] = {
+            ...state.InstallmentDetails[index],
+            Paid: 0,
+            PaymentType: "",
+            CheckImage: ""
+        };
+         state.isRevertPaymentModalOpen = false;
+         state.selectedDeleteIndex = -1;
+       }
+      },
+
     },
     extraReducers: (builder) => {
         builder
-            .addCase(FillClientData.pending, (state) => {
-                state.loading = true;
-            })
             .addCase(FillClientData.fulfilled, (state, action) => {
-                state.loading = false;
-                state.initialClientData= action.payload[0];
+              state.initialClientData= action.payload[0];
               
-            })
-            .addCase(FillClientData.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
-            //-------------------------------------------------------------
-            .addCase(saveNationalidImage.pending, (state) => {
-                state.loading = true;
-            })
+            })         
             .addCase(saveNationalidImage.fulfilled, (state, action) => {
-                state.loading = false;
                 state.nationalidImage = action.payload;
-            })
-            .addCase(saveNationalidImage.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
-            //-------------------------------------------------------------
-            .addCase(saveChecksImages.pending, (state) => {
-                state.loading = true;
-            })
+            })       
             .addCase(saveChecksImages.fulfilled, (state, action) => {
-                state.loading = false;
                 state.checkImage = action.payload;
             })
-            .addCase(saveChecksImages.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
-           
-             //-------------------------------------------------------------
-            .addCase(generateInstallments.pending, (state) => {
-                state.loading = true;
-            })
+       
             .addCase(generateInstallments.fulfilled, (state, action) => {
-                state.loading = false;
                 state.InstallmentDetails = action.payload;
-               
-
-            })
-            .addCase(generateInstallments.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
-            //-------------------------------------------------------------
-            .addCase(saveinstallmentCheck.pending, (state) => {
-                state.loading = true;
-            })
+            })        
             .addCase(saveinstallmentCheck.fulfilled, (state, action) => {
-                state.loading = false;
                 state.installmentCheckImageName = action.payload;
 
-            })
-            .addCase(saveinstallmentCheck.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
-             //-------------------------------------------------------------
-            .addCase(saveBookingandInstallment.pending, (state) => {
-                state.loading = true;
-            })
+            })        
             .addCase(saveBookingandInstallment.fulfilled, (state, action) => {
-                state.loading = false;
                 state.bookingClient.BookingID = action.payload.booking_id;
                 state.successSaveBookingData=action.payload.saved_m;
                 state.successSaveInstallmentData=action.payload.saved_d;
-
-            })
-            .addCase(saveBookingandInstallment.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
-            //-------------------------------------------------------------
-            .addCase(changetoReserved.pending, (state) => {
-                state.loading = true;
             })
             .addCase(changetoReserved.fulfilled, (state, action) => {
                 state.loading = false;
             })
-            .addCase(changetoReserved.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
-            //-------------------------------------------------------------
-            .addCase(getreservedClients.pending, (state) => {
-                state.loading = true;
-            })
+         
             .addCase(getreservedClients.fulfilled, (state, action) => {
-                state.loading = false;
                 state.reservedClients=action.payload;
             })
-            .addCase(getreservedClients.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
-             //-------------------------------------------------------------
-            .addCase(getreservedClientsByID.pending, (state) => {
-                state.loading = true;
-            })
             .addCase(getreservedClientsByID.fulfilled, (state, action) => {
-                state.loading = false;
                 state.InstallmentInformation=action.payload.installmentdata[0];
                 state.bookingClient=action.payload.clientdt[0];
                 state.InstallmentDetails=action.payload.installmentdt;
-            })
-            .addCase(getreservedClientsByID.rejected, (state) => {
-                state.loading = false;
-                state.error = true;
-            })
-
+            })  
     }
 })
-export const {GetClientDataForbooking, ChangevaluesOfBookingClient, clearInputs, caluclateDownPayment,
-    getInstallmentData,showPaymentModal,getPaymentModalvalues,changepaymentStatus,getInstallmentIndexRow,
-    clearpaymentModal,reservedOrnot,updateDownPaymentManual,calculatenewDownPayment,GetBookngClient
+export const {
+    GetClientDataForbooking, 
+    ChangevaluesOfBookingClient, 
+    clearInputs, 
+    caluclateDownPayment,
+    getInstallmentData,
+    showPaymentModal,
+    getPaymentModalvalues,
+    clearpaymentModal,
+    reservedOrnot,
+    updateDownPaymentManual,
+    calculatenewDownPayment,
+    GetBookngClient,
+    setIndexofInstallmentRow,
+    toggleRevertPymentModal,
+    setPendingPayment,
+    confirmpaidStatus,
+    openRevertModal,
+    confirmRevertPayment
+ 
 } = bookingSlice.actions;
 const bookingReducer = bookingSlice.reducer;
 export default bookingReducer;

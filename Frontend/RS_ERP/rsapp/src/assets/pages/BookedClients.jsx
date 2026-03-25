@@ -71,9 +71,7 @@ const editReservedClients=async(id,index)=>{
                                     <span className="price_tag" style={{color:'#040432'}}>{client.ReservationAmount}<small>ج.م</small></span>
                                 </td>
                                
-                               {/*  <td>
-                                    <span className="status_chip success">مكتمل</span>
-                                </td> */}
+                              
                                 <td>
                                     <div className="table_actions">
                                         <button className="action_icon view" title="تعديل" onClick={()=>editReservedClients(client.BookingID,index)}><SquarePen  size={18} color='blue' /></button>

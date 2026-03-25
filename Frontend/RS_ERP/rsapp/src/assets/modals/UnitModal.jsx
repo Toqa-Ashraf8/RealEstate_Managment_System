@@ -142,11 +142,13 @@ const HandleChangeImage=async(e)=>{
               <div className="col-4">
                   <div className="img_cntu">
                     <div style={{display:'flex',alignItems:'center',justifyContent:'center',position:'relative',top:'50%'}}><span><CiImageOn size={35} /></span></div>
+                  {(projectState.unitImageName  || projectState.selectedUnit.unitImage )&&
                    <img 
-                   src={variables.URL_IMGU+projectState.unitImageName} 
+                   src={`${variables.URL_IMGU}/${projectState.unitImageName || projectState.selectedUnit.unitImage}`} 
                    alt="" 
                    className="preview-img" 
                    style={{width:'100%',height:'100%',position:'absolute',top:'0',zIndex:'1000'}} />
+                }        
                 </div>
                </div>
            </div>

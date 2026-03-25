@@ -5,39 +5,41 @@ import '../css/CompleteBooking.css';
 import { RiSave3Fill } from "react-icons/ri";
 import { AiOutlineClear } from "react-icons/ai";
 import { FiPrinter } from "react-icons/fi";
-import { calculatenewDownPayment, caluclateDownPayment,  ChangevaluesOfBookingClient,  clearInputs,  FillClientData, generateInstallments, getInstallmentData, getreservedClientsByID, reservedOrnot, saveBookingandInstallment, saveChecksImages, saveNationalidImage, updateDownPaymentManual} from '../redux/bookingSlice';
+import { calculatenewDownPayment, caluclateDownPayment, ChangevaluesOfBookingClient,  clearInputs,  FillClientData, generateInstallments, getInstallmentData, getreservedClientsByID, reservedOrnot, saveBookingandInstallment, saveChecksImages, saveNationalidImage, updateDownPaymentManual} from '../redux/bookingSlice';
 import { variables } from '../variables';
 import {toast} from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
 
 const CompleteBooking = () => {
-    const db = useSelector((state) => state.negotiation);
-    const db_b = useSelector((state) => state.booking);
     const dispatch = useDispatch();
     const focusRef = useRef();
-    const Clientdata =db_b.bookingClient; 
     const downPaymentRef=useRef();
     const navigate=useNavigate();
-    const obj={...db_b.bookingClient,...db_b.InstallmentInformation}
     const reservationRef=useRef();
+    const {bookingClient,
+        InstallmentInformation,
+        initialClientData,
+        reserved,
+        nationalidImage,
+        checkImage
+    }=useSelector((state)=>state.booking);
   
-//************************************************************************
 const HandleChange=(e)=>{
     const {name,value}=e.target;
     dispatch(ChangevaluesOfBookingClient({[name]:value}));
 }
-//************************************************************************ 
+ 
 const ClearValues=()=>{
     dispatch(clearInputs());
     focusRef.current.focus();
 }
 const HandleChangeinstallmentValues=(e)=>{
     const {name,value}=e.target;
-     const totalamount=db_b.bookingClient.NegotiationPrice;
+     const totalamount=bookingClient.NegotiationPrice;
     dispatch(getInstallmentData({[name]:value}));
 
 }
-//************************************************************************
+
  const handleFileChange =async (e) => {
        const { name } = e.target;
         if (!e.target.files || e.target.files.length === 0) return; 
@@ -59,19 +61,16 @@ const HandleChangeinstallmentValues=(e)=>{
         }
     
 };
-//*******************************************************************************
+
 const SavedData=async()=>{
-    if (!Clientdata) {
+    if (!bookingClient) {
         toast.error("بيانات العميل غير مكتملة!");
         return;
     }
-    
-    const client_id=db_b.bookingClient.ClientID;
-    const client_name=db_b.bookingClient.ClientName;
-    const project_name=db_b.bookingClient.ProjectName;
-    const unit=db_b.bookingClient.Unit;
-    const parms={...db_b.bookingClient,...db_b.InstallmentInformation,ClientID:client_id,ClientName:client_name,ProjectName:project_name,Unit:unit,installments:[]};
-   console.log("parms",parms);
+    const parms={
+        ...bookingClient,
+        ...InstallmentInformation,
+         installments:[]};
     try {
         const result=await dispatch(saveBookingandInstallment(parms)).unwrap();
         if(result.saved===true){
@@ -95,42 +94,22 @@ const SavedData=async()=>{
     }
    
 }
-//*******************************************************************************
-    useEffect(() => {
-        if (focusRef.current) {
-            focusRef.current.focus();
-        } 
-     const savedData = localStorage.getItem('activeBookingClient');
-     console.log("savedData",savedData)
-     if (savedData) {
-        const parsedData = JSON.parse(savedData);
-        dispatch(FillClientData(parsedData));
-    }
-
- }, [dispatch]);
-
-//***********************************************************************************
 
 const calcutlateDownpayment=()=>{
-    //في حالة اول مرة اسجل بيانات للحجز 
-    const totalamount=db_b.initialClientData.NegotiationPrice;
-    if(db_b.bookingClient.BookingID===0 ){
+    const totalamount=initialClientData.NegotiationPrice;
+    if(bookingClient.BookingID===0 ){
        dispatch(caluclateDownPayment(totalamount));
     }
     else{
- // ياخد قيمة الحجز المدخلة الجديده ويحسب قيمة المقدم منها ويضع القيمة الجديده(API)في حالة انه جايب بيانات من
-        const newtotalPrice=db_b.initialClientData.NegotiationPrice;
+        const newtotalPrice=initialClientData.NegotiationPrice;
         dispatch(calculatenewDownPayment({total:newtotalPrice,newReservationAmount:reservationRef.current.value}))
-        console.log("newtotalPrice",newtotalPrice);
     }
 }
-//***********************************************************************************
+
 const createInstallments=()=>{
     dispatch(reservedOrnot(0))
-    if(db_b.InstallmentInformation.DownPayment!=="" &&
-       db_b.InstallmentInformation.FirstInstallmentDate!=="" &&
-       db_b.bookingClient.ReservationAmount !=""){
-         dispatch(generateInstallments(db_b.InstallmentInformation))
+    if(InstallmentInformation && bookingClient.ReservationAmount !=""){
+         dispatch(generateInstallments(InstallmentInformation))
          navigate('/installments_schedule');
     }
     else{
@@ -140,15 +119,25 @@ const createInstallments=()=>{
         });
     }
 }
-//***********************************************************************************
+
 const getinstallmentsData=(id)=>{
-    if(db_b.reserved===1){
+    if(reserved===1){
          dispatch(getreservedClientsByID(id));
          navigate('/installments_schedule');
     }
    
 }
-//***********************************************************************************
+   useEffect(() => {
+        if (focusRef.current) {
+            focusRef.current.focus();
+        } 
+     const savedData = localStorage.getItem('activeBookingClient');
+     if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        dispatch(FillClientData(parsedData));
+    }
+
+ }, [dispatch]);
     return (
         <div className="final_page_wrapper">
             <div className="final_booking_container">
@@ -157,27 +146,25 @@ const getinstallmentsData=(id)=>{
                 </div>
               
                 <div className="final_content_box animate__animated animate__fadeIn">
-                    <form className="final_form_body">
-                        
-                          
+                    <form className="final_form_body">                          
                                 <div className="row mb-4">
                                     <div className="col-md-4">
                                         <div className="final_field_group">
-                                             <input type="text" value={db_b.initialClientData.ClientID } hidden className="final_input_modern final_disabled" />
+                                             <input type="text" value={initialClientData.ClientID } hidden className="final_input_modern final_disabled" />
                                             <label className="final_label"><User size={18} /> إسم العميل</label>
-                                            <input type="text" value={db_b.initialClientData.ClientName } readOnly className="final_input_modern final_disabled" />
+                                            <input type="text" value={initialClientData.ClientName } readOnly className="final_input_modern final_disabled" />
                                         </div>
                                     </div>
                                     <div className="col-md-4">
                                         <div className="final_field_group">
                                             <label className="final_label"><Building2 size={18} /> المشروع</label>
-                                            <input type="text" value={db_b.initialClientData.ProjectName} readOnly className="final_input_modern final_disabled" />
+                                            <input type="text" value={initialClientData.ProjectName} readOnly className="final_input_modern final_disabled" />
                                         </div>
                                     </div>
                                     <div className="col-md-4">
                                         <div className="final_field_group">
                                             <label className="final_label"><Activity size={18} /> الوحدة</label>
-                                            <input type="text" value={db_b.initialClientData.Unit} readOnly className="final_input_modern final_disabled" />
+                                            <input type="text" value={initialClientData.Unit} readOnly className="final_input_modern final_disabled" />
                                         </div>
                                     </div>
                                 </div>
@@ -193,7 +180,7 @@ const getinstallmentsData=(id)=>{
                                         className="final_input_modern final_disabled" 
                                         name='BookingID'
                                         readOnly
-                                        value={db_b.bookingClient.BookingID || 0}
+                                        value={bookingClient.BookingID || 0}
                                         onChange={HandleChange}
                                         />
                                     </div>
@@ -206,7 +193,7 @@ const getinstallmentsData=(id)=>{
                                         name="NationalID"
                                         className="final_input_modern"
                                         ref={focusRef}
-                                        value={db_b.bookingClient.NationalID || ""}
+                                        value={bookingClient.NationalID || ""}
                                         onChange={HandleChange}
                                     />
                                 </div>
@@ -227,7 +214,7 @@ const getinstallmentsData=(id)=>{
                                     type="text" 
                                     name="SecondaryPhone" 
                                     className="final_input_modern"
-                                    value={db_b.bookingClient.SecondaryPhone || ""}
+                                    value={bookingClient.SecondaryPhone || ""}
                                     onChange={HandleChange}
                                     />
                                 </div>
@@ -237,7 +224,7 @@ const getinstallmentsData=(id)=>{
                                     type="text" 
                                     name="Address" 
                                     className="final_input_modern"
-                                    value={db_b.bookingClient.Address || ""}
+                                    value={bookingClient.Address || ""}
                                     onChange={HandleChange}
                                     />
                                 </div>
@@ -247,7 +234,7 @@ const getinstallmentsData=(id)=>{
                                     type="text" 
                                     name="Job" 
                                     className="final_input_modern"
-                                    value={db_b.bookingClient.Job || ""}
+                                    value={bookingClient.Job || ""}
                                     onChange={HandleChange}
                                     />
                                 </div>
@@ -255,10 +242,8 @@ const getinstallmentsData=(id)=>{
                             <div className="col-lg-4">
                                <div className="final_image_preview_big">
                           {(() => {
-                            const imgName = db_b.nationalidImage || db_b.bookingClient?.NationalIdImagePath;
-
+                            const imgName = nationalidImage || bookingClient?.NationalIdImagePath;
                             if (imgName && imgName !== "null") {
-                            // الحالة الأولى: لو فيه صورة
                             return (
                                 <img 
                                 src={`${variables.URL_IMGN}/${imgName}`} 
@@ -267,7 +252,6 @@ const getinstallmentsData=(id)=>{
                                 />
                             );
                             } else {
-                            // الحالة الثانية: لو مفيش صورة (الرسالة البديلة)
                             return (
                                 <div className="final_empty_msg">
                                 <ImageIcon size={40} className="final_icon_fade" />
@@ -291,7 +275,7 @@ const getinstallmentsData=(id)=>{
                                         name="ReservationAmount"
                                         className="final_input_modern"
                                         ref={reservationRef}
-                                        value={db_b.bookingClient.ReservationAmount || ""} 
+                                        value={bookingClient.ReservationAmount || ""} 
                                         onBlur={()=>calcutlateDownpayment()}
                                         onChange={HandleChange}
                                         
@@ -304,7 +288,7 @@ const getinstallmentsData=(id)=>{
                                         name="DownPayment"
                                         className="final_input_modern"         
                                         ref={downPaymentRef}
-                                        value={db_b.InstallmentInformation.DownPayment || ""}
+                                        value={InstallmentInformation.DownPayment || ""}
                                         onChange={HandleChangeinstallmentValues}
                                     />
                                 </div>
@@ -315,7 +299,7 @@ const getinstallmentsData=(id)=>{
                                         type="date"
                                         name="FirstInstallmentDate"
                                         className="final_input_modern"
-                                        value={db_b.InstallmentInformation.FirstInstallmentDate?.split('T')[0] || ""}
+                                        value={InstallmentInformation.FirstInstallmentDate?.split('T')[0] || ""}
                                         onChange={HandleChangeinstallmentValues}
                                     />
                                 </div>
@@ -325,7 +309,7 @@ const getinstallmentsData=(id)=>{
                                     <select 
                                     name="PaymentMethod" 
                                     className="final_select_modern"
-                                    value={db_b.bookingClient.PaymentMethod || ""}
+                                    value={bookingClient.PaymentMethod || ""}
                                     onChange={HandleChange}
                                     >
                                         <option value="-1">-إختر-</option>
@@ -350,7 +334,7 @@ const getinstallmentsData=(id)=>{
                                         <select
                                             name="InstallmentYears"
                                             className="final_select_modern"
-                                            value={db_b.InstallmentInformation.InstallmentYears||""}
+                                            value={InstallmentInformation.InstallmentYears||""}
                                             onChange={HandleChangeinstallmentValues}
                                         >
                                             <option value="-1">-إختر السنين-</option>
@@ -359,7 +343,7 @@ const getinstallmentsData=(id)=>{
                                             <option value="5">5 سنوات</option>
                                             <option value="7">7 سنوات</option>
                                         </select>
-                                        {db_b.InstallmentInformation.InstallmentYears !== "-1"&&
+                                        {InstallmentInformation.InstallmentYears !== "-1"&&
                                         (<button 
                                         type="button" 
                                         className="mini_btn primary"
@@ -375,13 +359,13 @@ const getinstallmentsData=(id)=>{
                             <div className="col-lg-4">
                                 <div className="final_image_preview_big" style={{ height: '220px' }}>
                                 {(() => {
-                                    const imgName2 = db_b.checkImage || db_b.bookingClient.CheckImagePath;
+                                    const imgName = checkImage || bookingClient.CheckImagePath;
 
-                                    if (imgName2 && imgName2 !== "null") {
+                                    if (imgName && imgName !== "null") {
                                     // الحالة الأولى: لو فيه صورة
                                     return (
                                         <img 
-                                        src={`${variables.URL_IMGC}/${imgName2}`} 
+                                        src={`${variables.URL_IMGC}/${imgName}`} 
                                         className="final_img_fluid" 
                                         alt="" 
                                         />
@@ -409,8 +393,8 @@ const getinstallmentsData=(id)=>{
                     className="final_circle_btn"
                     title="تنظيف"> <AiOutlineClear size={28} color="#14213d" onClick={()=>ClearValues()} /></div>       
                     <div className="final_circle_btn" title="حفظ"><RiSave3Fill size={24} color="#10b981" onClick={()=>SavedData()} /></div>
-                     {db_b.reserved===1 && 
-                     <div className="final_circle_btn" title="جدول الاقساط"><NotepadText  size={24} color="#1026b9" onClick={()=>getinstallmentsData(db_b.bookingClient.BookingID)}/></div>
+                     {reserved===1 && 
+                     <div className="final_circle_btn" title="جدول الاقساط"><NotepadText  size={24} color="#1026b9" onClick={()=>getinstallmentsData(bookingClient.BookingID)}/></div>
                      }
                 </div>
             </div>

@@ -26,6 +26,7 @@ import {
   prepareUnitModal,
   resetProjectForm,
   setProjectData,
+  SetRowIndexvalue,
   setUnitEditingIndex,
   showDeleteUnitModal,
   toggleDeleteProjectModal,

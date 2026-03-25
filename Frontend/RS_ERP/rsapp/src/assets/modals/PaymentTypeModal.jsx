@@ -3,7 +3,7 @@ import "../css/PaymentTypeModal.css";
 import {Building2,Ungroup,Image as ImageIcon}from 'lucide-react'
 import { useDispatch, useSelector } from "react-redux";
 import { CiImageOn } from "react-icons/ci";
-import {  changepaymentStatus, getPaymentModalvalues, saveinstallmentCheck, showPaymentModal } from "../redux/bookingSlice";
+import { confirmpaidStatus, getPaymentModalvalues, saveinstallmentCheck, showPaymentModal } from "../redux/bookingSlice";
 import { variables } from "../variables";
 const PaymentTypeModal = () => {
 const db_b = useSelector((state) => state.booking);
@@ -25,9 +25,9 @@ const HandleChangeImage=async(e)=>{
           await  dispatch(getPaymentModalvalues({[name]:fileName}));         
 }
 //********************************************************************************/
-
-
-
+const handleConfirmReversal=()=>{
+  dispatch(confirmpaidStatus());
+}
   return (
     <div dir="rtl">
       <div className="modalp">
@@ -50,7 +50,7 @@ const HandleChangeImage=async(e)=>{
                 <select 
                 className='form-select-modern'
                 name='PaymentType'
-                value={db_b.paymentType.PaymentType || ""}
+                value={db_b.paymentType?.PaymentType || ""}
                 onChange={HandlepaymentValuesChange}
                 >
             
@@ -74,25 +74,29 @@ const HandleChangeImage=async(e)=>{
                     </div>
                   </div>
                 </div>
-        </div>
+              </div>
                 <div className="col-6">
                  <div className="final_image_preview_big">
-                                   
-                         <img src={variables.URL_IMGI+db_b.installmentCheckImageName} className="final_img_fluid_I" alt="" />
-                         <div className="final_empty_msg">
-                            <ImageIcon size={40} className="final_icon_fade" />
-                            <p>معاينة الشيك</p>
-                            </div>
-                    </div>
+                  {(db_b.installmentCheckImageName || db_b.paymentType?.CheckImage)?
+                  
+                     (<img 
+                         src= {`${variables.URL_IMGI}/${db_b.installmentCheckImageName || db_b.paymentType?.CheckImage}`}
+                         className="final_img_fluid_I" alt="" />
+                    )  
+                    :
+                    ( <div className="final_empty_msg">
+                       <ImageIcon size={40} className="final_icon_fade" />
+                        <p>معاينة الشيك</p>
+                        </div>
+                    )
+                     }    
                </div>
-
+               </div>
           </div>
-
-
           </div>
           <div className="footerp">
           <div className="footer_btns_container">
-            <button className="btn_modal success" onClick={()=>dispatch(changepaymentStatus())}>تحديث الحالة</button>
+            <button className="btn_modal success" onClick={()=>handleConfirmReversal()}>تحديث الحالة</button>
             <button className="btn_modal danger"
              onClick={()=>dispatch(showPaymentModal(false))}
             >إلغاء</button>
