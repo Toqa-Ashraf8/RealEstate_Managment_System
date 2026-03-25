@@ -247,7 +247,7 @@ const getinstallmentsData=(id)=>{
                             if (imgName && imgName !== "null") {
                             return (
                                 <img 
-                                src={`${variables.URL_IMGN}/${imgName}`} 
+                                src={`${variables.NATIONAL_ID_IMAGES_URL}/${imgName}`} 
                                 className="final_img_fluid" 
                                 alt="" 
                                 />
@@ -366,7 +366,7 @@ const getinstallmentsData=(id)=>{
                                     // الحالة الأولى: لو فيه صورة
                                     return (
                                         <img 
-                                        src={`${variables.URL_IMGC}/${imgName}`} 
+                                        src={`${variables.CHECKS_IMAGES_URL}/${imgName}`} 
                                         className="final_img_fluid" 
                                         alt="" 
                                         />

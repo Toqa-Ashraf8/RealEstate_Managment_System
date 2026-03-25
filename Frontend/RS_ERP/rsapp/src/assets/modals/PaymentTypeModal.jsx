@@ -80,7 +80,7 @@ const handleConfirmReversal=()=>{
                   {(db_b.installmentCheckImageName || db_b.paymentType?.CheckImage)?
                   
                      (<img 
-                         src= {`${variables.URL_IMGI}/${db_b.installmentCheckImageName || db_b.paymentType?.CheckImage}`}
+                         src= {`${variables.INSTALLMENT_CHECKS_IMAGES_URL}/${db_b.installmentCheckImageName || db_b.paymentType?.CheckImage}`}
                          className="final_img_fluid_I" alt="" />
                     )  
                     :

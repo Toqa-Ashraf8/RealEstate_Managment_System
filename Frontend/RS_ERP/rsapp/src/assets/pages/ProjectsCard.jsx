@@ -47,7 +47,7 @@ const ProjectsCard = () => {
            
                   <div className="arch-visual">
                     {project.ProjectImage ? (
-                      <img src={variables.URL_IMGP + project.ProjectImage} className="arch-img" alt={project.ProjectName} />
+                      <img src={variables.PROJECT_IMAGES_URL + project.ProjectImage} className="arch-img" alt={project.ProjectName} />
                     ) : (
                       <div className="arch-img-none"><FaImage size={40} /></div>
                     )}

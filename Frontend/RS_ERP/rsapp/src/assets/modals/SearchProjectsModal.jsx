@@ -62,10 +62,10 @@ useEffect(() => {
                         <td>{project.TotalUnits}</td>
                         <td>{project.ProjectStatus}</td>
                        <td>
-                                 {variables.URL_IMGP + project.ProjectImage  ? (
+                                 {variables.PROJECT_IMAGES_URL + project.ProjectImage  ? (
                                  <div style={{width:'50px', height:'50px', margin:'auto'}}> 
                                  <img 
-                                   src={variables.URL_IMGP + project.ProjectImage} 
+                                   src={variables.PROJECT_IMAGES_URL + project.ProjectImage} 
                                    alt="Project" 
                                      style={{
                                      position:'relative', 

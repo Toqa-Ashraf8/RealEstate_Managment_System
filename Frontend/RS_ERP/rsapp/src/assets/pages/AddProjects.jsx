@@ -306,7 +306,7 @@ const AddProjects = () => {
                 <div className="img_cnt">
                   <img
                     src={
-                      variables.URL_IMGP +
+                      variables.PROJECT_IMAGES_URL +
                       (project.ProjectImage || projectImageName || "")
                     }
                     alt=""
@@ -363,7 +363,7 @@ const AddProjects = () => {
                     <td>{unit.MeterPrice} ج</td>
                     <td>{formatCurrency(unit.TotalPrice)} ج</td>
                     <td>
-                      {variables.URL_IMGU && unit.unitImage ? (
+                      {variables.UNIT_IMAGES_URL && unit.unitImage ? (
                         <div
                           style={{
                             width: "50px",
@@ -372,7 +372,7 @@ const AddProjects = () => {
                           }}
                         >
                           <img
-                            src={variables.URL_IMGU + (unit.unitImage || unitImageName)}
+                            src={variables.UNIT_IMAGES_URL + (unit.unitImage || unitImageName)}
                             alt="Unit"
                             style={{
                               position: "relative",

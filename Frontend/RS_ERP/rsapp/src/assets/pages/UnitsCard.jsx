@@ -35,7 +35,7 @@ const UnitsCard = () => {
               <div key={index} className="u-card-item">
                 <div className="u-card-header">
                   {unit.unitImage ? (
-                    <img src={variables.URL_IMGU + unit.unitImage} alt={unit.unitName} className="u-card-img" />
+                    <img src={variables.UNIT_IMAGES_URL + unit.unitImage} alt={unit.unitName} className="u-card-img" />
                   ) : (
                     <div className="u-card-no-img"><FaImage size={24} /></div>
                   )}

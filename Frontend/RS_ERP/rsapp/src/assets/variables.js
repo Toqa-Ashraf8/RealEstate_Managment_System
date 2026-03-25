@@ -1,11 +1,13 @@
+const BASE_URL = "https://localhost:7213";
+
 export const variables = {
-    URL_IMGP: "https://localhost:7213/Photos_projects/",
-    URL_API: "https://localhost:7213/api/Project/",
-    URL_API_C: "https://localhost:7213/api/Clients/", 
-    URL_API_N: "https://localhost:7213/api/Negotiation/",
-    URL_IMGU: "https://localhost:7213/Photos_units/",
-    URL_API_B:"https://localhost:7213/api/Booking/",
-    URL_IMGN:"https://localhost:7213/NationalIDCard_Images/",
-    URL_IMGC:"https://localhost:7213/Checks_Images/",
-    URL_IMGI:"https://localhost:7213/InstallmentChecks_Images/"
+    PROJECT_IMAGES_URL: `${BASE_URL}/Photos_projects/`,
+    PROJECTS_API: `${BASE_URL}/api/Project/`,
+    CLIENTS_API: `${BASE_URL}/api/Clients/`, 
+    NEGOTIATIONS_API:`${BASE_URL}/api/Negotiation/`,
+    UNIT_IMAGES_URL: `${BASE_URL}/Photos_units/`,
+    BOOKINGS_API:`${BASE_URL}/api/Booking/`,
+    NATIONAL_ID_IMAGES_URL:`${BASE_URL}/NationalIDCard_Images/`,
+    CHECKS_IMAGES_URL:`${BASE_URL}/Checks_Images/`,
+    INSTALLMENT_CHECKS_IMAGES_URL:`${BASE_URL}/InstallmentChecks_Images/`
 }
