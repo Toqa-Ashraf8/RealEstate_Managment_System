@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
-import { variables } from "./variables";
+import { variables } from "../variables";
 //-------------------------------------------------------------------------------
 export const uploadProjectImage = createAsyncThunk("uploadProjectImage/projects", async (formdata) => {
     const resp = await axios.post(variables.URL_API + "SaveImages", formdata)

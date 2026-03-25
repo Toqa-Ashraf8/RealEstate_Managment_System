@@ -5,7 +5,7 @@ import { updateSelectedProjectCode} from '../redux/projectSlice';
 import '../css/ProjectsCard.css';
 import { FaMapMarkerAlt, FaBuilding, FaHome, FaStore, FaHospital, FaImage, FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { fetchProjectsList } from '../projectService';
+import { fetchProjectsList } from '../services/projectService.js';
 
 const ProjectsCard = () => {
   const projectState = useSelector((state) => state.projects);

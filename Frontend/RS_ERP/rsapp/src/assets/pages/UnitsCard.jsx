@@ -5,7 +5,7 @@ import { FaRulerCombined, FaTag, FaImage, FaInfoCircle } from 'react-icons/fa';
 import { variables } from '../variables';
 import { formatCurrency } from '../helpers'
 import { HandCoins } from 'lucide-react';
-import { fetchProjectUnits } from '../projectService';
+import { fetchProjectUnits } from '../services/projectService.js';
 const UnitsCard = () => {
   const projectState = useSelector((state) => state.projects);
   const dispatch = useDispatch();

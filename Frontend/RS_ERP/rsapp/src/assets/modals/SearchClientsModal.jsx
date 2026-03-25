@@ -1,26 +1,28 @@
 import React, { useEffect } from 'react'
-import '../css/SearchClients.css'
+import '../css/SearchClientsModal.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { variables } from '../variables';
 import { IoMdClose } from "react-icons/io";
-import { FillClientsForm, GetAllClients, GetnegotiationsByclient, Getunit, getunitsByproject, ShowsearchcLientsMdl } from '../redux/clientSlice';
-const SearchClients = () => {
-  const db = useSelector((state) => state.clients);
+import {setClientsForm,toggleSearchClientsModal } from '../redux/clientSlice';
+import { fetchClients, fetchNegotiationsByClient } from '../services/clientService';
+const SearchClientsModal = () => {
+  const {clientsList} = useSelector((state) => state.clients);
+  const {isLoading}=useSelector((state)=>state.ui);
   const dispatch = useDispatch();
-//**************************************************************** */
-const HandleSearch= async(i)=>{
-    const selectedClient = db.clients[i];
+
+const handleSearch= async(i)=>{
+    const selectedClient = clientsList[i];
     if (!selectedClient) return;  
     const clientid=selectedClient.ClientID;
-    dispatch(FillClientsForm(i));
+    dispatch(setClientsForm(i));
    if (clientid) {
-        await dispatch(GetnegotiationsByclient(clientid));
+        await dispatch(fetchNegotiationsByClient(clientid));
     }
 }
  useEffect(() => {
     const loadClients = async () => {
       try {
-        await dispatch(GetAllClients());
+        await dispatch(fetchClients());
       } 
       catch (error) {
         console.error("فشل في جلب البيانات:", error);
@@ -37,7 +39,7 @@ const HandleSearch= async(i)=>{
                 <div className='hrdtitles_s'> 
                       <span 
                       className='close_search'
-                      onClick={()=>dispatch(ShowsearchcLientsMdl(false))}
+                      onClick={()=>dispatch(toggleSearchClientsModal(false))}
                       ><IoMdClose size={30} /></span>
                 </div> 
                 <h3 className='hds_title'>العملاء</h3>
@@ -55,9 +57,9 @@ const HandleSearch= async(i)=>{
                         </tr>
                     </thead>
                     <tbody>
-                        {db.clients.length===0 ?<tr><td colSpan={7} className="empty-msg">لا توجد بيانات لعرضها</td></tr>:
-                        db.clients.map((client,i)=>
-                        <tr key={i} onClick={()=>HandleSearch(i)}>
+                        {clientsList.length===0 ?<tr><td colSpan={7} className="empty-msg">لا توجد بيانات لعرضها</td></tr>:
+                        clientsList.map((client,i)=>
+                        <tr key={i} onClick={()=>handleSearch(i)}>
                         <td>{client.ClientID}</td>
                         <td>{client.ClientName}</td>
                         <td>{client.PhoneNumber}</td>
@@ -73,7 +75,8 @@ const HandleSearch= async(i)=>{
                 <div style={{display:'flex',justifyContent:'flex-end'}}>
                     <button 
                     className='btn btn-danger btn_closes'
-                     onClick={()=>dispatch(ShowsearchcLientsMdl(false))}
+                    disabled={isLoading}
+                    onClick={()=>dispatch(toggleSearchClientsModal(false))}
                     >إغلاق</button>
                 </div>
             </div>
@@ -83,4 +86,4 @@ const HandleSearch= async(i)=>{
   )
 }
 
-export default SearchClients;
+export default SearchClientsModal;

@@ -3,28 +3,28 @@ import '../css/SearchProjectsModal.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { selectProjectFromSearch, toggleSearchModal } from '../redux/projectSlice';
 import { variables } from '../variables';
-import { fetchProjectsList, fetchProjectUnits } from '../projectService';
+import { fetchProjectsList, fetchProjectUnits } from '../services/projectService.js';
 const SearchProjectsModal = () => {
-  const projectState = useSelector((state) => state.projects);
+  const {selectedProjectRowIndex,projectsList}= useSelector((state) => state.projects);
   const dispatch = useDispatch();
 useEffect(() => {
-   const fetchData =async  () => { 
+   const fetchProjectsData =async  () => { 
     await dispatch(fetchProjectsList());
   }; 
-  fetchData(); 
+  fetchProjectsData(); 
 }, []);
-const getDataInInputs=async(i)=>{
+
+const fillClientForm=async(i)=>{
      await dispatch(selectProjectFromSearch(i));
 }
 useEffect(() => {
-  if (projectState.selectedProjectRowIndex) {
-    dispatch(fetchProjectUnits(projectState.selectedProjectRowIndex));
+  if (selectedProjectRowIndex) {
+    dispatch(fetchProjectUnits(selectedProjectRowIndex));
     dispatch(toggleSearchModal(false));
   }
-}, [projectState.selectedProjectRowIndex]);
+}, [selectedProjectRowIndex]);
 
   return (
-    
     <div dir='rtl'>
       <div className="modals">
         <div className="modalcnt_s">
@@ -52,9 +52,9 @@ useEffect(() => {
                         </tr>
                     </thead>
                     <tbody>
-                        {projectState.projectsList.length===0 ?<tr><td colSpan={7} className="empty-msg">لا توجد بيانات لعرضها</td></tr>:
-                        projectState.projectsList.map((project,i)=>
-                        <tr key={i} onClick={()=>getDataInInputs(i)}>
+                        {projectsList.length===0 ?<tr><td colSpan={7} className="empty-msg">لا توجد بيانات لعرضها</td></tr>:
+                        projectsList.map((project,i)=>
+                        <tr key={i} onClick={()=>fillClientForm(i)}>
                         <td>{project.ProjectCode}</td>
                         <td>{project.ProjectName}</td>
                         <td>{project.ProjectType}</td>

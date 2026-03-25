@@ -4,14 +4,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { calculateUnitTotalPrice, saveUnitToTable, setUnitData, toggleUnitModal} from '../redux/projectSlice';
 import { CiImageOn } from "react-icons/ci";
 import { variables } from '../variables';
-import { uploadUnitImage } from '../projectService';
+import { uploadUnitImage } from '../services/projectService.js';
 
 const UnitModal = () => {
 
-  const projectState=useSelector((state)=>state.projects);
-  const dispatch=useDispatch();
+const {selectedUnit,unitImageName}=useSelector((state)=>state.projects);
+const dispatch=useDispatch();
   
-//******************************************************************* */
 const HandleChangeV=(e)=>{
   const {name,value}=e.target;
   dispatch(setUnitData({[name]:value}));
@@ -26,8 +25,6 @@ const HandleChangeImage=async(e)=>{
    await dispatch(setUnitData({[name]:fileName}));
   await dispatch(uploadUnitImage(formDatau));
 }
-
-/***************************************************************************** */
 
   return (
     <div dir='rtl'>
@@ -54,7 +51,7 @@ const HandleChangeImage=async(e)=>{
                 className='form-control-modern'
                 name='serial'
                 disabled
-                value={projectState.selectedUnit.serial}
+                value={selectedUnit.serial}
                 onChange={HandleChangeV}
                 />
               </div>
@@ -66,7 +63,7 @@ const HandleChangeImage=async(e)=>{
                 className='form-control-modern'
                 autoFocus
                 name='unitName'
-                value={projectState.selectedUnit.unitName}
+                value={selectedUnit.unitName}
                 onChange={HandleChangeV}
                 autoComplete='off'
                 />
@@ -76,7 +73,7 @@ const HandleChangeImage=async(e)=>{
                 <select 
                 className='form-select-modern'
                 name='Floor'
-                value={projectState.selectedUnit.Floor}
+                value={selectedUnit.Floor}
                 onChange={HandleChangeV}
                 >
                   <option value="-1">-إختر-</option>
@@ -93,7 +90,7 @@ const HandleChangeImage=async(e)=>{
                 type="text" 
                 className='form-control-modern'
                 name='TotalArea'
-                value={projectState.selectedUnit.TotalArea}
+                value={selectedUnit.TotalArea}
                 onChange={HandleChangeV}
                 autoComplete='off'
                 />
@@ -105,7 +102,7 @@ const HandleChangeImage=async(e)=>{
                 type="text" 
                 className='form-control-modern'
                 name='MeterPrice'
-                value={projectState.selectedUnit.MeterPrice}
+                value={selectedUnit.MeterPrice}
                 onChange={HandleChangeV}
                 autoComplete='off'
                 onBlur={()=>dispatch(calculateUnitTotalPrice())}
@@ -117,7 +114,7 @@ const HandleChangeImage=async(e)=>{
                 type="text" 
                 className='form-control-modern'
                 name='TotalPrice'
-                value={projectState.selectedUnit.TotalPrice}
+                value={selectedUnit.TotalPrice}
                 onChange={HandleChangeV}
                 autoComplete='off'
                 />
@@ -142,9 +139,9 @@ const HandleChangeImage=async(e)=>{
               <div className="col-4">
                   <div className="img_cntu">
                     <div style={{display:'flex',alignItems:'center',justifyContent:'center',position:'relative',top:'50%'}}><span><CiImageOn size={35} /></span></div>
-                  {(projectState.unitImageName  || projectState.selectedUnit.unitImage )&&
+                  {(unitImageName  || selectedUnit.unitImage )&&
                    <img 
-                   src={`${variables.URL_IMGU}/${projectState.unitImageName || projectState.selectedUnit.unitImage}`} 
+                   src={`${variables.URL_IMGU}/${unitImageName || selectedUnit.unitImage}`} 
                    alt="" 
                    className="preview-img" 
                    style={{width:'100%',height:'100%',position:'absolute',top:'0',zIndex:'1000'}} />

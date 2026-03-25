@@ -9,6 +9,7 @@ import { calculatenewDownPayment, caluclateDownPayment, ChangevaluesOfBookingCli
 import { variables } from '../variables';
 import {toast} from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
+import { LuPrinter } from "react-icons/lu";
 
 const CompleteBooking = () => {
     const dispatch = useDispatch();
@@ -392,9 +393,10 @@ const getinstallmentsData=(id)=>{
                     <div 
                     className="final_circle_btn"
                     title="تنظيف"> <AiOutlineClear size={28} color="#14213d" onClick={()=>ClearValues()} /></div>       
-                    <div className="final_circle_btn" title="حفظ"><RiSave3Fill size={24} color="#10b981" onClick={()=>SavedData()} /></div>
+                    <div className="final_circle_btn" title="طباعة"><LuPrinter  size={24} color="#1086b9" onClick={()=>window.print()} /></div>
+                     <div className="final_circle_btn" title="حفظ"><RiSave3Fill size={24} color="#10b981" onClick={()=>SavedData()} /></div>
                      {reserved===1 && 
-                     <div className="final_circle_btn" title="جدول الاقساط"><NotepadText  size={24} color="#1026b9" onClick={()=>getinstallmentsData(bookingClient.BookingID)}/></div>
+                     <div className="final_circle_btn" title="جدول الاقساط"><NotepadText  size={24} color="#42025e" onClick={()=>getinstallmentsData(bookingClient.BookingID)}/></div>
                      }
                 </div>
             </div>

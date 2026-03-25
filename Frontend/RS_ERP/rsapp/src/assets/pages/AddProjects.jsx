@@ -39,17 +39,24 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import SearchProjectsModal from "../modals/SearchProjectsModal";
 import { formatCurrency } from '../helpers'
-import DeleteProjectModal from "../modals/DeleteProjectModal.jsx";
-import DeleteUnitRowModal from "../modals/DeleteUnitRowModal.jsx";
-import { saveCompleteProject, uploadProjectImage } from "../projectService.js";
+import ProjectDeleteModal from "../modals/ProjectDeleteModal.jsx";
+import { saveCompleteProject, uploadProjectImage } from "../services/projectService.js";
+import UnitDeleteModal from "../modals/UnitDeleteModal.jsx";
 const AddProjects = () => {
-  const projectState = useSelector((state) => state.projects);
+  const {
+    project,
+    isUnitModalOpen,
+    unitsList,
+    isDeleteUnitModalOpen,
+    isDeleteProjectModalOpen,
+    isSearchModalOpen,
+    projectImageName,
+    unitImageName
+  } = useSelector((state) => state.projects);
   const { isLoading } = useSelector(state => state.ui);
   const dispatch = useDispatch();
   const NameRef = useRef();
-  const parms = { ...projectState.project, units: projectState.unitsList };
-//********************************************************************************* */
-  //--------------- Save Image ----------------------------
+ 
   const handleImageUpload = async (e) => {
     const { name } = e.target;
     if (!e.target.files || e.target.files.length === 0) return;
@@ -60,18 +67,19 @@ const AddProjects = () => {
     await dispatch(uploadProjectImage(formData));
     await dispatch(setProjectData({ [name]: fileName }));
   };
-  //--------------- HandleChange Master Inputs  ----------------------------
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     dispatch(setProjectData({ [name]: value }));
   };
-  //--------------- Clear Master Inputs  -----------------------------------
+  
   const handleResetForm = () => {
     dispatch(resetProjectForm());
     NameRef.current.focus();
   };
-  //--------------- Save Master--------------------------------------------
+  
   const handleSaveProject = async () => {
+     const parms = { ...project, units:unitsList };
     try {
       const result = await dispatch(saveCompleteProject(parms)).unwrap();
       if (result.errorOccured) {
@@ -92,24 +100,24 @@ const AddProjects = () => {
       });
     }
   };
-  //----------------------Add To Table Button Action----------------------
+
   const handleOpenUnitModal = () => {
-    dispatch(prepareUnitModal(projectState.unitsList.length + 1));
+    dispatch(prepareUnitModal(unitsList.length + 1));
     dispatch(toggleUnitModal(true));
     dispatch(setUnitEditingIndex(-1));
   };
-  //-----------------------Edit Button Table Action ------------------/
+  
   const handleEditUnit = (index) => {
     dispatch(toggleUnitModal(true));
     dispatch(SetRowIndexvalue(index));
   };
- //****************************************************************** */
+
   return (
     <div className="page-container">
-      {projectState.isUnitModalOpen && <UnitModal />}
-      {projectState.isDeleteUnitModalOpen && <DeleteUnitRowModal/>}
-      {projectState.isDeleteProjectModalOpen && <DeleteProjectModal/>}
-      {projectState.isSearchModalOpen && <SearchProjectsModal />}
+      {isUnitModalOpen && <UnitModal />}
+      {isDeleteUnitModalOpen && <UnitDeleteModal/>}
+      {isDeleteProjectModalOpen && <ProjectDeleteModal/>}
+      {isSearchModalOpen && <SearchProjectsModal />}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -186,7 +194,7 @@ const AddProjects = () => {
                     className="form-control-modern inp_code"
                     name="ProjectCode"
                     onChange={handleInputChange}
-                    value={projectState.project.ProjectCode || 0}
+                    value={project.ProjectCode || 0}
                     disabled
                   />
                 </div>
@@ -200,7 +208,7 @@ const AddProjects = () => {
                     className="form-control-modern"
                     autoFocus
                     name="ProjectName"
-                    value={projectState.project.ProjectName || ""}
+                    value={project.ProjectName || ""}
                     onChange={handleInputChange}
                     ref={NameRef}
                     autoComplete="off"
@@ -214,7 +222,7 @@ const AddProjects = () => {
                   <select
                     className="form-select-modern"
                     name="ProjectType"
-                    value={projectState.project.ProjectType || ""}
+                    value={project.ProjectType || ""}
                     onChange={handleInputChange}
                   >
                     <option value="-1">-- إختر النوع --</option>
@@ -234,7 +242,7 @@ const AddProjects = () => {
                     type="text"
                     className="form-control-modern"
                     name="Location"
-                    value={projectState.project.Location || ""}
+                    value={project.Location || ""}
                     onChange={handleInputChange}
                     autoComplete="off"
                   />
@@ -249,7 +257,7 @@ const AddProjects = () => {
                     placeholder="0"
                     className="form-control-modern"
                     name="TotalUnits"
-                    value={projectState.project.TotalUnits || 0}
+                    value={project.TotalUnits || 0}
                     onChange={handleInputChange}
                     autoComplete="off"
                   />
@@ -262,7 +270,7 @@ const AddProjects = () => {
                   <select
                     className="form-select-modern"
                     name="ProjectStatus"
-                    value={projectState.project.ProjectStatus || ""}
+                    value={project.ProjectStatus || ""}
                     onChange={handleInputChange}
                   >
                     <option value="-1">-- اختر الحالة --</option>
@@ -299,7 +307,7 @@ const AddProjects = () => {
                   <img
                     src={
                       variables.URL_IMGP +
-                      (projectState.project.ProjectImage || projectState.projectImageName || "")
+                      (project.ProjectImage || projectImageName || "")
                     }
                     alt=""
                     className="preview-img"
@@ -335,7 +343,7 @@ const AddProjects = () => {
               </tr>
             </thead>
             <tbody>
-              {projectState.unitsList.length === 0 ? (
+              {unitsList.length === 0 ? (
                 <tr>
                   <td
                     colSpan={8}
@@ -345,7 +353,7 @@ const AddProjects = () => {
                   </td>{" "}
                 </tr>
               ) : (
-                projectState.unitsList.map((unit, index) => (
+                unitsList.map((unit, index) => (
                   
                   <tr key={index}>
                     <td>{unit.serial}</td>
@@ -364,7 +372,7 @@ const AddProjects = () => {
                           }}
                         >
                           <img
-                            src={variables.URL_IMGU + (unit.unitImage || projectState.unitImageName)}
+                            src={variables.URL_IMGU + (unit.unitImage || unitImageName)}
                             alt="Unit"
                             style={{
                               position: "relative",

@@ -1,10 +1,16 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import axios from 'axios'
 import { variables } from "../variables";
 import { toast } from 'react-toastify';
 import { formatCurrency } from "../helpers";
-import { deleteProject, fetchProjectsList, fetchProjectUnits, saveCompleteProject, uploadProjectImage, uploadUnitImage } from "../projectService";
-import { CitrusIcon } from "lucide-react";
+import { 
+    deleteProject, 
+    fetchProjectsList, 
+    fetchProjectUnits, 
+    saveCompleteProject, 
+    uploadProjectImage, 
+    uploadUnitImage 
+} from "../services/projectService";
 const initialState = {
     project: {
          ProjectCode: 0, ProjectName:"", ProjectType: "-1", 

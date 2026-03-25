@@ -2,20 +2,18 @@ import React from 'react';
 import { MdClose, MdWarning, MdDelete } from "react-icons/md";
 import '../css/DeleteNegotiation.css';
 import { useDispatch, useSelector } from 'react-redux';
-import {DeleteNegotiationModal, DeleteNegotiationRow} from '../redux/clientSlice'
-const DeleteNegotiation = () => {
-  const db = useSelector((state) => state.clients);
+import {confirmDeleteNegotiation,toggleDeleteNegotiaionModal} from '../redux/clientSlice'
+const DeleteNegotiationModal = () => {
+  const {isLoading}=useSelector((state)=>state.ui);
   const dispatch = useDispatch();
-//************************************************ */
+
   return (
     <div className="neg-row-modal-overlay">
-      <div className="neg-row-modal-card">
-        
-        <div className="neg-row-modal-close" 
-        onClick={()=>dispatch(DeleteNegotiationModal(false))}
-        >
-          <MdClose />
-        </div>
+      <div className="neg-row-modal-card"> 
+        <span className="neg-row-modal-close" 
+        onClick={()=>dispatch(toggleDeleteNegotiaionModal(false))}>
+          <span><MdClose /></span>
+        </span>
 
         <div className="neg-row-modal-content">
           <div className="neg-row-modal-icon">
@@ -28,13 +26,13 @@ const DeleteNegotiation = () => {
 
         <div className="neg-row-modal-btns">
           <button className="neg-row-btn-cancel" 
-          onClick={()=>dispatch(DeleteNegotiationModal(false))}
-          >
+          disabled={isLoading}
+          onClick={()=>dispatch(toggleDeleteNegotiaionModal(false))}>
             لا
           </button>
            <button className="neg-row-btn-confirm"
-            onClick={()=>dispatch(DeleteNegotiationRow())}
-           >
+            disabled={isLoading}
+            onClick={()=>dispatch(confirmDeleteNegotiation())}>
             <MdDelete /> نعم
           </button>
         </div>
@@ -44,4 +42,4 @@ const DeleteNegotiation = () => {
   );
 };
 
-export default DeleteNegotiation;
+export default DeleteNegotiationModal;

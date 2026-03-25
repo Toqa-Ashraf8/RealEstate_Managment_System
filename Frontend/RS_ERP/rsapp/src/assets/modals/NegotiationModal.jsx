@@ -2,54 +2,59 @@ import React, { useEffect, useRef } from "react";
 import "../css/NegotiationModal.css";
 import {Building2,Ungroup}from 'lucide-react'
 import { useDispatch, useSelector } from "react-redux";
-import { AddToNegotiationTable, calculateDiscount, changeNegotiation_values, getpriceByunit, getprojects, getunitsByproject, showNegotiationModal } from "../redux/clientSlice";
+import { 
+  calculateDiscount,  
+  saveNegotiationToTable, 
+  setNegotiationData, 
+  toggleNegotiationModal 
+} from "../redux/clientSlice";
+import { fetchPriceByUnit, fetchProjects, fetchUnitsByProject } from "../services/clientService";
 const NegotiationModal = () => {
-const db = useSelector((state) => state.clients);
+const {negotiation,projects,units}= useSelector((state) => state.clients);
+const {isLoading}=useSelector((state)=>state.ui);
 const dispatch = useDispatch();
-const negotiationpriceRef=useRef();
+const negotiationPriceRef=useRef();
 
-//-------------------------------------------------------------
-const HandleChange=(e)=>{
+const handleInputsChange=(e)=>{
     const{name,value}=e.target;
      if (e.target.name === "ProjectName") {
       const selectedValue = e.target.value;
-      if (e.target.value !== "-1") dispatch(getunitsByproject(selectedValue));
+      if (e.target.value !== "-1") dispatch(fetchUnitsByProject(selectedValue));
     }
      if(e.target.name === "Unit"){
           const unitvalue=e.target.value;
-        if (e.target.value !== "-1") dispatch(getpriceByunit(unitvalue));
-         negotiationpriceRef.current.focus();
+        if (e.target.value !== "-1") dispatch(fetchPriceByUnit(unitvalue));
+         negotiationPriceRef.current.focus();
       }
-    dispatch(changeNegotiation_values({[name]:value}));
+    dispatch(setNegotiationData({[name]:value}));
 }
 
-//********************************************************************************/
-const AddToTable=()=>{
-  dispatch(AddToNegotiationTable())
+const addNewNegotiation=()=>{
+  dispatch(saveNegotiationToTable())
 }
-//--------------------------------------------
+
  useEffect(()=>{
-    negotiationpriceRef.current.focus();
-    if(db.negotiation.ProjectName!==-1 && db.negotiation.ProjectName){
-        dispatch(getprojects());
-        dispatch(getunitsByproject(db.negotiation.ProjectName))
+    negotiationPriceRef.current.focus();
+    if(negotiation.ProjectName!==-1 && negotiation.ProjectName){
+        dispatch(fetchProjects());
+        dispatch(fetchUnitsByProject(negotiation.ProjectName))
     }
  },[dispatch])
+
   return (
     <div dir="rtl">
       <div className="modaln">
         <div className="modalcnt_n">
           <div className="headern">
             <div className="mdl_titles">
-              <span 
-              className="close_b"
-              onClick={()=>dispatch(showNegotiationModal(false))}
-              >&times;</span>
+              <span className="close_b"  
+              onClick={()=>dispatch(toggleNegotiationModal(false))}>
+                <span>&times;</span>
+              </span>
               <h4 className="units_title">إرسال طلب تفاوض</h4>
             </div>
           </div>
           <div className="bodyn">
-              
             <div className="row">
                 <div className="project-unit-section col-5">
                  <div className="data_projectname" style={{display:'flex'}}>
@@ -59,26 +64,27 @@ const AddToTable=()=>{
                       <select 
                       className="crm_select select-project" 
                       name="ProjectName" 
-                      value={db.negotiation.ProjectName || ""} 
-                      onChange={HandleChange}
-                      
+                      value={negotiation.ProjectName || ""} 
+                      onChange={handleInputsChange} 
                       >
                         <option value="-1">-إختر-</option>
-                        {db.projects.map((project, index) => <option key={index} value={project.ProjectName}>{project.ProjectName}</option>)}
+                        {projects.map((project, index) => <option key={index} value={project.ProjectName}>{project.ProjectName}</option>)}
                       </select>
                   </div> 
-                  <div></div>
-                   {db.negotiation.ProjectName && db.negotiation.ProjectName !== "-1" && (
+                  <div>
+                 </div>
+                   {negotiation.ProjectName && negotiation.ProjectName !== "-1" && (
                     <div className="data-unitname" style={{display:'flex',gap:'40px'}}>
                       <label className="lbl_crm"> الوحدة</label>
-                      <select className="crm_select select-unit" name="Unit" value={db.negotiation.Unit || ""} onChange={HandleChange}>
+                      <select className="crm_select select-unit" name="Unit" value={negotiation.Unit || ""} onChange={handleInputsChange}>
                         <option value="-1">-إختر-</option>
-                        {db.units.map((unit, index) => <option key={index} value={unit.UnitName}>{unit.UnitName }</option>)}
+                        {units.map((unit, index) => <option key={index} value={unit.UnitName}>{unit.UnitName }</option>)}
                       </select>
                     </div>
                   )}
                   <div></div>
               </div>
+
               <div className="col-7">
                 <div className="input-group-modern data_cntu">
                   <label className="data_lbl">كود الطلب</label>
@@ -87,8 +93,8 @@ const AddToTable=()=>{
                     className="form-control-modern"
                     disabled
                     name="serialCode"
-                    value={db.negotiation.serialCode || ""}
-                    onChange={HandleChange}
+                    value={negotiation.serialCode || ""}
+                    onChange={handleInputsChange}
                   />
                 </div>
 
@@ -100,8 +106,8 @@ const AddToTable=()=>{
                     disabled
                     autoComplete="off"
                     name="OriginalPrice"
-                    value={db.negotiation.OriginalPrice || ""}
-                    onChange={HandleChange}
+                    value={negotiation.OriginalPrice || ""}
+                    onChange={handleInputsChange}
                   />
                 </div>
                  <div className="input-group-modern data_cntu">
@@ -110,10 +116,10 @@ const AddToTable=()=>{
                     type="text"
                     className="form-control-modern"
                     autoComplete="off"
-                     ref={negotiationpriceRef}
+                     ref={negotiationPriceRef}
                     name="NegotiationPrice"
-                    value={db.negotiation.NegotiationPrice || ""}
-                    onChange={HandleChange}
+                    value={negotiation.NegotiationPrice || ""}
+                    onChange={handleInputsChange}
                     onBlur={() => dispatch(calculateDiscount())}
                   />
                 </div>
@@ -124,13 +130,11 @@ const AddToTable=()=>{
                     className="form-control-modern"
                     autoComplete="off"
                     name="DiscountAmount"
-                    value={db.negotiation.DiscountAmount || ""}
-                    onChange={HandleChange}
+                    value={negotiation.DiscountAmount || ""}
+                    onChange={handleInputsChange}
                   />
-                </div> 
-               
-              </div>
-          
+                </div>       
+              </div>      
             </div>
           </div>
           <div className="footern">
@@ -143,11 +147,13 @@ const AddToTable=()=>{
             >
               <button className="btn btn-primary btn_addu"
               style={{marginRight:'20px'}}
-              onClick={()=>AddToTable()}
+              disabled={isLoading}
+              onClick={()=>addNewNegotiation()}
               >إضافة</button>
               <button 
               className="btn btn-danger"
-              onClick={()=>dispatch(showNegotiationModal(false))}
+              disabled={isLoading}
+              onClick={()=>dispatch(toggleNegotiationModal(false))}
               >إلغاء</button>
             </div>
           </div>

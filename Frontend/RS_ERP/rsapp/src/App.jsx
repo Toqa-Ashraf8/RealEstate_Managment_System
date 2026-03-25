@@ -1,7 +1,6 @@
 import './App.css'
 import 'animate.css';
 import { Routes,Route }from 'react-router-dom'
-import Projects from './assets/pages/Projects'
 import Header from './assets/nav/Header'
 import AddProjects from './assets/pages/AddProjects'
 import { ToastContainer, toast } from 'react-toastify';

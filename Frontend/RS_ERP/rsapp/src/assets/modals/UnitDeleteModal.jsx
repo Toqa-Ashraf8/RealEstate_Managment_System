@@ -1,10 +1,11 @@
 import React from 'react';
 import { MdClose, MdWarning, MdDelete } from "react-icons/md";
-import '../css/DeleteUnitRowModal.css';
+import '../css/UnitDeleteModal.css';
 import {  deleteUnitFromList, hideDeleteUnitModal } from '../redux/projectSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
-const DeleteUnitRowModal = () => {
+const UnitDeleteModal = () => {
+  const{isLoading}=useSelector((state)=>state.ui);
   const dispatch = useDispatch();
 
   return (
@@ -33,6 +34,7 @@ const DeleteUnitRowModal = () => {
             لا
           </button>
           <button className="row-btn-confirm"
+          disabled={isLoading}
           onClick={()=>dispatch(deleteUnitFromList())}
           >
             <MdDelete /> نعم
@@ -44,4 +46,4 @@ const DeleteUnitRowModal = () => {
   );
 };
 
-export default DeleteUnitRowModal;
+export default UnitDeleteModal;
