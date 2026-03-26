@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using System.Reflection.Emit;
+using System.Text;
 using WebApp1.EF;
 using WebApp1.Models;
 
@@ -31,7 +34,29 @@ builder.Services.AddDbContext<DataContext>(options =>
     )
 );
 
-//***********************************************
+//Enable JWT 
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        var jwtsettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtsettings.SecretKey));
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtsettings.Issuer,
+            ValidAudience = jwtsettings.Audience,
+            IssuerSigningKey = key
+        };
+ });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -41,7 +66,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//-----------------------------------------------
+
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider=new PhysicalFileProvider(
@@ -72,11 +97,9 @@ app.UseStaticFiles(new StaticFileOptions
         Path.Combine(Directory.GetCurrentDirectory(), "InstallmentChecks_Images")),
     RequestPath = "/InstallmentChecks_Images"
 });
-//----------------------------------------------
 app.UseHttpsRedirection();
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

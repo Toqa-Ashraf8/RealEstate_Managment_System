@@ -117,10 +117,28 @@ const clientSlice = createSlice({
             })
            
             .addCase(saveClient.fulfilled, (state, action) => {
+                if(action.payload.nullData===true){
+                  toast.error(" برجاء إدخال بيانات العميل لإكمال الحفظ!", {
+                  theme: "colored",
+                  position: "top-left",
+                });
+                }
                 state.client.ClientID = action.payload.id;   
             })
             .addCase(deleteClientData.fulfilled, (state, action) => {
                 state.deletedStatus = action.payload.deleted;
+                if(state.deletedStatus===true){
+                    toast.success("تم حذف بيانات العميل بنجاح", {
+                    theme: "colored",
+                    position: "top-left",
+                 });
+                }
+                else{
+                     toast.error("لا توجد بيانات للحذف ! حاول مرة أخري", {
+                     theme: "colored",
+                     position: "top-left",
+                    });
+                }
             })
             .addCase(fetchClients.fulfilled, (state, action) => {
                 state.clientsList = action.payload;

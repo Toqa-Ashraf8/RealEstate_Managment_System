@@ -63,9 +63,14 @@ namespace WebApp1.Controllers
         [HttpPost]
         public JsonResult SaveClients([FromBody] Client cl)
         {
-           
+            bool nullData = false;
             int id = Convert.ToInt32(cl.ClientID);
-           
+            if (id == 0 &&string.IsNullOrEmpty(cl.ClientName) && string.IsNullOrEmpty(cl.PhoneNumber) && string.IsNullOrEmpty(cl.Notes)) 
+            {
+                nullData = true;
+                return new JsonResult(new { id = 0, nullData =nullData });
+            }
+
             if (id == 0 )
             {
                 try
@@ -82,6 +87,7 @@ namespace WebApp1.Controllers
                         if (conn.State == ConnectionState.Closed) conn.Open();
                         id = Convert.ToInt32(cmd.ExecuteScalar());
                         if (conn.State == ConnectionState.Open) conn.Close();
+                        nullData = false;
                     }
 
                 }
@@ -108,6 +114,7 @@ namespace WebApp1.Controllers
                         if (conn.State == ConnectionState.Closed) conn.Open();
                         cmd.ExecuteNonQuery();
                         if (conn.State == ConnectionState.Open) conn.Close();
+                        nullData = false;
 
                     }
 
@@ -158,6 +165,7 @@ namespace WebApp1.Controllers
                                     cmd.Parameters.AddWithValue("@NegotiationDate", neg.NegotiationDate);
                                     cmd.Parameters.AddWithValue("@checkedByAdmin", neg.checkedByAdmin);
                                     cmd.ExecuteNonQuery();
+                                    nullData = false;
                                 }
                                    
                               if (conn.State == ConnectionState.Open) conn.Close();
@@ -167,7 +175,7 @@ namespace WebApp1.Controllers
                         catch (Exception) { throw; }
 
             }
-            var data = new { id = id };
+            var data = new { id = id , nullData= nullData };
             return new JsonResult(data);
         }
         //******************* Delete Clients and their negotiations***************

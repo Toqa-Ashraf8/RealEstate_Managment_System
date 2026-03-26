@@ -18,6 +18,8 @@ import BookedClients from './assets/pages/BookedClients';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import {clearGlobalError} from './assets/redux/uiSlice'
+import Register from './assets/pages/Register';
+import Login from './assets/pages/Login';
 
 function App() {
 const dispatch = useDispatch();
@@ -54,6 +56,8 @@ useEffect(() => {
               <Route path='/complete_booking' element={<CompleteBooking/>}/>
               <Route path='/installments_schedule' element={<InstallmentsSchedule/>}/>
               <Route path='/booked_clients' element={<BookedClients/>}/>
+              <Route path='/register' element={<Register/>}/>
+              <Route path='/login' element={<Login/>}/>
       </Routes>
     </>
   )

@@ -96,12 +96,16 @@ dispatch(editingNegotiationRow(index));
 
   const handleSaveClient=async()=>{
     const parms={...client,negotiations:negotiationsList}
-    try {
+   
+  try {
          const result = await dispatch(saveClient(parms)).unwrap();
-           toast.success("تم حفظ البيانات بنجاح ", {
+         if(result.nullData===false){
+            toast.success("تم حفظ البيانات بنجاح ", {
              theme: "colored",
              position: "top-left",
            }); 
+         }
+          
        } catch (error) {
          toast.error("حدث خطأ في الاتصال بالخادم", {
            theme: "colored",
@@ -113,7 +117,8 @@ dispatch(editingNegotiationRow(index));
 const handlePreviousClient=()=>{
   try {
     dispatch(fetchPreviousClient(client.ClientID))
-  } catch (error) {
+  } 
+  catch (error) {
     toast.error("حدث خطأ , يرجي إعادة المحاولة", {
            theme: "colored",
            position: "top-center",
@@ -131,8 +136,9 @@ const handleNextClient=()=>{
            position: "top-center",
     });
   }
+  console.log(client.ClientID)
 }
-
+console.log(client.ClientID)
 useEffect(()=>{
   if(nameRef.current.focus())nameRef.current.focus();
 },[])
@@ -356,15 +362,14 @@ useEffect(()=>{
 ) : ""}
                 <td>
                   <div className="btns_dtls_n">
-                <span className="btn_c" title="تعديل" onClick={()=>handleEditNegotiation(index)}>
-                  <CiEdit size={30} color="blue"/>
+                <span  title="تعديل" onClick={()=>handleEditNegotiation(index)}>
+                  <CiEdit size={25} color="blue"/>
                 </span>
                 
-                <span className="btn_c" title="تعديل"
-                onClick={()=>dispatch(selectedDeleteNegotiationRow(index))}>
-                  <MdDeleteOutline size={30} color="red"/>
-                </span>
-              
+                <span  title="تعديل"
+                  onClick={()=>dispatch(selectedDeleteNegotiationRow(index))}>
+                  <MdDeleteOutline size={25} color="red"/>
+                  </span>
                   </div>
                 </td>
               </tr>

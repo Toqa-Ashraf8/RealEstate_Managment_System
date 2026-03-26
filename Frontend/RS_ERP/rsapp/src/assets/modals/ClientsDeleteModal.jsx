@@ -15,23 +15,6 @@ const ClientsDeleteModal = () => {
   const handleDelete=async()=>{
    try {
       const result = await dispatch(deleteClientData(client.ClientID)).unwrap();
-       if(deletedStatus)
-       {
-          toast.success("تم حذف بيانات العميل بنجاح", {
-           theme: "colored",
-          position: "top-left",
-       });
-        dispatch(toggleDeleteClientModal(false));
-        dispatch(resetClientForm());
-       }
-       else{
-         toast.error("لا توجد بيانات للحذف ! حاول مرة أخري", {
-           theme: "colored",
-          position: "top-left",
-       });
-        dispatch(toggleDeleteClientModal(false));
-       }     
-    
    } 
    catch (error) {
       toast.error("حدث خطأ في الاتصال بالخادم", {
@@ -39,6 +22,8 @@ const ClientsDeleteModal = () => {
           position: "top-left",
        });
     }
+      await dispatch(toggleDeleteClientModal(false));
+      await dispatch(resetClientForm());
   }
   return (
     <div className="delete-client-wrapper">

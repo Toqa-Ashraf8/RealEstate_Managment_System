@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
+
+.login-page-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+    padding: 20px;
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 800px; /* العرض اللي طلبتيه */
+}
+
+.login-main-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 60px 50px;
+    border-radius: 35px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.login-title {
+    font-size: 25px;
+    font-weight:800;
+    color: #1e293b;
+    letter-spacing: -0.5px;
+}
+
+.login-input-row {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.login-input-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.login-label {
+    font-weight: 700;
+    font-size: 15px;
+    width: 160px; /* نفس عرض الـ Label في صفحة المشاريع */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #475569;
+}
+
+.login-label svg {
+    color: #4f46e5;
+    background: #f0f2ff;
+    padding: 8px;
+    border-radius: 14px;
+    width: 36px;
+    height: 36px;
+}
+
+.login-control {
+    flex: 1;
+    padding: 16px 20px;
+    border-radius: 18px;
+    border: 2px solid #f1f5f9;
+    background: #ffffff;
+    color: #1e293b;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    font-size: 15px;
+    font-family: 'Cairo', sans-serif;
+}
+
+.login-control:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 5px rgba(79, 70, 229, 0.1);
+    background: #fff;
+}
+
+.login-submit-btn {
+    width: 60%;
+    margin-top: 20px;
+    padding: 18px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+    font-family: 'Cairo', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.login-submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(79, 70, 229, 0.4);
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.login-link {
+    color: #4f46e5;
+    cursor: pointer;
+    text-decoration: none;
+    margin-right: 5px;
+    border-bottom: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.login-link:hover {
+    border-bottom-color: #4f46e5;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .login-input-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .login-label {
+        width: 100%;
+    }
+}

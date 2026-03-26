@@ -13,6 +13,7 @@ namespace WebApp1.EF
         public DbSet <ClientBookingDetail> ClientBookingDetails { get; set; }
         public DbSet<Rejected_negotiations_phase> Rejected_negotiations_phases { get; set; }
         public DbSet<Installment>Installments { get; set; }
+        public DbSet<User>Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
