@@ -21,7 +21,7 @@
     background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
     padding: 35px 25px;
-    height: 580px;
+    height: 660px!important;
     border-radius: 35px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.6);

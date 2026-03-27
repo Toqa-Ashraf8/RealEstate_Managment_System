@@ -1,12 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Lock, ShieldCheck, UserPlus } from 'lucide-react';
 import '../css/Register.css';
 import { useNavigate } from 'react-router-dom';
+import {useSelector,useDispatch} from 'react-redux'
+import { setUserData } from '../redux/authSlice';
+import { toast } from 'react-toastify';
+import { registerUsers } from '../services/authService';
 
 const Register = () => {
+  const {user,tokenRegisterUser}=useSelector((state)=>state.auth);
+  const {isLoading}=useSelector((state)=>state.ui);
+  const dispatch=useDispatch();
   const navigate=useNavigate();
+ 
 
+  const handleInputValues=(e)=>{
+    const {name,value}=e.target;
+    dispatch(setUserData({[name]:value}))
+  
+  }
+const validatePasswordMatch=(e)=>{
+  if(user.Password!==e.target.value){
+      toast.error("كلمة السر غير متطابقة!",{
+      theme:"colored",
+      position:"top-left"
+    })
+  }
+} 
+
+const handleRegister=async()=>{
+  try {
+   const result= await dispatch(registerUsers(user)).unwrap();
+    if(result.token){
+        toast.success("تم إنشاء الحساب بنجاح ", {
+          theme: "colored",
+          position: "top-left",
+      });
+     navigate('/addprojects');
+    }
+    else if(result.isExisted===true){
+        toast.error("هذا البريد الإلكتروني موجود بالفعل , حاول مرة أخري", {
+        theme: "colored",
+        position: "top-left",
+        });
+    }
+  } catch (error) {
+    toast.error("حدث خطأ في الاتصال بالخادم !",{
+      theme:"colored",
+      position:"top-left"
+    })
+  }
+}
+console.log("tokenRegisterUser",tokenRegisterUser)
   return (
     <div className="auth-page-container">
       <motion.div 
@@ -23,53 +69,85 @@ const Register = () => {
             </p>
           </div>
 
-          <form className="auth-form">
-            {/* الصف الأول: اسم المستخدم والإيميل */}
+          <div className="auth-form">
+  
             <div className="auth-form-row">
               <div className="auth-input-group">
                 <label className="auth-label"><User size={18}/> اسم المستخدم</label>
-                <input type="text" className="auth-control"  />
+                <input 
+                type="text" 
+                className="auth-control"
+                name='UserName'
+                value={user.UserName}
+                onChange={handleInputValues}
+                />
               </div>
               <div className="auth-input-group">
                 <label className="auth-label"><Mail size={18}/>  البريد الالكتروني</label>
-                <input type="email" className="auth-control"  />
+                <input 
+                type="email" 
+                className="auth-control"
+                name='Email'
+                value={user.Email}
+                onChange={handleInputValues}
+                />
               </div>
             </div>
 
-            {/* الصف الثاني: كلمة المرور وتأكيدها */}
+       
             <div className="auth-form-row">
               <div className="auth-input-group">
                 <label className="auth-label"><Lock size={18}/> كلمة السر</label>
-                <input type="password" className="auth-control" />
+                <input 
+                type="password" 
+                className="auth-control"
+                name='Password'
+                value={user.Password}
+                onChange={handleInputValues}
+                />
               </div>
               <div className="auth-input-group">
                 <label className="auth-label"><ShieldCheck size={18}/> تأكيد كلمة السر</label>
-                <input type="password" className="auth-control"  />
+                <input 
+                type="password" 
+                className="auth-control"
+                onBlur={(e)=>validatePasswordMatch(e)}
+                />
               </div>
             </div>
 
-           {/*  {/* الصف الثالث: نوع الصلاحية */}
+
              <div className="auth-form-row">
               <div className="auth-input-group">
                 <label className="auth-label"><UserPlus size={18}/> الصلاحية</label>
-                <select className="auth-control">
-                  <option value="User">موظف (User)</option>
-                  <option value="Admin">مدير نظام (Admin)</option>
+                <select 
+                className="auth-control"
+                name='Role'
+                value={user.Role}
+                onChange={handleInputValues}
+                >
+                 <option value="-1">-إختر-</option>
+                  <option value="Employee">Employee</option>
+                  <option value="Admin">Admin</option>
                 </select>
               </div>
             </div> 
 
             <div style={{display:'flex',justifyContent:'center',marginTop:'-15px',marginRight:'50px'}}>
-            <button type="submit" className="auth-submit-btn">
-                   تسجيل الحساب في المنظومة
+            <button 
+            className="auth-submit-btn"
+            disabled={isLoading}
+            onClick={()=>handleRegister()}
+            >
+             تسجيل الحساب في المنظومة
             </button>
             </div>
             
-          </form>
+       </div>
 
           <div className="auth-footer">
             لديك حساب مفعل؟ 
-            <span className="auth-link" onClick={()=>navigate('/login')}>دخول النظام</span>
+            <span className="auth-link"  onClick={()=>navigate('/login')}>دخول النظام</span>
           </div>
         </div>
       </motion.div>

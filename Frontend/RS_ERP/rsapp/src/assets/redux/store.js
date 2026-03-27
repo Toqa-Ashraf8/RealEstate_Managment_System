@@ -4,12 +4,14 @@ import clientReducer from './clientSlice';
 import negotiationReducer from './negotiationSlice';
 import bookingReducer from './bookingSlice';
 import uiReducer from './uiSlice';
+import authReducer from './authSlice';
 export const store = configureStore({
     reducer: {
         projects: projReducer,
         clients: clientReducer,
         negotiation:negotiationReducer,
         booking:bookingReducer,
-        ui:uiReducer
+        ui:uiReducer,
+        auth:authReducer
     }
 })
