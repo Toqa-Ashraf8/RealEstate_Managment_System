@@ -7,10 +7,11 @@ In many real estate agencies, operations like unit bookings and installment trac
 ## 🚀 Core Features
 
 ### 1. Role-Based Access Control (RBAC) 🔐
-* **Admin Dashboard:** High-level overview with **Charts & Analytics** (Sales performance, unit availability, and project statistics).
-* **Managerial Controls:** Exclusive access to approve/reject negotiation requests and manage project configurations.
-* **Employee/Sales Portal:** Tools to register clients, browse units, and initiate formal negotiation/purchase requests.
-
+* **Secure Auth**: Integrated **JWT Authentication** and **BCrypt** password hashing for robust data protection.
+* **Admin Dashboard**: High-level overview with **Charts & Analytics** (Sales performance, unit availability, and project statistics).
+* **Managerial Controls**: Exclusive access to approve/reject negotiation requests and manage project configurations.
+* **Employee/Sales Portal**: Tools to register clients, browse units, and initiate formal negotiation/purchase requests.
+  
 ### 2. Project & Unit Inventory (Master-Detail) 📋
 * **Master-Detail Architecture:** Administrators can create projects and dynamically add associated units with detailed specifications (Area, Floor, Price, Images, and Status).
 * **Live Inventory:** A real-time display of available vs. sold units for sales teams.
@@ -37,8 +38,22 @@ In many real estate agencies, operations like unit bookings and installment trac
 The system relies on a robust relational schema:
 * **One-to-Many:** Projects ➡️ Units.
 * **Many-to-One:** Negotiations ➡️ Clients & Units.
-* **Automation:** The system pulls validated client data into the booking phase automatically to ensure data integrity and zero manual entry errors.
+* **Automation:** The system pulls validated client data into the booking phase automatically to ensure data integrity and zero manual entry errors. 
 
+### 🏗️ Database Schema (ERD)
+The system relies on a highly normalized relational schema to ensure data integrity.
+![System ERD Diagram](./docs/erd-diagram.pdf)
+
+## 📊 System Workflow (Business Logic)
+```mermaid
+graph TD
+    A[Employee] -->|Registers| B(Client Data & Purchase Request)
+    B -->|Submit| C{Admin/Manager}
+    C -->|Reject| D[Rejected Negotiations Phase]
+    C -->|Approve| E[Client Booking Details]
+    E -->|Generates| F[Automated Installment Plan]
+    F -->|Tracks| G[Monthly Payments & Financials]
+```
 ## 🔧 Installation & Setup
 1. Clone the repo: `git clone https://github.com/Toqa-Ashraf8/RealEstate_FullStack_System.git`
 2. **Backend:** - Update `appsettings.json` with your SQL connection string.ٍ
