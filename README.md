@@ -42,7 +42,7 @@ The system relies on a robust relational schema:
 
 ### 🏗️ Database Schema (ERD)
 The system relies on a highly normalized relational schema to ensure data integrity.
-![System ERD Diagram](./docs/erd-diagram.pdf)
+![System ERD Diagram](./docs/erd-diagram.png)
 
 ## 📊 System Workflow (Business Logic)
 ```mermaid
