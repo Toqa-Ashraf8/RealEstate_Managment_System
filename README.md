@@ -46,14 +46,15 @@ The system relies on a highly normalized relational schema to ensure data integr
 ![System ERD Diagram](./docs/erd-diagram.png)
 
 ## 📊 System Workflow (Business Logic)
+
 ```mermaid
 graph TD
-    A[Employee] -->|Registers| B(Client Data & Purchases)
-    B -->|Submit| C{Admin/Manager}
-    C -->|Reject| D[Rejected Negotiations]
-    C -->|Approve| E[Client Booking Details]
-    E -->|Generates| F[Automated Installment Plan]
-    F -->|Tracks| G[Monthly Payments]
+A[Employee] -->|Registers| B(Client Data & Purchases)
+B -->|Submit| C{Admin/Manager}
+C -->|Reject| D[Rejected Negotiations]
+C -->|Approve| E[Client Booking Details]
+E -->|Generates| F[Automated Installment Plan]
+F -->|Tracks| G[Monthly Payments]
 ```
 ## 🔧 Installation & Setup
 1. Clone the repo: `git clone https://github.com/Toqa-Ashraf8/RealEstate_FullStack_System.git`
