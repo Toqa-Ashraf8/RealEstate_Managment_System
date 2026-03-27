@@ -48,7 +48,7 @@ The system relies on a highly normalized relational schema to ensure data integr
 ## 📊 System Workflow (Business Logic)
 ```mermaid
 graph TD
-    A[Employee] -->|Registers| B(Client Data & Purchase Request)
+    A[Employee] -->|Registers| B(Client Data & Purchases)
     B -->|Submit| C{Admin/Manager}
     C -->|Reject| D[Rejected Negotiations]
     C -->|Approve| E[Client Booking Details]
