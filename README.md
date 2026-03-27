@@ -50,7 +50,7 @@ The system relies on a highly normalized relational schema to ensure data integr
 graph TD
     A[Employee] -->|Registers| B(Client Data & Purchase Request)
     B -->|Submit| C{Admin/Manager}
-    C -->|Reject| D[Rejected Negotiations Phase]
+    C -->|Reject| D[Rejected Negotiations]
     C -->|Approve| E[Client Booking Details]
     E -->|Generates| F[Automated Installment Plan]
     F -->|Tracks| G[Monthly Payments]
