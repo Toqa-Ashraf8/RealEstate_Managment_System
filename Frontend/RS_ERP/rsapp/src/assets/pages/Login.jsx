@@ -3,10 +3,37 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, LogIn, ArrowLeftCircle } from 'lucide-react';
 import '../css/Login.css';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../services/authService';
+import { toast } from 'react-toastify';
+import { setUserData } from '../redux/authSlice';
 
 const Login = () => {
+  const {user,token,role}=useSelector((state)=>state.auth);
+  const {isLoading}=useSelector((state)=>state.auth);
+  const dispatch=useDispatch();
   const navigate=useNavigate();
 
+const handleChangeValues=(e)=>{
+  const {name,value}=e.target;
+  dispatch(setUserData({[name]:value}));
+}
+
+  const handleLogin=async()=>{
+        const result=await dispatch(loginUser(user)).unwrap();
+        const {token,role}=result;
+        if(token){
+          sessionStorage.setItem('token',token);
+          sessionStorage.setItem('userRole',role);
+          navigate('/addprojects');
+          toast.success("تم تسجيل الدخول بنجاح! مرحبا بك",{
+            theme:"colored",
+            position:"top-left"
+          })
+        }
+  }
+  console.log("token",token);
+  console.log("role",role);
   return (
     <div className="login-page-container">
       <motion.div 
@@ -21,37 +48,43 @@ const Login = () => {
            
           </div>
 
-          <form className="login-input-row">
-            {/* حقل البريد الإلكتروني */}
+          <div className="login-input-row">
+      
             <div className="login-input-group">
               <label className="login-label">
                 <Mail size={18}/> البريد الإلكتروني
               </label>
               <input 
-                name="email"
                 type="email" 
                 className="login-control" 
                 autoComplete="off"
+                name='Email'
+                value={user.Email}
+                onChange={handleChangeValues}
               />
             </div>
 
-            {/* حقل كلمة المرور */}
             <div className="login-input-group">
               <label className="login-label">
                 <Lock size={18}/> كلمة المرور
               </label>
               <input 
-                name="password"
                 type="password" 
-                className="login-control" 
+                className="login-control"
+                name='Password'
+                value={user.Password}
+                onChange={handleChangeValues} 
               />
             </div>
             <div style={{display:'flex',justifyContent:'center'}}>
-            <button type="submit" className="login-submit-btn">
+            <button 
+              className="login-submit-btn"
+              onClick={()=>handleLogin()}
+              >
                <LogIn size={22} /> دخول النظام
             </button>
             </div>
-          </form>
+          </div>
 
           <div className="login-footer">
             ليس لديك صلاحية وصول؟ 

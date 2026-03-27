@@ -8,3 +8,8 @@ export const registerUsers=createAsyncThunk("registerUsers/auth",async(data)=>{
     .then((res)=>res.data);
     return resp;
 })
+export const loginUser=createAsyncThunk("loginUser/auth",async(logUser)=>{
+    const resp=await axios.post(variables.AUTH_API+"Login",logUser)
+    .then((res)=>res.data);
+    return resp;
+})

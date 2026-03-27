@@ -1,10 +1,14 @@
-﻿using BCrypt.Net;
+﻿using Azure.Core;
+using BCrypt.Net;
+using BCrypt.Net;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System.Data;
@@ -16,10 +20,7 @@ using System.Security.Cryptography.Xml;
 using System.Text;
 using WebApp1.EF;
 using WebApp1.Models;
-using BCrypt.Net;
-using Microsoft.IdentityModel.Tokens;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace WebApp1.Controllers
 {
@@ -94,7 +95,68 @@ namespace WebApp1.Controllers
                 signingCredentials: creds
             );
             if (conn.State == ConnectionState.Open) conn.Close();
-            var data = new { token = new JwtSecurityTokenHandler().WriteToken(token)};
+            var data = new { token = new JwtSecurityTokenHandler().WriteToken(token) , role=user.Role};
+            return new JsonResult(data);
+
+        }
+
+        [Route("Login")]
+        [HttpPost]
+        public JsonResult Login([FromBody]Login userData)
+        {
+            bool islogged = false;
+            bool isNull = false;
+            string savedPassword = "";
+            string user_role = "";
+            if (userData == null) 
+            {
+                isNull = true;
+                var message = new { isNull = isNull };
+                return new JsonResult(message);
+            }
+            string sqls = @"select * from Users where Email=@Email";
+            SqlCommand cmd = new SqlCommand(sqls, conn);
+            if (conn.State == ConnectionState.Closed) conn.Open();
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@Email", userData.Email);
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                savedPassword = dt.Rows[0]["Password"].ToString();
+                user_role = dt.Rows[0]["Role"].ToString();
+
+            }
+            
+            bool isPasswordValid = BCrypt.Net.BCrypt.EnhancedVerify(userData.Password, savedPassword);
+            if (isPasswordValid)
+            {
+                islogged = true;
+            }
+            else
+            {
+                Response.StatusCode = 401;
+                return new JsonResult(new { message = "Unauthorized Access" });
+            }
+                var claims = new[]
+                    {
+                    new Claim(ClaimTypes.Name, dt.Rows[0]["UserName"].ToString()),
+                    new Claim(ClaimTypes.Role, dt.Rows[0]["Role"].ToString()),
+                 };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.SecretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: "MyRealEstateApi",
+                audience: "MyRealEstateReactApp",
+                claims: claims,
+                expires: DateTime.Now.AddHours(7),
+                signingCredentials: creds
+            );
+            if (conn.State == ConnectionState.Open) conn.Close();
+            var data = new { token = new JwtSecurityTokenHandler().WriteToken(token),role= user_role };
             return new JsonResult(data);
 
         }

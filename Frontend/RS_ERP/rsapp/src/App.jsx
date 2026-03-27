@@ -20,9 +20,11 @@ import { useEffect } from 'react';
 import {clearGlobalError} from './assets/redux/uiSlice'
 import Register from './assets/pages/Register';
 import Login from './assets/pages/Login';
+import ProtectedRoute from './assets/components/ProtectedRoute';
 
 function App() {
 const dispatch = useDispatch();
+const {token}=useSelector((state)=>state.auth);
 const { isLoading, globalError, globalMessage } = useSelector((state) => state.ui);
 
 useEffect(() => {
@@ -43,19 +45,83 @@ useEffect(() => {
         pauseOnHover
       />
 
-    <Header/>
-      <Routes>
-              <Route path="/addprojects" element={<AddProjects/>}/>
-              <Route path="/projects" element={<ProjectsCard/>}/>
-              <Route path="/units" element={<UnitsCard/>}/>
-              <Route path='/addclients' element={<AddClients/>}/> 
-              <Route path='/negotiation_requests' element={<NegotiationRequests/>}/>
-              <Route path='/booking' element={<BookingsManager/>}/> 
-              <Route path='/rejected_negotiations' element={<RejectedNegotiations/>}/> 
-              <Route path='/accepted_negotiations' element={<AcceptedNegotiations/>}/>  
-              <Route path='/complete_booking' element={<CompleteBooking/>}/>
-              <Route path='/installments_schedule' element={<InstallmentsSchedule/>}/>
-              <Route path='/booked_clients' element={<BookedClients/>}/>
+    <Header />
+      <Routes>      
+             <Route path="/addprojects" 
+              element={
+              <ProtectedRoute allowedRoles={['Admin']} >  
+                <AddProjects/>
+                </ProtectedRoute>
+              }
+              />
+              <Route path="/projects" 
+              element={
+                <ProtectedRoute>
+                  <ProjectsCard/>
+              </ProtectedRoute>
+             }
+              />
+              <Route path="/units" 
+              element={
+                <ProtectedRoute>
+                  <UnitsCard/>
+                </ProtectedRoute>
+               }
+              />
+              <Route path='/addclients' 
+              element={
+                <ProtectedRoute>
+                  <AddClients/>
+                 </ProtectedRoute>
+              }/> 
+              <Route path='/negotiation_requests' 
+              element={
+                <ProtectedRoute allowedRoles={['Admin']}>
+                 <NegotiationRequests/>
+                 </ProtectedRoute>
+              }/>
+              <Route path='/booking' 
+              element={
+                 <ProtectedRoute>
+                   <BookingsManager/>
+                 </ProtectedRoute>
+              }
+              /> 
+              <Route path='/rejected_negotiations' 
+              element={
+                <ProtectedRoute allowedRoles={['Admin']}>
+                 <RejectedNegotiations/>
+                </ProtectedRoute>
+               }
+              /> 
+              <Route path='/accepted_negotiations' 
+              element={
+                 <ProtectedRoute allowedRoles={['Admin']}>
+                  <AcceptedNegotiations/>
+                 </ProtectedRoute>
+              }
+              />  
+              <Route path='/complete_booking' 
+              element={
+               <ProtectedRoute>
+                <CompleteBooking/>
+              </ProtectedRoute>
+              }
+              />
+              <Route path='/installments_schedule' 
+              element={
+               <ProtectedRoute>
+                  <InstallmentsSchedule/>
+               </ProtectedRoute>
+              }
+              />
+              <Route path='/booked_clients' 
+              element={
+                 <ProtectedRoute>
+                  <BookedClients/>
+                  </ProtectedRoute>
+               }
+              />
               <Route path='/register' element={<Register/>}/>
               <Route path='/login' element={<Login/>}/>
       </Routes>
