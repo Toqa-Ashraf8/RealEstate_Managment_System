@@ -30,10 +30,10 @@ In many real estate agencies, operations like unit bookings and installment trac
 
 ## 🛠️ Tech Stack
 * **Frontend:** React.js, Redux Toolkit (Complex State Management),**Bootstrap**,Custom CSS.
-* **Backend:** .NET Core Web API (Restful Services),JWT Authentication.
+* **Backend:** .NET Core Web API (RESTful Services), JWT Authentication, ADO.NET & Entity Framework Core (Hybrid Data Access Layer)
 * **Database:** Microsoft SQL Server & Entity Framework Core.
 * **Data Visualization:** Chart.js for business analytics.
-* **Principles:** Developed with **Clean Code** standards, **SOLID Principles**, and **Testable Architecture**.
+* **Principles:** Developed with **Clean Code** standards, **SOLID Principles**, and **Focusing on Modular Logic**.
 
 ## 🏗️ Database Architecture & Logic
 The system relies on a robust relational schema:
