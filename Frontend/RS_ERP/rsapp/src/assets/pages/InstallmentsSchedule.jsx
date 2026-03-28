@@ -11,12 +11,12 @@ import {
 import '../css/InstallmentsSchedule.css';
 import { useDispatch, useSelector} from 'react-redux';
 import { 
-    changetoReserved, 
+    bookingDetailRequest,
     clearpaymentModal, 
+    confirmReservation, 
     FillClientData, 
     generateInstallments, 
-    openRevertModal, 
-    saveBookingandInstallment, 
+    openRevertModal,  
     setPendingPayment, 
     showPaymentModal, 
 } from '../redux/bookingSlice';
@@ -58,12 +58,12 @@ const saveAllData=async()=>{
     }
  
        try {
-           const result=await dispatch(saveBookingandInstallment(data)).unwrap();
+           const result=await dispatch(bookingDetailRequest(data)).unwrap();
             toast.success("تم الحجز بنجاح!", {
                theme: "colored",
                position: "top-left",
            });
-           await dispatch(changetoReserved(initialClientData));
+           await dispatch(confirmReservation(initialClientData));
        } 
        catch (error) {
            toast.error("حدث خطأ في الاتصال الخادم", {

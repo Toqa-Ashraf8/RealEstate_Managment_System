@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { ApprovedtoReject, clearValuesOfRow, GetAllnegotiations,  GetRejectModalvalues,  negotiationCount, RejectModal_values, SaveRequestByAdmin, showModal_reject } from '../redux/negotiationSlice';
+import { ApprovedtoReject, clearValuesOfRow,  GetRejectModalvalues,  negotiationCount, RejectModal_values, SaveRequestByAdmin, showModal_reject } from '../redux/negotiationSlice';
 import { AiTwotoneEdit } from "react-icons/ai";
 import { toast } from 'react-toastify';
 const RejectModal = () => {

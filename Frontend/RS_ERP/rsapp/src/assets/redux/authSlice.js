@@ -5,7 +5,8 @@ const initialState={
     user:{},
     token:sessionStorage.getItem('token'),
     role: sessionStorage.getItem('userRole'),
-    userName:sessionStorage.getItem('name')
+    userName:sessionStorage.getItem('name'),
+    isLoggedin:false
 }
 const authSlice=createSlice({
     name:'auth',
@@ -16,6 +17,13 @@ const authSlice=createSlice({
         },
         resetUserForm:(state,action)=>{
             state.user=initialState.user;
+        },
+        confirmLoggingin:(state,action)=>{
+            state.isLoggedin=action.payload;
+            if(state.isLoggedin===true){
+              state.token="";
+              state.user=initialState.user;
+            }
         }
        
     },
@@ -42,6 +50,6 @@ const authSlice=createSlice({
         })
     }
 })
-export const{setUserData,resetUserForm}=authSlice.actions;
+export const{setUserData,resetUserForm,confirmLoggingin}=authSlice.actions;
 const authReducer=authSlice.reducer;
 export default authReducer;

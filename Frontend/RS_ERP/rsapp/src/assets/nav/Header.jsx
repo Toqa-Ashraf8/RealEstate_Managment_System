@@ -4,6 +4,7 @@ import { MdOutlineRealEstateAgent } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import { MdOutlineNotifications } from "react-icons/md";
 import { useSelector } from 'react-redux';
+import HeaderActions from './HeaderActions';
 
 const Header = () => {
   const {token ,role}=useSelector((state)=>state.auth);
@@ -60,7 +61,7 @@ const Header = () => {
           </Link>
         </li>
       </ul>
-    
+    {token && <HeaderActions/>}
     </div>
   </div>
 </nav>

@@ -5,7 +5,7 @@ import '../css/CompleteBooking.css';
 import { RiSave3Fill } from "react-icons/ri";
 import { AiOutlineClear } from "react-icons/ai";
 import { FiPrinter } from "react-icons/fi";
-import { calculatenewDownPayment, caluclateDownPayment, ChangevaluesOfBookingClient,  clearInputs,  FillClientData, generateInstallments, getInstallmentData, getreservedClientsByID, reservedOrnot, saveBookingandInstallment, saveChecksImages, saveNationalidImage, updateDownPaymentManual} from '../redux/bookingSlice';
+import { bookingDetailRequest, calculatenewDownPayment, caluclateDownPayment, ChangevaluesOfBookingClient,  clearInputs,  FillClientData, generateInstallments, getInstallmentData, getreservedClientsByID, reservedOrnot, saveChecksImages, saveNationalidImage, updateDownPaymentManual} from '../redux/bookingSlice';
 import { variables } from '../variables';
 import {toast} from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
@@ -73,7 +73,7 @@ const SavedData=async()=>{
         ...InstallmentInformation,
          installments:[]};
     try {
-        const result=await dispatch(saveBookingandInstallment(parms)).unwrap();
+        const result=await dispatch(bookingDetailRequest(parms)).unwrap();
         if(result.saved===true){
          toast.success("تم الحجز بنجاح!", {
             theme: "colored",

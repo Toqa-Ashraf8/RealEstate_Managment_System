@@ -120,7 +120,7 @@ const negotiationSlice=createSlice({
         },
        
     },
-    //****************************************************************************** */
+   
     extraReducers:(builder)=>{
         builder
         .addCase(negotiationCount.pending,(state)=>{
@@ -130,7 +130,7 @@ const negotiationSlice=createSlice({
             state.negotiationNo=action.payload;
         })
         
-        .addCase(GetAllnegotiations.fulfilled,(state,action)=>{
+        .addCase(getPendingNegotiations.fulfilled,(state,action)=>{
             state.Allnegotiations=action.payload;
         })
         

@@ -215,12 +215,12 @@ const bookingSlice = createSlice({
                 state.installmentCheckImageName = action.payload;
 
             })        
-            .addCase(saveBookingandInstallment.fulfilled, (state, action) => {
+            .addCase(bookingDetailRequest.fulfilled, (state, action) => {
                 state.bookingClient.BookingID = action.payload.booking_id;
                 state.successSaveBookingData=action.payload.saved_m;
                 state.successSaveInstallmentData=action.payload.saved_d;
             })
-            .addCase(changetoReserved.fulfilled, (state, action) => {
+            .addCase(confirmReservation.fulfilled, (state, action) => {
                 state.loading = false;
             })
          
