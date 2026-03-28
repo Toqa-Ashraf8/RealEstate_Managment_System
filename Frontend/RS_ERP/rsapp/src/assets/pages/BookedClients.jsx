@@ -74,8 +74,9 @@ const editReservedClients=async(id,index)=>{
                               
                                 <td>
                                     <div className="table_actions">
-                                        <button className="action_icon view" title="تعديل" onClick={()=>editReservedClients(client.BookingID,index)}><SquarePen  size={18} color='blue' /></button>
-                                        <button className="action_icon print" title="طباعة"><Printer size={18} color='teal' /></button>
+                                        <button className="action_icon view" title="تعديل" onClick={()=>editReservedClients(client.BookingID,index)}>
+                                            <SquarePen  size={18} color='blue' />
+                                       </button>
                                     </div>
                                 </td>
                             </tr>
