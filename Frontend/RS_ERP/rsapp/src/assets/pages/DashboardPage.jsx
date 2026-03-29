@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../css/DashboardPage.css'; 
 import ProjectsUnitsBarChart from '../components/ProjectsUnitsBarChart'; 
 import DailyBookingChart from '../components/DailyBookingChart'; 
+import { useDispatch } from 'react-redux';
+import { fetchMonthlyReservations, fetchProjectsUnitsStats } from '../services/dashboardServices';
 
 const DashboardPage = () => {
+  const dispatch=useDispatch();
   const stats = [
     { title: "عدد المشاريع", value: "12" },
     { title: "إجمالي العملاء", value: "1,240" },
@@ -12,8 +15,17 @@ const DashboardPage = () => {
     { title: "وحدات متاحة", value: "156" },
   ];
 
-  const projectsUnitsData = [45, 80, 20, 55]; 
-  const bookingDailyData = [5, 12, 8, 45]; 
+  /* const projectsUnitsData = [45, 80, 20, 55]; 
+  const bookingDailyData = [5, 12, 8, 45];  */
+useEffect(()=>{
+  const fetchData=async()=>{
+   await Promise.all([
+      dispatch(fetchProjectsUnitsStats()),
+      dispatch(fetchMonthlyReservations())
+    ]);
+  }
+  fetchData();
+},[dispatch])
 
   return (
     <div className="dashboard-main-wrapper" dir="rtl">
@@ -38,7 +50,7 @@ const DashboardPage = () => {
               <h5 className="chart-main-heading">أكثر المشاريع وحدات</h5>
             </div>
             <div className="chart-visual-area">
-              <ProjectsUnitsBarChart projectsData={projectsUnitsData} />
+              <ProjectsUnitsBarChart />
             </div>
           </div>
         </div>
@@ -50,7 +62,7 @@ const DashboardPage = () => {
               <h5 className="chart-main-heading">نشاط الحجوزات اليومي</h5>
             </div>
             <div className="chart-visual-area">
-              <DailyBookingChart bookingData={bookingDailyData} />
+              <DailyBookingChart />
             </div>
           </div>
         </div>

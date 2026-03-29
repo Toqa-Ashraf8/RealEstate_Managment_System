@@ -1,20 +1,19 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from 'chart.js';
+import { useSelector } from 'react-redux';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const ProjectsUnitsBarChart = ({ projectsData }) => {
-  const data = {
-    // أسماء المشاريع اللي عندك في الداتابيز
-    labels: ['مشروع لؤلؤة', 'كمبوند الرواد', 'برج الياسمين', 'مشروع النخيل'], 
-    datasets: [
+const {projectsUnitsCounts}=useSelector((state)=>state.dashboard);
+  const data = { 
+      labels: projectsUnitsCounts.map((item) => item.ProjectName),
+     datasets: [
       {
-        label: 'عدد الوحدات',
-        // الأرقام دي هي اللي هتتغير لما تضيفي وحدات
-        data: projectsData || [45, 80, 20, 55], 
-        backgroundColor: '#0d6efd', // لون أزرق بروفيشنال
-        borderRadius: 8, // بيخلي الأعمدة شكلها مودرن (Rounded)
+        data: projectsUnitsCounts.map((item)=>item.TotalUnitsCount), 
+        backgroundColor: '#0d6efd', 
+        borderRadius: 8, 
         borderSkipped: false,
       },
     ],
@@ -24,15 +23,15 @@ const ProjectsUnitsBarChart = ({ projectsData }) => {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: false }, // مش محتاجين ليجند لأنها واضحة
+      legend: { display: false }, 
     },
     scales: {
       y: {
         beginAtZero: true,
-        position: 'right', // عشان الأرقام عربي
+        position: 'right', 
       },
       x: {
-        reverse: true, // ترتيب المشاريع من اليمين
+        reverse: true, 
       }
     }
   };
