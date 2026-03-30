@@ -70,9 +70,10 @@ const UnitsCard = () => {
                   <div className="u-card-price-row">
                     <div className="u-card-price">
                       <span className="price-label">السعر الإجمالي</span>
-                      <span className="price-value">{formatCurrency(unit.TotalPrice)} ج</span>
+                      <span className="price-value">
+                        {formatCurrency(unit.TotalPrice)} ج
+                        </span>
                     </div>
-                   
                   </div>
                 </div>
               </div>

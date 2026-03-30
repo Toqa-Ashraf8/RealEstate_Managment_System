@@ -20,7 +20,6 @@ const ProjectsCard = () => {
   const dispatch = useDispatch();
   const navigate=useNavigate();
 
-  //----------------------------------------------------------------------------------
   useEffect(() => {
     dispatch(fetchProjectsList());
   }, [dispatch]);
@@ -47,7 +46,8 @@ const ProjectsCard = () => {
           <div className="arch-grid">
             {projectState.projectsList.map((project, i) => (
               <div key={i} 
-              className="arch-item animate__animated animate__zoomIn" style={{ animationDelay: `${i * 0.1}s` }}
+              className="arch-item animate__animated animate__zoomIn" 
+              style={{ animationDelay: `${i * 0.1}s` }}
               onClick={()=>dispatch(updateSelectedProjectCode(i))}
               >
                 <div className="arch-card" data-type={project.ProjectType}>
@@ -55,25 +55,33 @@ const ProjectsCard = () => {
            
                   <div className="arch-visual">
                     {project.ProjectImage ? (
-                      <img src={variables.PROJECT_IMAGES_URL + project.ProjectImage} className="arch-img" alt={project.ProjectName} />
+                      <img 
+                      src={variables.PROJECT_IMAGES_URL + project.ProjectImage} 
+                      className="arch-img" alt={project.ProjectName} />
                     ) : (
                       <div className="arch-img-none"><FaImage size={40} /></div>
                     )}
                     
                   
-                    <div className="arch-glass-badge arch-status">{project.ProjectStatus || 'نشط'}</div>
-                    <div className="arch-glass-badge arch-icon-type">{getProjectIcon(project.ProjectType)}</div>
+                    <div className="arch-glass-badge arch-status">
+                      {project.ProjectStatus || 'نشط'}
+                      </div>
+                    <div className="arch-glass-badge arch-icon-type">
+                      {getProjectIcon(project.ProjectType)}
+                      </div>
                  
                   </div>
-
-                  {/* الجزء السفلي: البيانات */}
                   <div className="arch-body">
                     <span className="arch-type-label">{project.ProjectType}</span>
                     <h4 className="arch-title">{project.ProjectName}</h4>
                     
                     <div className="arch-stats">
-                      <div className="arch-stat"><FaMapMarkerAlt className="c-red" /> <span>{project.Location || 'غير محدد'}</span></div>
-                      <div className="arch-stat"><FaBuilding className="c-blue" /> <span>{project.TotalUnits || 0} وحدة</span></div>
+                      <div className="arch-stat"><FaMapMarkerAlt className="c-red" /> 
+                      <span>{project.Location || 'غير محدد'}</span>
+                      </div>
+                      <div className="arch-stat"><FaBuilding className="c-blue" /> 
+                      <span>{project.TotalUnits || 0} وحدة</span>
+                      </div>
                     </div>
                     
                     <button 

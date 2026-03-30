@@ -87,12 +87,12 @@ namespace WebApp1.Controllers
                             ClientStatus,Notes) values(@ClientName,@PhoneNumber,@ClientStatus,@Notes)select SCOPE_IDENTITY()";
                     using (SqlCommand cmd = new SqlCommand(sqlin, conn))
                     {
+                        if (conn.State == ConnectionState.Closed) conn.Open();
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("@ClientName", cl.ClientName);
                         cmd.Parameters.AddWithValue("@PhoneNumber", cl.PhoneNumber);
                         cmd.Parameters.AddWithValue("@ClientStatus", cl.ClientStatus);
                         cmd.Parameters.AddWithValue("@Notes", cl.Notes);
-                        if (conn.State == ConnectionState.Closed) conn.Open();
                         id = Convert.ToInt32(cmd.ExecuteScalar());
                         if (conn.State == ConnectionState.Open) conn.Close();
                         nullData = false;
@@ -110,7 +110,8 @@ namespace WebApp1.Controllers
                 try
                 {
                     string sqlupdate = @"update Clients set ClientName=@ClientName,PhoneNumber=@PhoneNumber,
-                                     ClientStatus=@ClientStatus,Notes=@Notes where ClientID=@ClientID";
+                                     ClientStatus=@ClientStatus,Notes=@Notes where ClientID=@ClientID";  
+                    if (conn.State == ConnectionState.Closed) conn.Open();
                     using (SqlCommand cmd = new SqlCommand(sqlupdate, conn))
                     {
                         cmd.Parameters.Clear();
@@ -119,9 +120,7 @@ namespace WebApp1.Controllers
                         cmd.Parameters.AddWithValue("@ClientStatus", cl.ClientStatus);
                         cmd.Parameters.AddWithValue("@Notes", cl.Notes);
                         cmd.Parameters.AddWithValue("@ClientID", id);
-                        if (conn.State == ConnectionState.Closed) conn.Open();
                         cmd.ExecuteNonQuery();
-                        if (conn.State == ConnectionState.Open) conn.Close();
                         nullData = false;
 
                     }
@@ -180,17 +179,18 @@ namespace WebApp1.Controllers
                                     cmd.Parameters.AddWithValue("@Requester", neg.Requester);
                                     cmd.Parameters.AddWithValue("@Reserved", neg.Reserved);
                                     cmd.ExecuteScalar();
-                                    if (conn.State == ConnectionState.Open) conn.Close();
+                                   
                                     nullData = false;
                                 }
-                                   
+                              if (conn.State == ConnectionState.Open) conn.Close();  
                               
                         } 
-                               
+                              
                         }
                         catch (Exception) { throw; }
 
             }
+            if (conn.State == ConnectionState.Open) conn.Close();
             var data = new { id = id , nullData= nullData };
             return new JsonResult(data);
         }

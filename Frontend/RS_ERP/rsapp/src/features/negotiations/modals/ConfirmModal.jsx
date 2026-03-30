@@ -2,43 +2,39 @@ import React, { useState } from 'react';
 import './ConfirmModal.css';
 import { useDispatch, useSelector } from 'react-redux';
 import {toast} from 'react-toastify'
-import { ApprovedtoReject, SaveRequestByAdmin, showconfirmModal } from '../../../assets/redux/negotiationSlice';
+import { toggleConfirmModal } from '../../../assets/redux/negotiationSlice';
+import { 
+  processNegotiationReview, 
+  updateNegotiationStatus 
+} from '../../../services/negotiationService';
 
 const ConfirmModal = () => {
-     const db = useSelector((state) => state.negotiation);
-    const dispatch = useDispatch();
-    const rejectobj=db.rejectedrow;
-    
-    //******************************************************************* */
-const AcceptRequest = async () => {
+const {
+  selectedRejectedNegotiation,
+  selectedRequest,
+  CurrentDate,
+  rejected
+} = useSelector((state) => state.negotiation);
+const dispatch = useDispatch();
 
-  const acceptedrow = {
-    ClientID: db.negotiationRow.ClientID,
-    ProjectName: db.negotiationRow.ProjectName,
-    Unit: db.negotiationRow.Unit,
-    NegotiationCondition: db.negotiationRow.NegotiationCondition,
-    SuggestedPrice: db.negotiationRow.SuggestedPrice || 0,
-    ReasonOfReject: db.negotiationRow.ReasonOfReject || "",
-    CheckedDate: db.CurrentDate
-  };
-  try {
-  
-    if (db.Re_approveRow === 0) {
-      await dispatch(SaveRequestByAdmin(acceptedrow)).unwrap();
+    
+const AcceptRequest = async () => {
+const acceptedrow = {...selectedRequest,CheckedDate:CurrentDate};
+   try {
+    if (rejected === 0) {
+      await dispatch(processNegotiationReview(acceptedrow)).unwrap();
       toast.success("تم قبول الطلب!");
     } 
-    else if (db.Re_approveRow === 1) {
-    
-      await dispatch(ApprovedtoReject(rejectobj)).unwrap();
+    else if (rejected === 1) {
+      await dispatch(updateNegotiationStatus(selectedRejectedNegotiation)).unwrap();
       toast.success("تم تحديث الطلب!");
     }
-
-    dispatch(showconfirmModal(false));
-
-  } catch (error) {
+    dispatch(toggleConfirmModal(false));
+  } 
+  catch (error) {
     console.error("Submission Error:", error);
     toast.warning("حدث خطأ أثناء الحفظ");
-  }
+  }  
 };
 
   return (
@@ -47,7 +43,7 @@ const AcceptRequest = async () => {
         <p className="modal-message">هل أنت متأكد من قبول هذا الطلب؟</p>
         <div className="modal-actions">
           <button className="btn btn-danger" 
-          onClick={()=>dispatch(showconfirmModal(false))}>لا</button>
+          onClick={()=>dispatch(toggleConfirmModal(false))}>لا</button>
           <button className="btn-yes" onClick={()=>AcceptRequest()}>نعم</button>
         </div>
       </div>

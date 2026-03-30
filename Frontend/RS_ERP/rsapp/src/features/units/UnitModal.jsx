@@ -143,20 +143,29 @@ const HandleChangeImage=async(e)=>{
               </div>
               <div className="col-4">
                   <div className="img_cntu">
-                    <div style={{display:'flex',alignItems:'center',justifyContent:'center',position:'relative',top:'50%'}}><span><CiImageOn size={35} /></span></div>
+                    <div 
+                    style={{display:'flex',alignItems:'center',
+                           justifyContent:'center',
+                           position:'relative',top:'50%'}}>
+                    <span><CiImageOn size={35} /></span>
+                    </div>
                   {(unitImageName  || selectedUnit.unitImage )&&
                    <img 
                    src={`${variables.UNIT_IMAGES_URL}/${unitImageName || selectedUnit.unitImage}`} 
                    alt="" 
                    className="preview-img" 
-                   style={{width:'100%',height:'100%',position:'absolute',top:'0',zIndex:'1000'}} />
-                }        
+                   style={{width:'100%',height:'100%',
+                          position:'absolute',top:'0',
+                          zIndex:'1000'}} />
+                  }        
                 </div>
                </div>
            </div>
             </div>
             <div className="footeru">
-                <div style={{display:'flex',justifyContent:'space-between',marginLeft:'40px',marginTop:'-15px'}}>
+                <div 
+                style={{display:'flex',justifyContent:'space-between',
+                        marginLeft:'40px',marginTop:'-15px'}}>
                     <button 
                     className='btn btn-primary btn_addu'
                     onClick={()=> dispatch(saveUnitToTable())}

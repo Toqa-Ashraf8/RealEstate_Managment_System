@@ -9,7 +9,8 @@ import {
     GetBookngClient, 
     reservedOrnot 
 } from '../../../assets/redux/bookingSlice'; 
-import { acceptedCount } from '../../../assets/redux/negotiationSlice';
+import { fetchApprovedNegotiations } from '../../../services/negotiationService';
+
 
 
 const BookingsManager = () => {
@@ -30,10 +31,10 @@ const CompleteBooking=(index)=>{
     dispatch(clearInputs());
 }   
 
-//********************************************************* */
+
 useEffect(()=>{
     const Fetch=async()=>{
-         dispatch(acceptedCount());
+         dispatch(fetchApprovedNegotiations());
     }
     Fetch();
 },[])

@@ -1,11 +1,20 @@
 import React, { useEffect } from 'react'
 import './SearchProjectsModal.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { selectProjectFromSearch, toggleSearchModal } from '../../../assets/redux/projectSlice.js';
+import { 
+  selectProjectFromSearch, 
+  toggleSearchModal 
+} from '../../../assets/redux/projectSlice.js';
 import { variables } from '../../../assets/variables.js';
-import { fetchProjectsList,fetchUnitsDetails } from '../../../services/projectService.js';
+import { 
+  fetchProjectsList,
+  fetchUnitsDetails 
+} from '../../../services/projectService.js';
 const SearchProjectsModal = () => {
-  const {selectedProjectRowIndex,projectsList}= useSelector((state) => state.projects);
+  const {
+    selectedProjectRowIndex,
+    projectsList
+}= useSelector((state) => state.projects);
   const dispatch = useDispatch();
 useEffect(() => {
    const fetchProjectsData =async  () => { 
@@ -31,7 +40,11 @@ useEffect(() => {
             <div className="hdr_s">
                 <div className='hrdtitles'>
                       <span 
-                      style={{color:'#fff',cursor:'pointer',fontSize:'40px',marginTop:'-10px',marginRight:'15px'}}
+                      style={{color:'#fff',
+                            cursor:'pointer',
+                            fontSize:'40px',
+                            marginTop:'-10px',
+                            marginRight:'15px'}}
                       onClick={()=>dispatch(toggleSearchModal(false))}
                       >&times;</span>
                 </div> 
@@ -52,7 +65,9 @@ useEffect(() => {
                         </tr>
                     </thead>
                     <tbody>
-                        {projectsList.length===0 ?<tr><td colSpan={7} className="empty-msg">لا توجد بيانات لعرضها</td></tr>:
+                        {projectsList.length===0 ?<tr>
+                          <td colSpan={7} className="empty-msg">لا توجد بيانات لعرضها</td>
+                        </tr>:
                         projectsList.map((project,i)=>
                         <tr key={i} onClick={()=>fillClientForm(i)}>
                         <td>{project.ProjectCode}</td>
@@ -86,7 +101,7 @@ useEffect(() => {
                                      justifyContent:'center',
                                      borderRadius:'4px'
                                    }}>
-                                     <span style={{fontSize:'12px', color:'#999'}}>لا توجد صورة</span>
+                                  <span style={{fontSize:'12px', color:'#999'}}>لا توجد صورة</span>
                                    </div>)}
                                  </td>
                         </tr>

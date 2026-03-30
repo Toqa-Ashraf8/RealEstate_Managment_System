@@ -133,7 +133,10 @@ const handleRegister=async()=>{
               </div>
             </div> 
 
-            <div style={{display:'flex',justifyContent:'center',marginTop:'-15px',marginRight:'50px'}}>
+            <div style={{display:'flex',
+                        justifyContent:'center',
+                        marginTop:'-15px',
+                        marginRight:'50px'}}>
             <button 
             className="auth-submit-btn"
             disabled={isLoading}
@@ -147,7 +150,11 @@ const handleRegister=async()=>{
 
           <div className="auth-footer">
             لديك حساب مفعل؟ 
-            <span className="auth-link"  onClick={()=>navigate('/login')}>دخول النظام</span>
+            <span 
+            className="auth-link"  
+            onClick={()=>navigate('/login')}
+            >دخول النظام
+            </span>
           </div>
         </div>
       </motion.div>

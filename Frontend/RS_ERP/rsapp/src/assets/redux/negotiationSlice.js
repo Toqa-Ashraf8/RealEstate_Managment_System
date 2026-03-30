@@ -1,196 +1,176 @@
 import { createSlice ,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { variables } from "../variables";
+import { 
+    fetchApprovedNegotiations,
+    fetchPendingCount, 
+    fetchPendingNegotiations, 
+    fetchRejectedNegotiations, 
+    processNegotiationReview, 
+    updateNegotiationStatus
+} from "../../services/negotiationService";
 const initialState={
-        error:false,
-        loading:false,
-        negotiationNo:"",
-        Allnegotiations:[],
-        rejectmodal:false,
-        detailsOfRow:{},
-        negotiationRow:{ClientID:"",ProjectName:"",
-                        Unit:"",NegotiationCondition:0,SuggestedPrice:0,
-                        ReasonOfReject:"",CheckedDate:new Date().toISOString()
-                        ,Reserved:0},
-        confirmModal:false,
-        savedRequest:false,
-        rejected_neg:0,
-        accepted_neg:0,
-        rejectReq:false,
-        acceptedRequests:[],
-        rejectedRequests:[],
-        Re_confirmModal:false,
-        CurrentDate:"",
-        acceptedRow:{},
-        rejectedrow:{},
-        defineRow:0,
-        updated:false,
-        Re_approveRow:0,
-        deleteModal:false,
+ pendingCount:"",
+ rejectedCount:0,
+ approvedCount:0,
+//
+  pendingRequests:[],
+  acceptedRequests:[],
+  rejectedRequests:[],   
+//
+selectedRequest:{
+    ClientID:"",
+    ProjectName:"",
+    Unit:"",
+    NegotiationCondition:0,
+    SuggestedPrice:0,
+    ReasonOfReject:"",
+    CheckedDate:new Date().toISOString()
+    ,Reserved:0
+},
+ isRejectModalOpen:false,
+ isConfirmModalOpen:false,
+ isReConfirmModalOpen:false,
+//
+ selectedAcceptedNegotiation:{},
+ selectedRejectedNegotiation:{},
+ //
+ isUpdatedSuccessfully:false,
+ isSavedSuccessfully:false,
+ //if approved=1 -- Approve Negotiation / rejected=1 -- Reject Negotiation
+    approved:0,
+    rejected:0,
+    CurrentDate:new Date().toISOString().split('T')[0],
 }
-export const negotiationCount=createAsyncThunk("negotiationCount/negotiaion",async()=>{
-    const resp=await axios.get(variables.NEGOTIATIONS_API+"GetPendingNegotiationsCount")
-    .then((res)=>res.data);
-    return resp;
-})
-export const getPendingNegotiations=createAsyncThunk("getPendingNegotiations/negotiaion",async()=>{
-    const resp=await axios.get(variables.NEGOTIATIONS_API+"GetPendingNegotiations")
-    .then((res)=>res.data);
-    return resp;
-})
-export const SaveRequestByAdmin=createAsyncThunk("SaveRequestByAdmin/negotiaion",async(acceptedrow)=>{
-    const resp=await axios.post(variables.NEGOTIATIONS_API+"ProcessNegotiationReview",acceptedrow)
-    .then((res)=>res.data);
-    return resp;
-})
-export const rejectedCount=createAsyncThunk("rejectedCount/negotiaion",async()=>{
-    const resp=await axios.get(variables.NEGOTIATIONS_API+"GetRejectedNegotiations")
-    .then((res)=>res.data);
-    return resp;
-})
-export const acceptedCount=createAsyncThunk("acceptedCount/negotiaion",async()=>{
-    const resp=await axios.get(variables.NEGOTIATIONS_API+"GetApprovedNegotiations")
-    .then((res)=>res.data);
-    return resp;
-})
-export const ApprovedtoReject=createAsyncThunk("ApprovedtoReject/negotiaion",async(approvedRequest)=>{
-    const resp=await axios.post(variables.NEGOTIATIONS_API+"UpdateNegotiationReview",approvedRequest)
-    .then((res)=>res.data);
-    return resp;
-})
 
 const negotiationSlice=createSlice({
     name:'negotiation',
     initialState,
     reducers:{
-        showModal_reject:(state,action)=>{
-            state.rejectmodal=action.payload;
+        toggleRejectModal:(state,action)=>{
+            state.isRejectModalOpen=action.payload;
         },
-        GetClientDetails:(state,action)=>{
-           state.negotiationRow=state.Allnegotiations[action.payload];
-           state.CurrentDate=new Date().toISOString().split('T')[0];
+        setClientRequestData:(state,action)=>{
+           state.selectedRequest=state.pendingRequests[action.payload];
         },
-        RejectModal_values:(state,action)=>{
-            state.negotiationRow={...state.negotiationRow,...action.payload};
+        //إضافة قيم مودال رفض الطلب الي بيانات الصف لارسالها للحفظ 
+        updateSelectedRequestData:(state,action)=>{
+            state.selectedRequest={...state.selectedRequest,...action.payload};
         },
-        ChangeConditionOfRequest:(state,action)=>{
+        //تغيير الحالة للطلب الي مقبول او مرفوض لو 1 مقبول و 0 مرفوض
+        setNegotiationStatus:(state,action)=>{
             if(action.payload===1){
-                state.negotiationRow.NegotiationCondition=1
+                state.selectedRequest.NegotiationCondition=1
             }
             else if(action.payload===0){
-                state.negotiationRow.NegotiationCondition=0
+                state.selectedRequest.NegotiationCondition=0
             }
         },
-        clearValuesOfRow:(state,action)=>{
-            state.negotiationRow=initialState.negotiationRow;
+        resetSelectedRequest:(state,action)=>{
+            state.selectedRequest=initialState.selectedRequest;
         },
-        showconfirmModal:(state,action)=>{
-            state.confirmModal=action.payload;
+        toggleConfirmModal:(state,action)=>{
+            state.isConfirmModalOpen=action.payload;
         },
-         rejectedRequests_show:(state,action)=>{
-            state.rejectReq=action.payload;
-        },
-        showModal_reconfrim:(state,action)=>{
-            state.Re_confirmModal=action.payload;
-        },
-        GetAdcceptedrowByIndex:(state,action)=>{
+       
+        // تحويل طلب مقبول لطلب مرفوض
+        selectAcceptedForUpdate:(state,action)=>{
             const row=state.acceptedRequests[action.payload];
              if(row.NegotiationCondition===true){
-                const boolval=0;
-                row.NegotiationCondition=boolval;
+                row.NegotiationCondition=0;
              }
-             state.acceptedRow=row;
+             state.selectedAcceptedNegotiation=row;
         },
-        GetRejectModalvalues:(state,action)=>{
-            state.acceptedRow={...state.acceptedRow,...action.payload}
+        // عند اعاده رفض الطلب نرسل قيم المودال (سبب الرفض - سعر المقترح ) مع الطلب المقبول 
+        updateAcceptedNegotiationData:(state,action)=>{
+            state.selectedAcceptedNegotiation=
+            {...state.selectedAcceptedNegotiation,...action.payload}
            
         },
-        DefineApproveRow:(state,action)=>{
-            state.defineRow=action.payload;
-            state.negotiationRow.ReasonOfReject="";
-            state.negotiationRow.SuggestedPrice="";
+        //اذا كانت القيمة 1 الطلب مقبول وليس هناك قيم مودال رفض 
+        prepareApproveAction:(state,action)=>{
+            state.approved=action.payload;
+            state.selectedRequest.ReasonOfReject="";
+            state.selectedRequest.SuggestedPrice=0;
         },
-          GetRejectedrowByIndex:(state,action)=>{
+        //اختيار سطر من اللبات المفروضة لتحويل الي مقبول
+          selectRejectedForUpdate:(state,action)=>{
             const row=state.rejectedRequests[action.payload];
              if(row.NegotiationCondition===false){
-                const boolval=1;
-                row.NegotiationCondition=boolval;
+                row.NegotiationCondition=1;
              }
-             state.rejectedrow=row;
+             state.selectedRejectedNegotiation=row;
         },
-         DefineRejectRow:(state,action)=>{
-            state.Re_approveRow=action.payload;     
+        // لو كانت قيمة rejected=1 تحويله لمرفوض
+         prepareRejectAction:(state,action)=>{
+            state.rejected=action.payload;     
         },
        
     },
    
     extraReducers:(builder)=>{
         builder
-        .addCase(negotiationCount.pending,(state)=>{
-            state.loading=true;
+        .addCase(fetchPendingCount.fulfilled,(state,action)=>{
+            state.pendingCount=action.payload;
         })
-        .addCase(negotiationCount.fulfilled,(state,action)=>{
-            state.negotiationNo=action.payload;
+        .addCase(fetchPendingNegotiations.fulfilled,(state,action)=>{
+            state.pendingRequests=action.payload;
         })
-        
-        .addCase(getPendingNegotiations.fulfilled,(state,action)=>{
-            state.Allnegotiations=action.payload;
-        })
-        
-        .addCase(SaveRequestByAdmin.fulfilled,(state,action)=>{
-            state.savedRequest=action.payload.saved;
-            if(state.savedRequest){
-                const unitidentity=state.negotiationRow.Unit;
-                state.Allnegotiations = state.Allnegotiations.filter(neg => neg.Unit !== unitidentity);
-                if (state.negotiationNo > 0) {
-                   state.negotiationNo -= 1;
+        .addCase(processNegotiationReview.fulfilled,(state,action)=>{
+            state.isSavedSuccessfully=action.payload.saved;
+            if(state.isSavedSuccessfully){
+                const pendingUnit=state.selectedRequest.Unit;
+                state.pendingRequests = 
+                state.pendingRequests.filter(neg => neg.Unit !== pendingUnit);
+                if (state.pendingCount > 0) {
+                   state.pendingCount -= 1;
                    
                  }
-                 if (state.negotiationRow.NegotiationCondition === 1) {
-                   state.accepted_neg = (Number(state.accepted_neg) || 0) + 1;
-                 } else if (state.negotiationRow.NegotiationCondition === 0) {
-                    state.rejected_neg = (Number(state.rejected_neg) || 0) + 1;
+                 if (state.selectedRequest.NegotiationCondition === 1) {
+                   state.approvedCount = (Number(state.approvedCount) || 0) + 1;
+                 } else if (state.selectedRequest.NegotiationCondition === 0) {
+                    state.rejectedCount = (Number(state.rejectedCount) || 0) + 1;
                   }   
-                   state.negotiationRow = initialState.negotiationRow;
-               
+                   state.selectedRequest = initialState.selectedRequest;       
              }
-        
-        })
-       
-        .addCase(rejectedCount.fulfilled,(state,action)=>{
-            state.rejected_neg=action.payload.count;
+        }) 
+        .addCase(fetchRejectedNegotiations.fulfilled,(state,action)=>{
+            state.rejectedCount=action.payload.count;
             state.rejectedRequests=action.payload.dt;
         })
-        
-            .addCase(acceptedCount.fulfilled,(state,action)=>{
-                state.accepted_neg=action.payload.count_a;
-                state.acceptedRequests=action.payload.dt;
-             })
-        .addCase(ApprovedtoReject.fulfilled,(state,action)=>{
-            state.updated=action.payload;
-            if(state.updated===true){
-                const unitidentity=state.acceptedRow.Unit;
-                const unitidentity_rejected=state.rejectedrow.Unit;
-                state.acceptedRequests = state.acceptedRequests.filter(neg => neg.Unit !== unitidentity);
-                state.rejectedRequests = state.rejectedRequests.filter(neg2 => neg2.Unit !== unitidentity_rejected);
-                if (state.negotiationNo > 0) {
-                   state.negotiationNo -= 1;
+        .addCase(fetchApprovedNegotiations.fulfilled,(state,action)=>{
+         state.approvedCount=action.payload.count_a;
+         state.acceptedRequests=action.payload.dt;
+        })
+        .addCase(updateNegotiationStatus.fulfilled,(state,action)=>{
+            state.isUpdatedSuccessfully=action.payload;
+            if(state.isUpdatedSuccessfully===true){
+                const acceptedUnit=state.selectedAcceptedNegotiation.Unit;
+                const rejectedUnit=state.selectedRejectedNegotiation.Unit;
+                state.acceptedRequests = 
+                state.acceptedRequests.filter(neg => neg.Unit !== acceptedUnit);
+                state.rejectedRequests =
+                 state.rejectedRequests.filter(neg => neg.Unit !== rejectedUnit);
+                if (state.pendingCount > 0) {
+                   state.pendingCount -= 1;
                  }
-              
-               state.negotiationRow = {
-                ClientID: "", ProjectName: "", Unit: "", 
-                NegotiationCondition: 0, SuggestedPrice: 0, 
-                ReasonOfReject: "", CheckedDate: new Date().toISOString()
-                 };
+               state.selectedRequest = initialState.selectedRequest;
              }
         })
-       
     }
 })
-export const{showModal_reject,GetClientDetails,RejectModal_values,ChangeConditionOfRequest,clearValuesOfRow,
-            showconfirmModal,rejectedRequests_show,showModal_reconfrim,GetAdcceptedrowByIndex,
-            GetRejectModalvalues,DefineApproveRow,DefineRejectRow,GetRejectedrowByIndex,
-                 
+export const{
+    toggleRejectModal,
+    setClientRequestData,
+    updateSelectedRequestData,
+    setNegotiationStatus,
+    resetSelectedRequest,
+    toggleConfirmModal,
+    selectAcceptedForUpdate,
+    updateAcceptedNegotiationData,
+    prepareApproveAction,
+    prepareRejectAction,
+    selectRejectedForUpdate,
 }=negotiationSlice.actions;
 const negotiationReducer=negotiationSlice.reducer;
 export default negotiationReducer;

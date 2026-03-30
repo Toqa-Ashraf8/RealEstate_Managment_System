@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { acceptedCount, ChangeConditionOfRequest, DefineApproveRow, DefineRejectRow, GetClientDetails, getPendingNegotiations, negotiationCount, rejectedCount, rejectedRequests_show, showconfirmModal, showModal_reject } from '../../../assets/redux/negotiationSlice';
+import { 
+    setNegotiationStatus, 
+    prepareApproveAction, 
+    setClientRequestData, 
+    toggleConfirmModal, 
+    toggleRejectModal 
+} from '../../../assets/redux/negotiationSlice';
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { CgCloseR } from "react-icons/cg";
 import 'animate.css';
@@ -9,35 +15,45 @@ import './NegotiationRequests.css'
 import { MoveLeft } from 'lucide-react';
 import ConfirmModal from '../modals/ConfirmModal';
 import { useNavigate } from 'react-router-dom';
-
+import { 
+    fetchApprovedNegotiations, 
+    fetchPendingCount, 
+    fetchPendingNegotiations, 
+    fetchRejectedNegotiations 
+} from '../../../services/negotiationService';
 
 const NegotiationRequests = () => {
-    const db = useSelector((state) => state.negotiation);
-    const dispatch = useDispatch();
-    const navigate=useNavigate();
-  
-//***************************************************** */
+const {
+        isRejectModalOpen,
+        isConfirmModalOpen,
+        pendingCount,
+        rejectedCount,
+        approvedCount,
+        pendingRequests
+} = useSelector((state) => state.negotiation);
+const dispatch = useDispatch();
+const navigate=useNavigate();
+
 const Reject=(i)=>{
-   dispatch(showModal_reject(true));
-    dispatch(GetClientDetails(i));
-    dispatch(DefineApproveRow(0));
-    dispatch(ChangeConditionOfRequest(0));
-      
+   dispatch(toggleRejectModal(true));
+    dispatch(setClientRequestData(i));
+    dispatch(prepareApproveAction(1));
+    dispatch(setNegotiationStatus(0));     
 }
 
 const Accepted=(i)=>{
-     dispatch(GetClientDetails(i));
-     dispatch(DefineRejectRow(0));
-     dispatch(ChangeConditionOfRequest(1));
-     dispatch(showconfirmModal(true));
+     dispatch(setClientRequestData(i));
+     dispatch(prepareApproveAction(0));
+     dispatch(setNegotiationStatus(1));
+     dispatch(toggleConfirmModal(true));
 } 
-    useEffect(() => {
+useEffect(() => {
       const Fetch=async()=>{
         try {
-           await dispatch(negotiationCount());
-           await dispatch(getPendingNegotiations());
-           await dispatch(rejectedCount());
-           await dispatch(acceptedCount());
+           await dispatch(fetchPendingCount());
+           await dispatch(fetchPendingNegotiations());
+           await dispatch(fetchRejectedNegotiations());
+           await dispatch(fetchApprovedNegotiations());
 
         } catch (error) {
           console.log("فشل في جلب البيانات",error)
@@ -46,24 +62,25 @@ const Accepted=(i)=>{
       Fetch();
     }, [dispatch]);
 
-    return (
-      
+ return ( 
         <div className="dashboard-wrapper animate__animated animate__fadeIn">
-          {db.rejectmodal && <RejectModal/>}
-          {db.confirmModal && <ConfirmModal/>}
+          {isRejectModalOpen && <RejectModal/>}
+          {isConfirmModalOpen && <ConfirmModal/>}
             <div className="custom-glass-header">
                 <div className="title-section">
-                    <h3>طلبات التفاوض / الشراء <span className="badge-count">{db.negotiationNo || 0}</span></h3>
+                    <h3>طلبات التفاوض / الشراء <span className="badge-count">
+                    {pendingCount || 0}</span>
+                    </h3>
                 </div>
                 <div className="status-container" style={{cursor:'pointer'}}>
                     <div 
                     className="stat-item reject"
                     onClick={()=>navigate('/rejected_negotiations')}
-                    >مرفوض: {db.rejected_neg ||0}</div>
+                    >مرفوض: {rejectedCount ||0}</div>
                     <div 
                     className="stat-item approve"
                      onClick={()=>navigate('/accepted_negotiations')}
-                    >مقبول: {db.accepted_neg || 0}</div>
+                    >مقبول: {approvedCount || 0}</div>
                 </div>
             </div>
 
@@ -82,8 +99,10 @@ const Accepted=(i)=>{
                         </tr>
                     </thead>
                     <tbody>
-                        {db.Allnegotiations?.map((neg, index) => (
-                            <tr key={index}  className="animate__animated animate__fadeInUp" style={{ animationDelay: `${index * 0.1}s` }}>
+                        {pendingRequests?.map((neg, index) => (
+                            <tr key={index}  className="animate__animated animate__fadeInUp" 
+                            style={{ animationDelay: `${index * 0.1}s` }}
+                            >
                                 <td>{neg.Requester}</td>
                                 <td>{neg.ClientID}</td>
                                 <td className="font-bold">{neg.ClientName}</td>
@@ -95,8 +114,13 @@ const Accepted=(i)=>{
                                     </div>
                                 </td>
                                 <td>
-                                    <div className="price-tag-container" style={{display:'flex',justifyContent:'center'}}>
-                                        <span className="price-old" style={{fontSize:'16px'}}>{neg.OriginalPrice}</span>
+                                    <div 
+                                    className="price-tag-container" 
+                                    style={{display:'flex',justifyContent:'center'}}>
+                                        <span 
+                                        className="price-old" style={{fontSize:'16px'}}>
+                                        {neg.OriginalPrice}
+                                        </span>
                                         <span>  <MoveLeft size={25}/></span>
                                         <span className="price-new">{neg.NegotiationPrice}</span>
                                     </div>
@@ -125,8 +149,6 @@ const Accepted=(i)=>{
                     </tbody>
                 </table>
             </div>
-
-          
         </div>
     );
 };

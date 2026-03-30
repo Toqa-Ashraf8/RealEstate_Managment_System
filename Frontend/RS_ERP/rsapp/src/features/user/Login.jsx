@@ -87,7 +87,11 @@ const handleChangeValues=(e)=>{
 
           <div className="login-footer">
             ليس لديك صلاحية وصول؟ 
-            <span className="login-link" onClick={()=>navigate('/register')}>طلب إنشاء حساب</span>
+            <span 
+            className="login-link" 
+            onClick={()=>navigate('/register')}
+            >طلب إنشاء حساب
+            </span>
           </div>
         </div>
       </motion.div>

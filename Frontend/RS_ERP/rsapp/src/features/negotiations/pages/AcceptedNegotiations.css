@@ -45,7 +45,6 @@
     border-radius: 15px;
     padding: 12px 20px;
     display: grid;
-    /* توزيع الأعمدة بشكل متناسق مع حذف عمود "سبب الرفض" */
     grid-template-columns: 1.5fr 1.5fr 1fr 0.5fr 0.5fr;
     align-items: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -101,7 +100,7 @@
 }
 
 .acc-price {
-    color: #2b6cb0 !important; /* لون أزرق للقبول */
+    color: #2b6cb0 !important; 
     font-size: 14px !important;
     font-weight: 800 !important;
     margin-top: 2px;
@@ -120,28 +119,3 @@
     font-weight: 700 !important;
 }
 
-/* زر الاسترجاع للرفض - لون أحمر خفيف */
-/* .acc-action-section {
-    display: flex;
-    justify-content: center;
-}
- */
-/* .btn-acc-restore-icon {
-    background-color: #feb2b2 !important;
-    color: #c53030 !important;
-    border: none !important;
-    width: 100px;
-    height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.btn-acc-restore-icon:hover {
-    background-color: #fc8181 !important;
-    color: white !important;
-    transform: scale(1.1);
-} */

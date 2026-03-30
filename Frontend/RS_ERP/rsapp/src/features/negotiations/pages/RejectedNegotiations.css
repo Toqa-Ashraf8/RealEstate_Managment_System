@@ -44,7 +44,6 @@
     border-radius: 15px;
     padding: 15px 20px;
     display: grid;
-    /* تقسيم الأعمدة لضمان استيعاب كل البيانات في سطر واحد */
     grid-template-columns: 1.2fr 1.2fr 1.8fr 0.8fr 0.8fr 0.5fr;
     align-items: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
@@ -62,7 +61,7 @@
     padding: 0 8px;
 }
 
-/* تصغير نصوص العميل */
+
 .client-section {
     flex-direction: row !important;
     align-items: center;
@@ -92,7 +91,7 @@
     color: #718096;
 }
 
-/* تصغير نصوص الوحدة والسعر */
+
 .unit-section p {
     margin: 0;
     font-size: 12px;
@@ -106,7 +105,7 @@
     font-weight: 800 !important;
 }
 
-/* تصغير نصوص سبب الرفض */
+
 .reason-section {
     background: #fff5f5;
     padding: 8px 12px !important;
@@ -129,7 +128,7 @@
     font-weight: 600;
 }
 
-/* تصغير نصوص التواريخ */
+
 .date-section p {
     margin: 0;
     font-size: 11px;
@@ -143,7 +142,7 @@
     font-weight: 700 !important;
 }
 
-/* ستايل الزرار الأيقونة */
+
 .action-section {
     display: flex;
     justify-content: center;
@@ -168,7 +167,7 @@
     transform: scale(1.1);
 }
 
-/* تحسين الاستجابة للشاشات المتوسطة */
+
 @media (max-width: 1024px) {
     .clean-item-row {
         grid-template-columns: 1fr 1fr 1.5fr;

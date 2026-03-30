@@ -64,7 +64,7 @@ useEffect(()=>{
               <h5 className="chart-main-heading">أكثر المشاريع وحدات</h5>
             </div>
             <div className="chart-visual-area">
-              {/* <ProjectsUnitsBarChart /> */}
+               <ProjectsUnitsBarChart /> 
             </div>
           </div>
         </div>
@@ -75,13 +75,11 @@ useEffect(()=>{
               <h5 className="chart-main-heading">نشاط الحجوزات اليومي</h5>
             </div>
             <div className="chart-visual-area">
-             {/*  <DailyBookingChart /> */}
+              <DailyBookingChart /> 
             </div>
           </div>
-        </div>
-        
-      </div>
-      
+        </div>     
+      </div>  
     </div>
   );
 };

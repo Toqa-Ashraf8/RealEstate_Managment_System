@@ -4,13 +4,29 @@
     --transition-smooth: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.arch-wrapper { padding: 60px 20px; background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
-    min-height: 100vh;}
-.arch-container { max-width: 1200px; margin: 0 auto; }
-.arch-grid { display: flex; flex-wrap: wrap; margin: 0 -15px; }
-.arch-item { flex: 0 0 33.333%; max-width: 33.333%; padding: 0 15px; margin-bottom: 40px; }
-
-
+.arch-wrapper { 
+    padding: 60px 20px; 
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+    min-height: 100vh;
+}
+.arch-container 
+{
+     max-width: 1200px; 
+     margin: 0 auto; 
+}
+.arch-grid 
+{ 
+    display: flex; 
+    flex-wrap: wrap;
+     margin: 0 -15px; 
+    }
+.arch-item 
+{ 
+    flex: 0 0 33.333%; 
+    max-width: 33.333%; 
+    padding: 0 15px; 
+    margin-bottom: 40px; 
+}
 .arch-card {
     background: #fff;
     border-radius: 0 40px 0 40px;
@@ -21,20 +37,35 @@
     flex-direction: column;
     box-shadow: 10px 10px 20px #e0e0e0, -5px -5px 15px #ffffff;
 }
-
 .arch-visual {
     height: 220px;
     position: relative;
     overflow: hidden;
     border-radius: 0 40px 0 0; 
 }
+.arch-img 
+{ 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    transition: transform 1.5s ease; 
+}
+.arch-card:hover .arch-img 
+{ 
+    transform: scale(1.1); 
+    filter: brightness(0.8); 
+}
 
-.arch-img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.5s ease; }
-.arch-card:hover .arch-img { transform: scale(1.1); filter: brightness(0.8); }
-
-.arch-img-none { width: 100%; height: 100%; background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #ccc; }
-
-
+.arch-img-none 
+{ 
+    width: 100%; 
+    height: 100%; 
+    background: #f8f9fa; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: #ccc; 
+}
 .arch-glass-badge {
     position: absolute;
     background: rgba(255, 255, 255, 0.2);
@@ -45,23 +76,61 @@
     z-index: 2;
 }
 
-.arch-status { top: 15px; right: 15px; padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; }
-.arch-icon-type { top: 15px; left: 15px; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-
-
-
-
+.arch-status 
+{ 
+    top: 15px; 
+    right: 15px; 
+    padding: 5px 12px; 
+    border-radius: 8px; 
+    font-size: 0.75rem; 
+}
+.arch-icon-type 
+{ 
+    top: 15px; 
+    left: 15px; 
+    width: 35px; 
+    height: 35px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
 .arch-body { padding: 25px; }
-.arch-type-label { font-size: 0.7rem; font-weight: 800; color: var(--accent-color); text-transform: uppercase; border: 1px solid; padding: 2px 8px; border-radius: 4px; }
-.arch-title { font-size: 1.4rem; font-weight: 900; color: var(--primary-color); margin: 10px 0; }
-
-.arch-stats { display: flex; justify-content: space-between; border-top: 1px dashed #eee; margin-top: 15px; padding-top: 15px; }
-.arch-stat { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #666; }
-
+.arch-type-label 
+{ 
+    font-size: 0.7rem; 
+    font-weight: 800; 
+    color: var(--accent-color); 
+    text-transform: uppercase; 
+    border: 1px solid; 
+    padding: 2px 8px; 
+    border-radius: 4px; 
+}
+.arch-title 
+{ 
+    font-size: 1.4rem; 
+    font-weight: 900; 
+    color: var(--primary-color); 
+    margin: 10px 0; 
+}
+.arch-stats 
+{ 
+    display: flex; 
+    justify-content: space-between; 
+    border-top: 1px dashed #eee; 
+    margin-top: 15px; 
+    padding-top: 15px; 
+}
+.arch-stat 
+{ 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+    font-size: 0.85rem; 
+    color: #666; 
+}
 .c-red { color: #e63946; }
 .c-blue { color: var(--accent-color); }
-
-
 .arch-btn {
     margin-top: 20px;
     width: 100%;
@@ -89,8 +158,12 @@
     background: radial-gradient(circle at center, rgba(18, 130, 162, 0.1) 0%, transparent 70%);
     opacity: 0; transition: 0.5s; z-index: -1;
 }
-
 .arch-card:hover .arch-glow { opacity: 1; }
-
-@media (max-width: 992px) { .arch-item { flex: 0 0 50%; max-width: 50%; } }
-@media (max-width: 600px) { .arch-item { flex: 0 0 100%; max-width: 100%; } }
+@media (max-width: 992px) 
+{ 
+    .arch-item { flex: 0 0 50%; max-width: 50%; } 
+}
+@media (max-width: 600px) 
+{ 
+    .arch-item { flex: 0 0 100%; max-width: 100%; } 
+}

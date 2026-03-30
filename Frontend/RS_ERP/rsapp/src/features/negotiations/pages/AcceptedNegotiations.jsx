@@ -2,34 +2,40 @@ import React, { useEffect } from 'react';
 import { RotateCcw, User, Tag, CalendarCheck } from 'lucide-react';
 import './AcceptedNegotiations.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { acceptedCount, DefineApproveRow, GetAdcceptedrowByIndex, showModal_reject } from '../../../assets/redux/negotiationSlice';
+import { 
+    prepareApproveAction,
+    prepareRejectAction,
+    selectAcceptedForUpdate, 
+    toggleRejectModal 
+} from '../../../assets/redux/negotiationSlice';
 import RejectModal from '../modals/RejectModal';
+import { fetchApprovedNegotiations } from '../../../services/negotiationService';
 
 const AcceptedNegotiations = () => {
-    const db = useSelector((state) => state.negotiation);
-    const dispatch = useDispatch();
-//************************************************************************ */
+const {isRejectModalOpen,acceptedRequests} = useSelector((state) => state.negotiation);
+const dispatch = useDispatch();
+
 const Re_Reject=(index)=>{
-    dispatch(GetAdcceptedrowByIndex(index));
-    dispatch(DefineApproveRow(1));
-    dispatch(showModal_reject(true));
+    dispatch(selectAcceptedForUpdate(index));
+    dispatch(prepareRejectAction(1));
+    dispatch(toggleRejectModal(true));
 }
     useEffect(() => {
         const getData = async () => {
-            await dispatch(acceptedCount());
+            await dispatch(fetchApprovedNegotiations());
         }
         getData();
     }, [dispatch]);
 
     return (
         <div className="acc-page-wrapper">
-             {db.rejectmodal && <RejectModal/>}
+             {isRejectModalOpen && <RejectModal/>}
             <div className="acc-header">
                 <h2>قائمة الطلبات المقبولة</h2>
             </div>
 
             <div className="acc-list-container">
-                {db.acceptedRequests.map((req, index) => (
+                {acceptedRequests.map((req, index) => (
                     <div 
                     key={index} className="acc-item-row"
                     >
@@ -48,15 +54,17 @@ const Re_Reject=(index)=>{
                         </div>
                         <div className="section date-section">
                             <p><CalendarCheck size={12} /> تاريخ الطلب</p>
-                            <p className="rejected-date">{req.NegotiationDate ? req.NegotiationDate.split('T')[0] : ""}</p>
+                            <p className="rejected-date">
+                            {req.NegotiationDate ? req.NegotiationDate.split('T')[0] : ""}
+                            </p>
                         </div>
                     
                         <div className="acc-section acc-date-section">
                             <p><CalendarCheck size={12} /> تاريخ القبول</p>
-                            <p className="acc-date-text">{req.CheckedDate ? req.CheckedDate.split('T')[0] : ""}</p>
+                            <p className="acc-date-text">
+                            {req.CheckedDate ? req.CheckedDate.split('T')[0] : ""}
+                            </p>
                         </div>
-
-                   
                         <div className="acc-section acc-action-section">
                             <button 
                             className="btn btn-danger" 
@@ -66,7 +74,6 @@ const Re_Reject=(index)=>{
                                 استرجاع للرفض
                             </button>
                         </div>
-                        
                     </div>
                 ))}
             </div>

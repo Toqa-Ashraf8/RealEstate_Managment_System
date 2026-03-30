@@ -122,7 +122,7 @@ namespace WebApp1.Controllers
                     using (SqlCommand cmd = new SqlCommand(sqlup, conn))
                     { 
                         if (conn.State == ConnectionState.Closed) conn.Open();
-                        cmd.Parameters.Clear();
+                            cmd.Parameters.Clear();
                             cmd.Parameters.Clear();
                             cmd.Parameters.AddWithValue("@ClientID", ph.ClientID);
                             cmd.Parameters.AddWithValue("@ProjectName", ph.ProjectName);

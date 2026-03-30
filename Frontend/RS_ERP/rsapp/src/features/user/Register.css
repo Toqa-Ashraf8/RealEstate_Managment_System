@@ -129,7 +129,6 @@
     margin-right: 10px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .auth-form-row {
         flex-direction: column;

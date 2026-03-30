@@ -13,7 +13,7 @@
 
 .login-wrapper {
     width: 100%;
-    max-width: 800px; /* العرض اللي طلبتيه */
+    max-width: 800px;
 }
 
 .login-main-card {
@@ -52,7 +52,7 @@
 .login-label {
     font-weight: 700;
     font-size: 15px;
-    width: 160px; /* نفس عرض الـ Label في صفحة المشاريع */
+    width: 160px; 
     display: flex;
     align-items: center;
     gap: 12px;
@@ -134,7 +134,7 @@
     border-bottom-color: #4f46e5;
 }
 
-/* Responsive */
+
 @media (max-width: 600px) {
     .login-input-group {
         flex-direction: column;

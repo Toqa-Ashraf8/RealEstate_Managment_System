@@ -1,81 +1,73 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { 
-    ApprovedtoReject, 
-    clearValuesOfRow,  
-    GetRejectModalvalues,  
-    negotiationCount, 
-    RejectModal_values, 
-    SaveRequestByAdmin, 
-    showModal_reject 
+    resetSelectedRequest,  
+    updateAcceptedNegotiationData,  
+    updateSelectedRequestData, 
+    toggleRejectModal 
 } from '../../../assets/redux/negotiationSlice';
 import { AiTwotoneEdit } from "react-icons/ai";
 import { toast } from 'react-toastify';
+import { 
+    processNegotiationReview, 
+    updateNegotiationStatus 
+} from '../../../services/negotiationService';
 const RejectModal = () => {
-     const db = useSelector((state) => state.negotiation);
-    const dispatch = useDispatch();
-    const RequestRow=db.detailsOfRow;
-    const suggestedPrice=useRef();
-   const acceptedobj=db.acceptedRow;
+const {
+    selectedAcceptedNegotiation,
+    selectedRequest,
+    CurrentDate,
+    rejected
+} = useSelector((state) => state.negotiation);
+const dispatch = useDispatch();
+const suggestedPrice=useRef();
 
-  //***************************************************** */
-  const AddsuggestedPrice=()=>{
+const AddsuggestedPrice=()=>{
     suggestedPrice.current.disabled=false;
     suggestedPrice.current.focus();
-  }
-  //***************************************************** */
+}
 const HandleChange=(e)=>{
     const {name,value}=e.target;
-    dispatch(RejectModal_values({[name]:value}));
-    dispatch(GetRejectModalvalues({[name]:value}));
+    dispatch(updateSelectedRequestData({[name]:value}));
+    dispatch(updateAcceptedNegotiationData({[name]:value}));
 }
 const CloseModal=()=>{
-    dispatch(showModal_reject(false));
-    dispatch(clearValuesOfRow());
+    dispatch(toggleRejectModal(false));
+    dispatch(resetSelectedRequest());
 }
 const RejectConfirming=async()=>{
-     const row={ClientID:db.negotiationRow.ClientID,
-      ProjectName:db.negotiationRow.ProjectName,
-      Unit:db.negotiationRow.Unit,
-      NegotiationCondition:db.negotiationRow.NegotiationCondition,
-      SuggestedPrice:db.negotiationRow.SuggestedPrice || 0,
-      ReasonOfReject:db.negotiationRow.ReasonOfReject || ""
-      ,CheckedDate:db.CurrentDate}
+     const row={...selectedAcceptedNegotiation,CheckedDate:CurrentDate}
+   
     try{
-    if(db.defineRow===0){
-    await dispatch(SaveRequestByAdmin(row)).unwrap();
+    if(rejected===0){
+    await dispatch(processNegotiationReview(row)).unwrap();
      toast.error("تم رفض الطلب!", {
         theme: "colored",
         position: "top-left",
       });  
-     
     }
-    else if(db.defineRow===1){
-      await dispatch(ApprovedtoReject(acceptedobj)).unwrap();
+    else if(rejected===1){
+      await dispatch(updateNegotiationStatus(selectedAcceptedNegotiation)).unwrap();
        toast.error("تم إعادة رفض الطلب!", {
         theme: "colored",
         position: "top-left",
       });  
-     
     }
-
-      dispatch(showModal_reject(false)); 
+      dispatch(toggleRejectModal(false)); 
     }       
-   
     catch (error) {
         console.error("خطأ في العملية:", error);
         toast.warning("حدث خطأ، يرجى التأكد من البيانات");
-    }
+    } 
 }
 
- 
   return (
-    <div>
+             <div>
                 <div className="modal-backdrop">
                     <div className="glass-modal animate__animated animate__zoomIn animate__faster">
                         <div className="modal-header">
                             <h3>رفض عرض العميل</h3>
-                            <p>{RequestRow.ClientName} - {RequestRow.ProjectName}</p>
+                            <p>{selectedAcceptedNegotiation.ClientName} - {selectedAcceptedNegotiation.ProjectName}</p>
                         </div>
                         <div className="modal-inputs">
                             <div className="field" style={{display:'flex'}} >
@@ -86,7 +78,7 @@ const RejectConfirming=async()=>{
                                     disabled
                                     placeholder="أدخل مبلغ السعر الجديد"
                                     name='SuggestedPrice'
-                                    value={db.negotiationRow.SuggestedPrice || ""}
+                                    value={selectedRequest.SuggestedPrice || ""}
                                     onChange={HandleChange}
                                     style={{width:'250px'}}
                                     ref={suggestedPrice}
@@ -107,7 +99,7 @@ const RejectConfirming=async()=>{
                                     rows="3" 
                                     placeholder="لماذا تم رفض هذا السعر؟"
                                     name='ReasonOfReject'
-                                    value={db.negotiationRow.ReasonOfReject || ""}
+                                    value={selectedRequest.ReasonOfReject || ""}
                                     onChange={HandleChange}
                                 ></textarea>
                             </div>
@@ -118,11 +110,11 @@ const RejectConfirming=async()=>{
                             className="confirm-btn"
                             onClick={()=>RejectConfirming()}
                             >تأكيد الرفض</button>
-                            <button className="cancel-btn" onClick={() =>CloseModal()}>إلغاء</button>
+                            <button className="cancel-btn" 
+                            onClick={() =>CloseModal()}>إلغاء</button>
                         </div>
                     </div>
                 </div>
-            
     </div>
   )
 }

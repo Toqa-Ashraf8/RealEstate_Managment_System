@@ -6,8 +6,6 @@ import { toast } from 'react-toastify';
 import { deleteClientData } from '../../../services/clientService';
 import { resetClientForm, toggleDeleteClientModal } from '../../../assets/redux/clientSlice';
 
-
-
 const ClientsDeleteModal = () => {
   const {client,deletedStatus} = useSelector((state) => state.clients);
   const {isLoading} =useSelector((state)=>state.ui);
@@ -53,7 +51,10 @@ const ClientsDeleteModal = () => {
                onClick={handleDelete}>
                 <MdDelete /> نعم، متأكد
               </button>
-              <button disabled={isLoading} className="btn-action-c btn-no" onClick={()=>dispatch(toggleDeleteClientModal(false))}>
+              <button 
+              disabled={isLoading} 
+              className="btn-action-c btn-no" 
+              onClick={()=>dispatch(toggleDeleteClientModal(false))}>
                 لا، إلغاء
               </button>
             </div>
