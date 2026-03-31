@@ -54,3 +54,13 @@ export const deleteBookingData = createAsyncThunk("deleteBookingData/booking", a
         .then((res) => res.data);
     return resp;
 })
+export const changeUnitAvailableStatus = createAsyncThunk("changeUnitAvailableStatus/booking", async (unit) => {
+    const resp = await axios.post(variables.BOOKINGS_API + "SetUnitAvailable?unit=" + unit)
+        .then((res) => res.data);
+    return resp;
+})
+export const deleteReservation = createAsyncThunk("deleteReservation/booking", async (clientdata) => {
+    const resp = await axios.post(variables.BOOKINGS_API + "DeleteReservation",clientdata)
+        .then((res) => res.data);
+    return resp;
+})

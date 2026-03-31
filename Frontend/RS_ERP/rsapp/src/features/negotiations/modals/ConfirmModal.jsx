@@ -20,6 +20,7 @@ const dispatch = useDispatch();
     
 const acceptRequest = async () => {
 const acceptedrow = {...selectedRequest,CheckedDate:CurrentDate};
+console.log("acceptedrow",acceptedrow)
    try {
     if (rejected === 0) {
       await dispatch(processNegotiationReview(acceptedrow)).unwrap();
@@ -32,9 +33,8 @@ const acceptedrow = {...selectedRequest,CheckedDate:CurrentDate};
     dispatch(toggleConfirmModal(false));
   } 
   catch (error) {
-    console.error("Submission Error:", error);
     toast.warning("حدث خطأ أثناء الحفظ");
-  }  
+  }   
 };
 
   return (

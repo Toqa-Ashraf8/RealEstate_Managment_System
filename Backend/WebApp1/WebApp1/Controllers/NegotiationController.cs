@@ -269,7 +269,10 @@ namespace WebApp1.Controllers
         {
             int count_a = 0;
             DataTable dt = new DataTable();
-            string sqld = "select * from Negotiations_2 where NegotiationCondition=1 AND checkedByAdmin=1 AND Reserved=0";
+            string sqld = "select * from Negotiations_2 where" +
+                            " NegotiationCondition=1 AND " +
+                            "checkedByAdmin=1 " +
+                            "AND Reserved=0";
             SqlDataAdapter da = new SqlDataAdapter(sqld, conn);
             da.Fill(dt);
             if (dt.Rows.Count > 0)

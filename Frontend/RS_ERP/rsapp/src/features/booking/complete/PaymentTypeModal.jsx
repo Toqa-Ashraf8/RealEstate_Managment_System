@@ -87,8 +87,7 @@ const confirmReversal=()=>{
                   
                      (<img 
                      src= 
-                     {`${variables.INSTALLMENT_CHECKS_IMAGES_URL}/
-                      ${installmentCheckImageName || paymentType?.CheckImage}`}
+                     {`${variables.INSTALLMENT_CHECKS_IMAGES_URL}/${installmentCheckImageName || paymentType?.CheckImage}`}
                        className="final_img_fluid_I" alt="" />
                     )  
                     :

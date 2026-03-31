@@ -15,21 +15,24 @@ import {
 import './BookedClients.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
-    deleteBookingData, 
     deleteBookingRow,   
     setReservationStatus
 } from '../../../assets/redux/bookingSlice';
 import { useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import BookingsReport from '../../../assets/reports/BookingsReport';
-import { changeUnitAvailableStatus } from '../../../services/projectService';
+
 import { 
+    changeUnitAvailableStatus,
+    deleteBookingData,
+    deleteReservation,
     fetchAllReservedClients, 
     fetchReservedClientById 
 } from '../../../services/bookingService';
+import { toast } from 'react-toastify';
 
 const BookedClients = () => {
-const {reservedClients}=useSelector((state)=>state.booking);
+const {reservedClients,initialClientData}=useSelector((state)=>state.booking);
     const dispatch=useDispatch();
     const navigate=useNavigate();
    
@@ -62,25 +65,22 @@ const printReport = async (index, id) => {
 
 const deleteBooking=async(index)=>{
   const selectedBookingId=reservedClients[index].BookingID;
-  const reservedUnitName=reservedClients[index].Unit;
-    try {
-        const result= await dispatch(deleteBookingData(selectedBookingId)).unwrap();
-        if(result.isDeleted){
-             toast.success("تم حذف الحجز بنجاح!", {
-             theme: "colored",
-             position: "top-left",
-            }); 
-        await dispatch(changeUnitAvailableStatus(reservedUnitName));
-        dispatch(deleteBookingRow(index));
-        }
-       
-    } catch (error) {
-        toast.error("حدث خطأ في الاتال بالخادم!", {
-        theme: "colored",
-        position: "top-left",
-       });
-    }
-}
+  const reservedClientID=reservedClients[index].ClientID;
+   try {
+         const reuslt= await dispatch(deleteBookingData(selectedBookingId)).unwrap();  
+            toast.success("تم حذف الحجز !", {
+            theme: "colored",
+            position: "top-left",
+            });   
+            dispatch(deleteBookingRow(reservedClientID));   
+       }  
+       catch (error) {
+            toast.error("حدث خطأ في الاتصال بالخادم!", {
+            theme: "colored",
+            position: "top-left",
+       }); 
+ } } 
+
     return (
         <div className="booked_list_wrapper">      
           <div className="booked_list_header">
@@ -99,9 +99,8 @@ const deleteBooking=async(index)=>{
                     <thead>
                         <tr>
                             <th>العميل <ArrowUpDown size={14} /></th>
-                            <th>المشروع والوحدة</th>
-                            <th>قيمة الوحدة</th>
-                            <th>قيمة الحجز</th>
+                            <th>المشروع</th>
+                            <th>الوحدة</th>
                             <th className="text_center">الإجراءات</th>
                         </tr>
                     </thead>
@@ -118,20 +117,13 @@ const deleteBooking=async(index)=>{
                     <td>
                         <div className="project_cell">
                         <p>{client.ProjectName}</p>
-                        <small>وحدة:{client.Unit} </small>
                         </div>
-                        </td>
-                        <td>
-                        <span className="price_tag" style={{color:'#040432'}}>
-                            {client.NegotiationPrice}<small>ج.م</small>
-                            </span>
-                        </td>
-                        <td>
-                        <span className="price_tag" style={{color:'#040432'}}>
-                            {client.ReservationAmount}<small>ج.م</small>
-                            </span>
-                        </td>
-                                    
+                    </td>  
+                      <td>
+                        <div className="project_cell">
+                        <p>{client.Unit}</p>
+                        </div>
+                    </td>       
                         <td>
                         <div className="table_actions">
                         <button 

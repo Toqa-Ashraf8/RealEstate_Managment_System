@@ -2,9 +2,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios';
 import { variables } from '../variables'; 
 import { 
+    bookingDetailRequest,
+    changeUnitAvailableStatus,
+    deleteBookingData,
+    deleteReservation,
     fetchAllReservedClients, 
     fetchReservedClientById, 
     fillClientData, 
+    generateInstallments, 
+    saveChecksImages, 
     saveInstallmentCheck, 
     saveNationalIdImage 
 } from '../../services/bookingService';
@@ -46,6 +52,7 @@ const initialState = {
     successSaveInstallmentData:false,
     successUpdate:false,
     isDeletedBooking:false,
+    successDelete:false,
     //   
     reserved:-1,
     selectedInstallmentrow:-1,
@@ -163,7 +170,7 @@ const bookingSlice = createSlice({
       },
       deleteBookingRow:(state,action)=>{
         state.reservedClients=
-        state.reservedClients.filter((client,index)=>index!==action.payload);
+        state.reservedClients.filter((client)=>client.ClientID!==action.payload);
       }
     },
     extraReducers: (builder) => {
@@ -199,6 +206,12 @@ const bookingSlice = createSlice({
             })  
             .addCase(deleteBookingData.fulfilled, (state, action) => {
                 state.isDeletedBooking=action.payload;
+            })
+            .addCase(changeUnitAvailableStatus.fulfilled, (state, action) => {
+                 state.isUpdated = action.payload;
+            }) 
+            .addCase(deleteReservation.fulfilled, (state, action) => {
+                 state.successDelete = action.payload;
             })
     }
 })

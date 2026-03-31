@@ -11,10 +11,7 @@ import {
 import './InstallmentsSchedule.css';
 import { useDispatch, useSelector} from 'react-redux';
  import { 
-    bookingDetailRequest,
     resetPaymentModal, 
-    confirmReservation, 
-    generateInstallments, 
     toggleRevertModal,  
     setPendingPayment, 
     togglePaymentModal, 
@@ -24,7 +21,12 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
  import RevertPaymentModal from './RevertPaymentModal'; 
 import { MdDeleteOutline } from "react-icons/md";
-import { fillClientData } from '../../../services/bookingService';
+import { 
+    bookingDetailRequest, 
+    confirmReservation, 
+    fillClientData, 
+    generateInstallments
+} from '../../../services/bookingService';
 
 
 const InstallmentsSchedule = () => {

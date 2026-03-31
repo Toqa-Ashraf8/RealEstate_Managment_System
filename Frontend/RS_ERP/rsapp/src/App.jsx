@@ -29,9 +29,16 @@ import {clearGlobalError} from './assets/redux/uiSlice'
 function App() {
 const dispatch = useDispatch();
 const {token}=useSelector((state)=>state.auth);
-const { isLoading, globalError, globalMessage } = useSelector((state) => state.ui);
+const { 
+  isLoading, 
+  globalError, 
+  globalMessage 
+} = useSelector((state) => state.ui);
 const componentRef = useRef();
-const db_b=useSelector((state)=>state.booking);
+const {
+  bookingClient,
+  installmentDetails
+}=useSelector((state)=>state.booking);
 useEffect(() => {
     if (globalError) {
       toast.error(globalMessage || "حدث خطأ في السيرفر",);
@@ -151,8 +158,8 @@ useEffect(() => {
                  <ProtectedRoute>
                      <BookingsReport 
                     ref={componentRef} 
-                    client={db_b.bookingClient} 
-                    installments={db_b.InstallmentDetails}
+                    client={bookingClient} 
+                    installments={installmentDetails}
                   /> 
                   </ProtectedRoute>
                 }

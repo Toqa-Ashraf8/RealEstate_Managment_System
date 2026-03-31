@@ -4,7 +4,6 @@ import { variables } from "../variables";
 import { toast } from 'react-toastify';
 import { formatCurrency } from "../helpers";
 import { 
-    changeUnitAvailableStatus,
     deleteProject, 
     fetchProjectsList, 
     fetchProjectUnits, 
@@ -53,7 +52,7 @@ const projectSlice = createSlice({
             state.project = { ...state.project, ...action.payload }
         },
         resetProjectForm: (state) => {
-            state.project = { ProjectCode: 0, ProjectName: '', ProjectType: '-1', Location: '', TotalUnits: 0, ProjectStatus: '-1', ProjectImage: '' };
+            state.project =initialState.project;;
             state.projectImageName = '';
             state.unitsList = [];
         },
@@ -87,7 +86,8 @@ const projectSlice = createSlice({
             state.isDeleteUnitModalOpen = true;
         },
         deleteUnitFromList: (state, action) => {
-            state.unitsList = state.unitsList.filter((items, index) => index !== state.unitTableRowIndex);
+            state.unitsList = 
+            state.unitsList.filter((items, index) => index !== state.unitTableRowIndex);
             state.isDeleteUnitModalOpen = false;
         },
         hideDeleteUnitModal: (state) => {
@@ -95,7 +95,8 @@ const projectSlice = createSlice({
         },
         calculateUnitTotalPrice: (state) => {
             if (state.selectedUnit.TotalArea && state.selectedUnit.MeterPrice) {
-                state.calculatedUnitTotalPrice = state.selectedUnit.TotalArea * state.selectedUnit.MeterPrice;
+                state.calculatedUnitTotalPrice = 
+                state.selectedUnit.TotalArea * state.selectedUnit.MeterPrice;
                 state.selectedUnit.TotalPrice = state.calculatedUnitTotalPrice;
             } else {
                 state.calculatedUnitTotalPrice = 0;
@@ -151,9 +152,7 @@ const projectSlice = createSlice({
             .addCase(fetchUnitsDetails.fulfilled, (state, action) => {
                 state.unitsList = action.payload;
             })
-            .addCase(changeUnitAvailableStatus.fulfilled, (state, action) => {
-                state.isUpdated = action.payload;
-            })
+            
     }
 })
 export const { 

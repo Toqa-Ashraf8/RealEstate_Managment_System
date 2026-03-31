@@ -6,7 +6,6 @@ import { Printer } from 'lucide-react';
 const BookingsReport = React.forwardRef(({ client, installments}, ref) => {
     if (!client) return null;
     const summarizedInstallments = installments?.slice(0, 5) || [];
-
     return (
         <div className="report-view-container">
          

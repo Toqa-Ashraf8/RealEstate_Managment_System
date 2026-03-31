@@ -309,14 +309,25 @@ const AddProjects = () => {
 
               <div className="col-4">
                 <div className="img_cnt">
-                  <img
-                    src={
-                      variables.PROJECT_IMAGES_URL +
-                      (project.ProjectImage || projectImageName || "")
+                {(() => {
+                const imgName = projectImageName || project?.ProjectImage;
+                  if (imgName && imgName !== "null") {
+                   return (
+                    <img 
+                     src={`${variables.PROJECT_IMAGES_URL}/${imgName}`} 
+                     className="preview-img"
+                     alt="" 
+                    />
+                    );
+                   } else {
+                     return (
+                        <div className="final_empty_msg_p">
+                        <ImageIcon size={40} className="final_icon_fade" />
+                         <p>معاينة المشروع</p>
+                        </div>
+                      );
                     }
-                    alt=""
-                    className="preview-img"
-                  />
+                  })()}
                 </div>
               </div>
             </div>

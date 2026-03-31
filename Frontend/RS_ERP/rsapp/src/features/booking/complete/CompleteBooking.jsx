@@ -23,12 +23,9 @@ import { RiSave3Fill } from "react-icons/ri";
 import { AiOutlineClear } from "react-icons/ai";
 import { FiPrinter } from "react-icons/fi";
 import { 
-    bookingDetailRequest, 
     calculateNewDownPayment, 
     caluclateDownPayment,  
-    generateInstallments,  
-    resetBookingForm, 
-    saveChecksImages, 
+    resetBookingForm,  
     setBookingClientData, 
     setInstallmentData, 
     setReservationStatus, 
@@ -39,8 +36,11 @@ import {toast} from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
 import { LuPrinter } from "react-icons/lu";
 import { 
+    bookingDetailRequest,
     fetchReservedClientById, 
     fillClientData, 
+    generateInstallments, 
+    saveChecksImages, 
     saveNationalIdImage 
 } from '../../../services/bookingService';
 
@@ -296,7 +296,7 @@ const getinstallmentsData=(id)=>{
                                 </div>
                             </div>
                             <div className="col-lg-4">
-                               <div className="final_image_preview_big">
+                           <div className="final_image_preview_big">
                           {(() => {
                             const imgName = nationalIdImage || bookingClient?.NationalIdImagePath;
                             if (imgName && imgName !== "null") {

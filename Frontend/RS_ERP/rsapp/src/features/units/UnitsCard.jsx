@@ -47,11 +47,10 @@ const UnitsCard = () => {
                   <div style={{display:'flex',justifyContent:'space-between'}}>
                  <span><h4 className="u-card-title">{unit.unitName}</h4></span> 
                   <div className='u-card-status'>
-                    
-                    {unit.ReservedStatus===false ? 
-                     (<span style={{fontWeight:'bold',color:'green'}}>متاحة</span>)
-                    :
+                    {unit.ReservedStatus ? 
                     (<span style={{fontWeight:'bold',color:'red'}}>محجوزة</span>)
+                     :
+                     (<span style={{fontWeight:'bold',color:'green'}}>متاحة</span>)
                     }
                   
                   </div>
