@@ -22,20 +22,20 @@ const {
 const dispatch = useDispatch();
 const suggestedPrice=useRef();
 
-const AddsuggestedPrice=()=>{
+const enableSuggestedPrice=()=>{
     suggestedPrice.current.disabled=false;
     suggestedPrice.current.focus();
 }
-const HandleChange=(e)=>{
+const handleChange=(e)=>{
     const {name,value}=e.target;
     dispatch(updateSelectedRequestData({[name]:value}));
     dispatch(updateAcceptedNegotiationData({[name]:value}));
 }
-const CloseModal=()=>{
+const closeRejectModal=()=>{
     dispatch(toggleRejectModal(false));
     dispatch(resetSelectedRequest());
 }
-const RejectConfirming=async()=>{
+const confirmRejection=async()=>{
      const row={...selectedAcceptedNegotiation,CheckedDate:CurrentDate}
    
     try{
@@ -79,7 +79,7 @@ const RejectConfirming=async()=>{
                                     placeholder="أدخل مبلغ السعر الجديد"
                                     name='SuggestedPrice'
                                     value={selectedRequest.SuggestedPrice || ""}
-                                    onChange={HandleChange}
+                                    onChange={handleChange}
                                     style={{width:'250px'}}
                                     ref={suggestedPrice}
                                 />  
@@ -87,7 +87,7 @@ const RejectConfirming=async()=>{
                                     <AiTwotoneEdit 
                                     size={25} color='teal' 
                                     style={{cursor:'pointer',marginRight:'20px'}}
-                                    onClick={()=>AddsuggestedPrice()}
+                                    onClick={()=>enableSuggestedPrice()}
                                     />
                                     </span>
                                 </div>
@@ -100,7 +100,7 @@ const RejectConfirming=async()=>{
                                     placeholder="لماذا تم رفض هذا السعر؟"
                                     name='ReasonOfReject'
                                     value={selectedRequest.ReasonOfReject || ""}
-                                    onChange={HandleChange}
+                                    onChange={handleChange}
                                 ></textarea>
                             </div>
                              
@@ -108,10 +108,10 @@ const RejectConfirming=async()=>{
                         <div className="modal-actions">
                             <button 
                             className="confirm-btn"
-                            onClick={()=>RejectConfirming()}
+                            onClick={()=>confirmRejection()}
                             >تأكيد الرفض</button>
                             <button className="cancel-btn" 
-                            onClick={() =>CloseModal()}>إلغاء</button>
+                            onClick={() =>closeRejectModal()}>إلغاء</button>
                         </div>
                     </div>
                 </div>

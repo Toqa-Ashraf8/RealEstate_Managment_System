@@ -18,7 +18,7 @@ const {
 const dispatch = useDispatch();
 
     
-const AcceptRequest = async () => {
+const acceptRequest = async () => {
 const acceptedrow = {...selectedRequest,CheckedDate:CurrentDate};
    try {
     if (rejected === 0) {
@@ -44,7 +44,7 @@ const acceptedrow = {...selectedRequest,CheckedDate:CurrentDate};
         <div className="modal-actions">
           <button className="btn btn-danger" 
           onClick={()=>dispatch(toggleConfirmModal(false))}>لا</button>
-          <button className="btn-yes" onClick={()=>AcceptRequest()}>نعم</button>
+          <button className="btn-yes" onClick={()=>acceptRequest()}>نعم</button>
         </div>
       </div>
     </div>

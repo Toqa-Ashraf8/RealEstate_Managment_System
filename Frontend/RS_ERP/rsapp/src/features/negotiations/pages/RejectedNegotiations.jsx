@@ -21,21 +21,20 @@ const RejectedNegotiations = () => {
 const {isConfirmModalOpen,rejectedRequests} = useSelector((state) => state.negotiation);
 const dispatch = useDispatch();
 
-const Re_Approve=(index)=>{
+const reapproveRequest=(index)=>{
     dispatch(selectRejectedForUpdate(index))
     dispatch(dispatch(prepareRejectAction(1)));
     dispatch(toggleConfirmModal(true));
 }
 useEffect(() => {
-    const getData = async () => {
+    const fetchData = async () => {
     await dispatch(fetchRejectedNegotiations());
     }
-    getData();
+    fetchData();
 }, [dispatch]);
 
     return (
         <div className="clean-page-wrapper">
-            
            {isConfirmModalOpen && <ConfirmModal/>} 
             <div className="clean-header">
                 <h2>قائمة الطلبات المستبعدة</h2>
@@ -81,7 +80,7 @@ useEffect(() => {
                           <button 
                           className="btn btn-success" 
                           style={{width:'120px',height:'30px',fontSize:'13px'}}
-                          onClick={()=>Re_Approve(index)}
+                          onClick={()=>reapproveRequest(index)}
                           >
                                 استرجاع للقبول
                             </button>

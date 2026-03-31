@@ -15,16 +15,16 @@ const AcceptedNegotiations = () => {
 const {isRejectModalOpen,acceptedRequests} = useSelector((state) => state.negotiation);
 const dispatch = useDispatch();
 
-const Re_Reject=(index)=>{
+const rejectApprovedRequest=(index)=>{
     dispatch(selectAcceptedForUpdate(index));
     dispatch(prepareRejectAction(1));
     dispatch(toggleRejectModal(true));
 }
     useEffect(() => {
-        const getData = async () => {
+        const fetchData = async () => {
             await dispatch(fetchApprovedNegotiations());
         }
-        getData();
+        fetchData();
     }, [dispatch]);
 
     return (
@@ -69,7 +69,7 @@ const Re_Reject=(index)=>{
                             <button 
                             className="btn btn-danger" 
                             style={{width:'120px',height:'30px',fontSize:'13px'}}
-                            onClick={()=>Re_Reject(index)}
+                            onClick={()=>rejectApprovedRequest(index)}
                             >
                                 استرجاع للرفض
                             </button>

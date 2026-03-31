@@ -34,14 +34,14 @@ const {
 const dispatch = useDispatch();
 const navigate=useNavigate();
 
-const Reject=(i)=>{
-   dispatch(toggleRejectModal(true));
+const rejectRequest=(i)=>{
+    dispatch(toggleRejectModal(true));
     dispatch(setClientRequestData(i));
     dispatch(prepareApproveAction(1));
     dispatch(setNegotiationStatus(0));     
 }
 
-const Accepted=(i)=>{
+const acceptRequest=(i)=>{
      dispatch(setClientRequestData(i));
      dispatch(prepareApproveAction(0));
      dispatch(setNegotiationStatus(1));
@@ -131,14 +131,14 @@ useEffect(() => {
                                     style={{display:'flex',justifyContent:'center',gap:'20px'}}>
                                         <button 
                                         className="action-btn accept-btn" title="قبول"
-                                         onClick={()=>Accepted(index)}
+                                         onClick={()=>acceptRequest(index)}
                                         >
                                             <IoMdCheckmarkCircleOutline size={22} />
                                         </button>
                                         <button 
                                             className="action-btn reject-btn" 
                                             title="رفض"
-                                           onClick={() =>Reject(index)}
+                                           onClick={() =>rejectRequest(index)}
                                         >
                                             <CgCloseR size={22} />
                                         </button>

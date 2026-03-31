@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System.Data;
 using System.Data.SqlClient;
-using System.Data.SqlClient;
 using System.Diagnostics.Contracts;
 using WebApp1.EF;
 using WebApp1.Models;
