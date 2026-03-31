@@ -1,10 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios';
 import { variables } from '../variables'; 
+import { 
+    fetchAllReservedClients, 
+    fetchReservedClientById, 
+    fillClientData, 
+    saveInstallmentCheck, 
+    saveNationalIdImage 
+} from '../../services/bookingService';
+
 const initialState = {
-    loading: false,
-    error: false,
-    bookRowIndex: "",
     bookingClient: {
         BookingID: 0,
         NationalID: "",
@@ -17,128 +22,86 @@ const initialState = {
         CheckImagePath: "",
         Reserved:1
     },
+    InstallmentInformation: { 
+        TotalAmount: 0, 
+        DownPayment: 0, 
+        FirstInstallmentDate: "", 
+        InstallmentYears: "-1" 
+    },
+    paymentType:{
+        PaymentType:"",
+        CheckImage:""
+    },
     initialClientData:{},
-    bookingClients: [],
-    nationalidImage: "",
+    reservedClients:[],
+    installmentDetails:[],
+    nationalIdImage: "",
     checkImage: "",
-    savedData: "",
-    InstallmentInformation: { TotalAmount: 0, DownPayment: 0, FirstInstallmentDate: "", InstallmentYears: "-1" },
-    InstallmentDetails:[],
-    paymentModal:false,
-    paymentType:{PaymentType:"",CheckImage:""},
     installmentCheckImageName:"",
-    rIndex:-1,
+    //
+    isPaymentModalOpen:false,
+    isRevertPaymentModalOpen:false,
+    //
     successSaveBookingData:false,
     successSaveInstallmentData:false,
     successUpdate:false,
-    bookingClientIndex:-1,
-    reservedClients:[],
+    isDeletedBooking:false,
+    //   
     reserved:-1,
-    isRevertPaymentModalOpen:false,
     selectedInstallmentrow:-1,
-    isRevertPaymentModalOpen: false,
     selectedDeleteIndex: -1,
+    //
     bookingDate:new Date().toISOString().split('T')[0],
-    isDeletedBooking:false
-
 }
-//*********************************************************************** */
-export const FillClientData = createAsyncThunk("FillClientData/booking", async (Clientdata) => {
-    const resp = await axios.post(variables.BOOKINGS_API + "GetBookingClientData", Clientdata)
-        .then((res) => res.data);
-    return resp;
-})
-export const saveNationalidImage = createAsyncThunk("saveNationalidImage/booking", async (formData) => {
-    const resp = await axios.post(variables.BOOKINGS_API + "NationalIdUploadRequest", formData)
-        .then((res) => res.data);
-    return resp;
-})
-export const saveChecksImages = createAsyncThunk("saveChecksImages/booking", async (formData_) => {
-    const resp = await axios.post(variables.BOOKINGS_API + "CheckUploadRequest", formData_)
-        .then((res) => res.data);
-    return resp;
-})
 
-export const generateInstallments = createAsyncThunk("generateInstallments/booking", async (request) => {
-    const resp = await axios.post(variables.BOOKINGS_API + "GenerateInstallments", request)
-        .then((res) => res.data);
-    return resp;
-})
-export const saveinstallmentCheck = createAsyncThunk("saveinstallmentCheck/booking", async (formData) => {
-    const resp = await axios.post(variables.BOOKINGS_API + "InstallmentCheckUploadRequest", formData)
-        .then((res) => res.data);
-    return resp;
-})
-export const bookingDetailRequest = createAsyncThunk("bookingDetailRequest/booking", async (sentdata) => {
-    const resp = await axios.post(variables.BOOKINGS_API + "BookingDetailRequest", sentdata)
-        .then((res) => res.data);
-    return resp;
-})
-export const confirmReservation = createAsyncThunk("confirmReservation/booking", async (row) => {
-    const resp = await axios.post(variables.BOOKINGS_API + "ConfirmReservation", row)
-        .then((res) => res.data);
-    return resp;
-})
-export const getreservedClients = createAsyncThunk("getreservedClients/booking", async () => {
-    const resp = await axios.get(variables.BOOKINGS_API + "GetAllReservedClients")
-        .then((res) => res.data);
-    return resp;
-})
-export const getreservedClientsByID = createAsyncThunk("getreservedClientsByID/booking", async (id) => {
-    const resp = await axios.post(variables.BOOKINGS_API + "GetReservedClientById?id="+id)
-        .then((res) => res.data);
-    return resp;
-})
-export const deleteBookingData = createAsyncThunk("deleteBookingData/booking", async (id) => {
-    const resp = await axios.delete(variables.BOOKINGS_API + "DeleteBookingData?bookingid="+id)
-        .then((res) => res.data);
-    return resp;
-})
 const bookingSlice = createSlice({
     name: 'booking',
     initialState,
     reducers: {
-        GetClientDataForbooking: (state, action) => {
+        setBookingClientData: (state, action) => {
             state.bookingClient = { ...state.bookingClient, ...action.payload };
         },
-        ChangevaluesOfBookingClient: (state, action) => {
-            state.bookingClient = { ...state.bookingClient, ...action.payload };
-        },
-        clearInputs: (state) => {
+        resetBookingForm: (state) => {
             state.bookingClient = initialState.bookingClient;
             state.InstallmentInformation = initialState.InstallmentInformation;
             state.checkImage = "",
-            state.nationalidImage = "";
+            state.nationalIdImage = "";
         },
+        //حساب قيمة المقدم قبل الحجز
         caluclateDownPayment: (state, action) => {
             if (state.bookingClient.ReservationAmount > 0) {
                 const negoiationPrice = action.payload;
                 state.InstallmentInformation.TotalAmount = negoiationPrice;
-                const downpaymentBeforeReservation = state.InstallmentInformation.TotalAmount - state.bookingClient.ReservationAmount;
-                state.InstallmentInformation.DownPayment = downpaymentBeforeReservation * (25 / 100);
+                const balance = 
+                state.InstallmentInformation.TotalAmount - state.bookingClient.ReservationAmount;
+                state.InstallmentInformation.DownPayment = balance * 0.25;
             }
         },
-        calculatenewDownPayment:(state,action)=>{
+        //حساب قيمة المقدم بقيمة الحجز من الداتا بيز
+        calculateNewDownPayment:(state,action)=>{
             const negoiationPrice = action.payload.total;
             state.InstallmentInformation.TotalAmount = negoiationPrice;
-             const NewdownpaymentBeforeReservation = state.InstallmentInformation.TotalAmount - action.payload.newReservationAmount;
-             state.InstallmentInformation.DownPayment = NewdownpaymentBeforeReservation * (25 / 100);
+             const newBalance = 
+             state.InstallmentInformation.TotalAmount - action.payload.newReservationAmount;
+             state.InstallmentInformation.DownPayment = newBalance * 0.25;
         },
-        getInstallmentData: (state, action) => {
+        setInstallmentData: (state, action) => {
             state.InstallmentInformation = { ...state.InstallmentInformation, ...action.payload };
         },
-        showPaymentModal:(state,action)=>
+        togglePaymentModal:(state,action)=>
         {
-            state.paymentModal=action.payload;
+            state.isPaymentModalOpen=action.payload;
         },
-        getPaymentModalvalues:(state,action)=>{
+        setPaymentModalValues:(state,action)=>{
             state.paymentType={...state.paymentType,...action.payload}
         },
-        clearpaymentModal:(state)=>{
+        resetPaymentModal:(state)=>{
             state.paymentType={PaymentType:"",CheckImage:""};
             state.installmentCheckImageName="";
         },
-        reservedOrnot:(state,action)=>{
+        //reserved=1 لو يجيب قيم جدول الاقساط وبيانات العميل من الداتا بيز 
+        //reserved=0  يعمل جدول اقساط وبيانات عميل جديد 
+        setReservationStatus:(state,action)=>{
             state.reserved=action.payload;
         },
        updateDownPaymentManual: (state, action) => {
@@ -147,129 +110,117 @@ const bookingSlice = createSlice({
                 DownPayment: action.payload
             };
         },
-        GetBookngClient:(state,action)=>{
+        setInitialClientData:(state,action)=>{
             state.initialClientData=action.payload;    
         },
-        
         toggleRevertPymentModal:(state,action)=>{
             state.isRevertPaymentModalOpen=action.payload;
         },
-         setPendingPayment: (state, action) => {
-        const {index,isEdit} = action.payload;
-        state.selectedInstallmentrow=index;
-        if(isEdit===1){
-            const rowData = state.InstallmentDetails[index];
-            state.paymentType = {
-            PaymentType: rowData.PaymentType || "",
-            CheckImage: rowData.CheckImage || ""
-         };
-        }
-      
-        else {
-          state.paymentType = { PaymentType: "", CheckImage: "" };
-         }
-            
+        setPendingPayment: (state, action) => {
+            const {index,isEdit} = action.payload;
+            state.selectedInstallmentrow=index;
+            if(isEdit===1){
+                const rowData = state.installmentDetails[index];
+                state.paymentType = {
+                PaymentType: rowData.PaymentType || "",
+                CheckImage: rowData.CheckImage || ""
+            };
+            }
+            else {
+            state.paymentType = { PaymentType: "", CheckImage: "" };
+            }
         },
         confirmpaidStatus: (state) => {
-        const index = state.selectedInstallmentrow;
-        if (index !== -1) {
-         state.InstallmentDetails[index] = {
-            ...state.InstallmentDetails[index],
-            Paid: 1, 
-            PaymentType: state.paymentType.PaymentType,
-            CheckImage: state.paymentType.CheckImage
-        };
-          state.selectedInstallmentrow = -1;
-        }
-         state.paymentModal = false; 
+            const index = state.selectedInstallmentrow;
+            if (index !== -1) {
+            state.installmentDetails[index] = {
+                ...state.installmentDetails[index],
+                Paid: 1, 
+                PaymentType: state.paymentType.PaymentType,
+                CheckImage: state.paymentType.CheckImage
+            };
+            state.selectedInstallmentrow = -1;
+            }
+            state.isPaymentModalOpen = false; 
         },
-        openRevertModal:(state,action)=>{
-             state.selectedDeleteIndex=action.payload;
+        toggleRevertModal:(state,action)=>{
+            state.selectedDeleteIndex=action.payload;
             state.isRevertPaymentModalOpen=true;
         },
        
         confirmRevertPayment: (state) => {
-        const index = state.selectedDeleteIndex;
-         if (index !== -1) {
-        state.InstallmentDetails[index] = {
-            ...state.InstallmentDetails[index],
-            Paid: 0,
-            PaymentType: "",
-            CheckImage: ""
-        };
-         state.isRevertPaymentModalOpen = false;
-         state.selectedDeleteIndex = -1;
-       }
+            const index = state.selectedDeleteIndex;
+            if (index !== -1) {
+            state.installmentDetails[index] = {
+                ...state.installmentDetails[index],
+                Paid: 0,
+                PaymentType: "",
+                CheckImage: ""
+            };
+            state.isRevertPaymentModalOpen = false;
+            state.selectedDeleteIndex = -1;
+        }
       },
       deleteBookingRow:(state,action)=>{
-        state.reservedClients=state.reservedClients.filter((client,index)=>index!==action.payload);
+        state.reservedClients=
+        state.reservedClients.filter((client,index)=>index!==action.payload);
       }
-     
-
     },
     extraReducers: (builder) => {
         builder
-            .addCase(FillClientData.fulfilled, (state, action) => {
+            .addCase(fillClientData.fulfilled, (state, action) => {
               state.initialClientData= action.payload[0];
               
             })         
-            .addCase(saveNationalidImage.fulfilled, (state, action) => {
-                state.nationalidImage = action.payload;
+            .addCase(saveNationalIdImage.fulfilled, (state, action) => {
+                state.nationalIdImage = action.payload;
             })       
             .addCase(saveChecksImages.fulfilled, (state, action) => {
                 state.checkImage = action.payload;
             })
-       
             .addCase(generateInstallments.fulfilled, (state, action) => {
-                state.InstallmentDetails = action.payload;
+                state.installmentDetails = action.payload;
             })        
-            .addCase(saveinstallmentCheck.fulfilled, (state, action) => {
+            .addCase(saveInstallmentCheck.fulfilled, (state, action) => {
                 state.installmentCheckImageName = action.payload;
-
             })        
             .addCase(bookingDetailRequest.fulfilled, (state, action) => {
                 state.bookingClient.BookingID = action.payload.booking_id;
                 state.successSaveBookingData=action.payload.saved_m;
                 state.successSaveInstallmentData=action.payload.saved_d;
             })
-          /*   .addCase(confirmReservation.fulfilled, (state, action) => {
-                state.loading = false;
-            }) */
-            .addCase(getreservedClients.fulfilled, (state, action) => {
+            .addCase(fetchAllReservedClients.fulfilled, (state, action) => {
                 state.reservedClients=action.payload;
             })
-            .addCase(getreservedClientsByID.fulfilled, (state, action) => {
+            .addCase(fetchReservedClientById.fulfilled, (state, action) => {
                 state.InstallmentInformation=action.payload.installmentdata[0];
                 state.bookingClient=action.payload.clientdt[0];
-                state.InstallmentDetails=action.payload.installmentdt;
+                state.installmentDetails=action.payload.installmentdt;
             })  
             .addCase(deleteBookingData.fulfilled, (state, action) => {
                 state.isDeletedBooking=action.payload;
             })
-           
     }
 })
 export const {
-    GetClientDataForbooking, 
-    ChangevaluesOfBookingClient, 
-    clearInputs, 
+    setBookingClientData, 
+    resetBookingForm, 
     caluclateDownPayment,
-    getInstallmentData,
-    showPaymentModal,
-    getPaymentModalvalues,
-    clearpaymentModal,
-    reservedOrnot,
+    setInstallmentData,
+    togglePaymentModal,
+    setPaymentModalValues,
+    resetPaymentModal,
+    setReservationStatus,
     updateDownPaymentManual,
-    calculatenewDownPayment,
-    GetBookngClient,
+    calculateNewDownPayment,
+    setInitialClientData,
     setIndexofInstallmentRow,
     toggleRevertPymentModal,
     setPendingPayment,
     confirmpaidStatus,
-    openRevertModal,
+    toggleRevertModal,
     confirmRevertPayment,
     deleteBookingRow
-
 } = bookingSlice.actions;
 const bookingReducer = bookingSlice.reducer;
 export default bookingReducer;

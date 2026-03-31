@@ -16,18 +16,20 @@ import './BookedClients.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
     deleteBookingData, 
-    deleteBookingRow, 
-    getreservedClients, 
-    getreservedClientsByID, 
-    reservedOrnot 
+    deleteBookingRow,   
+    setReservationStatus
 } from '../../../assets/redux/bookingSlice';
 import { useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import BookingsReport from '../../../assets/reports/BookingsReport';
 import { changeUnitAvailableStatus } from '../../../services/projectService';
+import { 
+    fetchAllReservedClients, 
+    fetchReservedClientById 
+} from '../../../services/bookingService';
 
 const BookedClients = () => {
-const {reservedClients,}=useSelector((state)=>state.booking);
+const {reservedClients}=useSelector((state)=>state.booking);
     const dispatch=useDispatch();
     const navigate=useNavigate();
    
@@ -37,19 +39,19 @@ const handlePrint = useReactToPrint({
 });
 
 useEffect(()=>{ 
-    dispatch(getreservedClients());
+    dispatch(fetchAllReservedClients());
 },[])
 const editReservedClients=async(id,index)=>{
     const selectedClient=reservedClients[index];
     localStorage.setItem('activeBookingClient', JSON.stringify(selectedClient));
-    await dispatch(getreservedClientsByID(id));
-     dispatch(reservedOrnot(1));
+    await dispatch(fetchReservedClientById(id));
+     dispatch(setReservationStatus(1));
     await navigate('/complete_booking?clientId='+id);
 }
 const printReport = async (index, id) => {
     try {
-        await dispatch(getreservedClientsByID(id)).unwrap();
-        dispatch(reservedOrnot(1)); 
+        await dispatch(fetchReservedClientById(id)).unwrap();
+        dispatch(setReservationStatus(1)); 
         handlePrint();  
         navigate('/bookingreport');
         

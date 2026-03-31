@@ -2,13 +2,13 @@ import React from 'react';
 import './RevertPaymentModal.css'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { confirmRevertPayment, openRevertModal } from '../../../assets/redux/bookingSlice';
-
-
+import { 
+    confirmRevertPayment, 
+    toggleRevertModal 
+} from '../../../assets/redux/bookingSlice';
 
 const RevertPaymentModal = () => {
-    const dispatch = useDispatch();
-
+const dispatch = useDispatch();
     return (
         <div className="rv-modal-overlay">
             <div className="rv-modal-card">
@@ -19,16 +19,15 @@ const RevertPaymentModal = () => {
                     </span>
                 </p>
                 <div className="rv-modal-buttons">
-                   
                     <button 
                         className="rv-btn-confirm"
                         onClick={()=>dispatch(confirmRevertPayment())}
-                     >
+                    >
                         تأكيد الإلغاء
                     </button>
                      <button 
                         className="rv-btn-cancel" 
-                        onClick={()=>dispatch(openRevertModal(false))}
+                        onClick={()=>dispatch(toggleRevertModal(false))}
                     >
                         تراجع
                     </button>

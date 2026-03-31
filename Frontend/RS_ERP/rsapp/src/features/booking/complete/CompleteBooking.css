@@ -131,7 +131,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* التوسيط المثالي في النص */
+    transform: translate(-50%, -50%); 
     text-align: center; 
     color: #cbd5e1;  
     width: 100%;
@@ -139,14 +139,12 @@
 
 .final_icon_fade { opacity: 0.3; margin-bottom: 10px; }
 
-/* الخط الفاصل */
+
 .final_divider { 
     border: 0; 
     border-top: 2px solid #f1f5f9; 
     margin: 25px 0; 
 }
-
-/* الزرار الكبير */
 .final_submit_btn {
     width: 100%; 
     padding: 16px;
@@ -200,9 +198,9 @@
 }
 
 .final_circle_btn:hover { transform: scale(1.1); border-color: #4f46e5; }
-/* الأجزاء الإضافية فقط لدمجها مع كودك */
+
 .final_small_generate_btn {
-    flex: 0.6; /* عشان مياخدش مساحة كبيرة جنب السلكت */
+    flex: 0.6; 
     padding: 10px 15px;
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
@@ -226,12 +224,9 @@
     filter: brightness(1.1);
 }
 
-/* لضمان توسيط الأيقونات في الأنبوتس الجديدة */
 .final_label svg {
     min-width: 20px;
 }
-
-/* حالة الـ Error في الصور */
 .final_img_fluid[style*="display: none"] + .final_empty_msg {
     display: flex !important;
 }

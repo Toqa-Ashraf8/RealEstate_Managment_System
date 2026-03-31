@@ -12,19 +12,19 @@ import './InstallmentsSchedule.css';
 import { useDispatch, useSelector} from 'react-redux';
  import { 
     bookingDetailRequest,
-    clearpaymentModal, 
+    resetPaymentModal, 
     confirmReservation, 
-    FillClientData, 
     generateInstallments, 
-    openRevertModal,  
+    toggleRevertModal,  
     setPendingPayment, 
-    showPaymentModal, 
+    togglePaymentModal, 
 } from '../../../assets/redux/bookingSlice'; 
 import { useNavigate } from 'react-router-dom';
  import PaymentTypeModal from './PaymentTypeModal'; 
 import { toast } from 'react-toastify';
  import RevertPaymentModal from './RevertPaymentModal'; 
 import { MdDeleteOutline } from "react-icons/md";
+import { fillClientData } from '../../../services/bookingService';
 
 
 const InstallmentsSchedule = () => {
@@ -34,17 +34,17 @@ const InstallmentsSchedule = () => {
         bookingClient,
         initialClientData, 
         InstallmentInformation, 
-        InstallmentDetails, 
+        installmentDetails, 
         isRevertPaymentModalOpen, 
-        paymentModal,
+        isPaymentModalOpen,
         reserved,
         bookingDate
     } = useSelector((state) => state.booking);
-//-----------------------------------------------------------------------------------
+
 const payInstallment=(i)=>{
     dispatch(setPendingPayment({ index: i, isEdit: 0 }));
-    dispatch(showPaymentModal(true));
-    dispatch(clearpaymentModal());
+    dispatch(togglePaymentModal(true));
+    dispatch(resetPaymentModal());
 }
 const saveAllData=async()=>{
     const data={
@@ -52,7 +52,7 @@ const saveAllData=async()=>{
         ...bookingClient, 
         ...InstallmentInformation, 
         bookingDate,
-        installments:InstallmentDetails.map(item => ({
+        installments:installmentDetails.map(item => ({
             ...item,
             Paid: item.Paid ? 1 : 0 ,
             PaymentType: item.PaymentType || "", 
@@ -75,41 +75,51 @@ const saveAllData=async()=>{
        } 
        if(reserved===0){
         await navigate('/booking');
-       }     
-        
+       }      
 }
 
 const handleEdit=(i)=>{
      dispatch(setPendingPayment({ index: i, isEdit: 1 }));
-     dispatch(showPaymentModal(true));
+     dispatch(togglePaymentModal(true));
 }
-//-----------------------------------------------------------------------------------
+
     useEffect(() => {
         const FetchClientData = async () => {
          const savedData = localStorage.getItem('activeBookingClient');
             if (savedData && reserved===0 && !bookingClient.ClientID) {
                 const parsedData = JSON.parse(savedData);
-                await  dispatch(FillClientData(parsedData));
+                await  dispatch(fillClientData(parsedData));
                 await dispatch(generateInstallments(InstallmentInformation));
             }
         }
         FetchClientData();
     }, [dispatch, InstallmentInformation]);
-//------------------------------------------------------------------------------------
 
     return (
         <div className="mini_ins_wrapper"> 
-        {paymentModal && <PaymentTypeModal/>}
+        {isPaymentModalOpen && <PaymentTypeModal/>}
          {isRevertPaymentModalOpen && <RevertPaymentModal/>}
                 <div className="mini_ins_container">
                     <header className="mini_ins_header">
                         <div className="mini_ins_title_section">  
                             <h1>إدارة تحصيل الأقساط</h1>
-                            <p>الوحدة: <mark>{initialClientData.Unit}</mark> - مشروع <mark>{initialClientData.ProjectName}</mark></p>
+                            <p>الوحدة: <mark>{initialClientData.Unit}</mark>
+                             - مشروع <mark>{initialClientData.ProjectName}</mark>
+                            </p>
                         </div>
                         <div className="mini_ins_actions">
-                            <button className="mini_btn secundary" onClick={()=>navigate(-1)}><ArrowRight  size={16} /> الرجوع لصفحة الحجز</button>
-                            <button className="mini_btn btn-info" style={{color:'#fff'}} onClick={() => window.print()}><Printer size={16} /> طباعة</button>
+                            <button 
+                            className="mini_btn secundary" 
+                            onClick={()=>navigate(-1)}>
+                                <ArrowRight  size={16} /> الرجوع لصفحة الحجز
+                            </button>
+
+                            <button 
+                            className="mini_btn btn-info" 
+                            style={{color:'#fff'}} 
+                            onClick={() => window.print()}>
+                                <Printer size={16} /> طباعة
+                            </button>
                             <button 
                             className="mini_btn btn-success"
                             onClick={()=>saveAllData()}
@@ -118,13 +128,28 @@ const handleEdit=(i)=>{
                     </header>
                     <div className="mini_ins_summary_strip">
                       
-                        <div className="mini_stat_card blue"><User className="card_icon" /><div><span>العميل</span><strong>{initialClientData.ClientName}</strong></div></div>
-                        <div className="mini_stat_card green"><DollarSign className="card_icon" /><div><span>الإجمالي</span><strong>{initialClientData.NegotiationPrice} ج.م</strong></div></div>
-                        <div className="mini_stat_card highlight"><CalendarDays className="card_icon" /><div><span>المقدم</span><strong>{InstallmentInformation.DownPayment}ج.م</strong></div></div>
+                        <div className="mini_stat_card blue">
+                            <User className="card_icon" />
+                        <div>
+                         <span>العميل</span>
+                         <strong>{initialClientData.ClientName}</strong>
+                        </div></div>
+                        <div className="mini_stat_card green">
+                            <DollarSign className="card_icon" />
+                        <div>
+                            <span>الإجمالي</span>
+                        <strong>{initialClientData.NegotiationPrice} ج.م</strong>
+                        </div></div>
+                        <div className="mini_stat_card highlight">
+                            <CalendarDays className="card_icon" />
+                        <div>
+                            <span>المقدم</span>
+                        <strong>{InstallmentInformation.DownPayment}ج.م</strong>
+                        </div></div>
                     </div>      
                     <div className="mini_table_section">
                         <div className="mini_table_header">
-                            <h2>جدول الدفعات ({InstallmentDetails[0]?.Months || 0} شهر)</h2>
+                            <h2>جدول الدفعات ({installmentDetails[0]?.Months || 0} شهر)</h2>
                         </div>
                         <div className="mini_table_box">   
                             <div className="mini_thead sticky_th">
@@ -135,8 +160,11 @@ const handleEdit=(i)=>{
                                 <div className="ins_th">الإجراء</div>
                             </div>                   
                             <div className="mini_tbody scrollable_body">
-                            {InstallmentDetails.length===0 ? <div className="empty-msg" style={{textAlign:'center'}}> لا يوجد أقساط لعرضها</div> :
-                                InstallmentDetails.map((item, idx) => (
+                            {installmentDetails.length===0 ? 
+                            <div className="empty-msg" 
+                            style={{textAlign:'center'}}> لا يوجد أقساط لعرضها
+                            </div> :
+                            installmentDetails.map((item, idx) => (
                                     <div className="mini_trow" key={idx}>
                                         <div className="ins_td muted">{item.InstallmentNumber}</div>
                                         <div className="ins_td">{item.DueDate.split('T')[0]}</div>
@@ -157,12 +185,17 @@ const handleEdit=(i)=>{
                                         </button>
                                             
                                         </div>):
-                                          <div style={{cursor:'pointer',display:'flex',justifyContent:'center',alignItems:'center',gap:'10px'}}>
+                                          <div 
+                                          style={{cursor:'pointer',
+                                          display:'flex',
+                                          justifyContent:'center',
+                                          alignItems:'center',
+                                          gap:'10px'}}>
                                                  <span>
                                                     <MdDeleteOutline 
                                                     size={22} 
                                                     color='red'
-                                                    onClick={()=>dispatch(openRevertModal(idx))}
+                                                    onClick={()=>dispatch(toggleRevertModal(idx))}
                                                     />
                                                  </span>
                                                  <span>
@@ -178,14 +211,10 @@ const handleEdit=(i)=>{
                                         </div>
                                     </div>
                                 ))}
-                              
-                            </div>
-                             
-                        </div>
-                        
+                            </div>                       
+                        </div>                
                     </div>
-                </div>
-           
+                </div>         
         </div>
     );
 };

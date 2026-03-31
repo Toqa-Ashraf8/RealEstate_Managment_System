@@ -24,23 +24,25 @@ import { AiOutlineClear } from "react-icons/ai";
 import { FiPrinter } from "react-icons/fi";
 import { 
     bookingDetailRequest, 
-    calculatenewDownPayment, 
-    caluclateDownPayment, 
-    ChangevaluesOfBookingClient,  
-    clearInputs,  
-    FillClientData, 
-    generateInstallments, 
-    getInstallmentData, 
-    getreservedClientsByID, 
-    reservedOrnot, 
+    calculateNewDownPayment, 
+    caluclateDownPayment,  
+    generateInstallments,  
+    resetBookingForm, 
     saveChecksImages, 
-    saveNationalidImage, 
+    setBookingClientData, 
+    setInstallmentData, 
+    setReservationStatus, 
     updateDownPaymentManual
 } from '../../../assets/redux/bookingSlice';
 import { variables } from '../../../assets/variables';
 import {toast} from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
 import { LuPrinter } from "react-icons/lu";
+import { 
+    fetchReservedClientById, 
+    fillClientData, 
+    saveNationalIdImage 
+} from '../../../services/bookingService';
 
 const CompleteBooking = () => {
     const dispatch = useDispatch();
@@ -52,27 +54,26 @@ const CompleteBooking = () => {
         InstallmentInformation,
         initialClientData,
         reserved,
-        nationalidImage,
+        nationalIdImage,
         checkImage,
         bookingDate
     }=useSelector((state)=>state.booking);
   
-const HandleChange=(e)=>{
+const handleChange=(e)=>{
     const {name,value}=e.target;
-    dispatch(ChangevaluesOfBookingClient({[name]:value}));
+    dispatch(setBookingClientData({[name]:value}));
 }
  
-const ClearValues=()=>{
-    dispatch(clearInputs());
+const resetForm=()=>{
+    dispatch(resetBookingForm());
     focusRef.current.focus();
 }
-const HandleChangeinstallmentValues=(e)=>{
+const handleChangeinstallment=(e)=>{
     const {name,value}=e.target;
      const totalamount=bookingClient.NegotiationPrice;
-    dispatch(getInstallmentData({[name]:value}));
+    dispatch(setInstallmentData({[name]:value}));
 
 }
-
  const handleFileChange =async (e) => {
        const { name } = e.target;
         if (!e.target.files || e.target.files.length === 0) return; 
@@ -81,8 +82,8 @@ const HandleChangeinstallmentValues=(e)=>{
             const formData = new FormData();
             const fileName = file.name;
             formData.append("formFile", file, fileName);    
-           await  dispatch(saveNationalidImage(formData));
-           await  dispatch(ChangevaluesOfBookingClient({[name]:fileName}));         
+           await  dispatch(saveNationalIdImage(formData));
+           await  dispatch(setBookingClientData({[name]:fileName}));         
         }
         if(e.target.name==='CheckImagePath'){
                 const file2 = e.target.files[0];
@@ -90,11 +91,10 @@ const HandleChangeinstallmentValues=(e)=>{
                 const fileName_ = file2.name;
                 formData_.append("file_c", file2, fileName_);    
               await dispatch(saveChecksImages(formData_));
-              await dispatch(ChangevaluesOfBookingClient({[name]:fileName_})); 
+              await dispatch(setBookingClientData({[name]:fileName_})); 
         }
     
 };
-
 const SavedData=async()=>{
     const parms={
         ...bookingClient,
@@ -130,7 +130,6 @@ const SavedData=async()=>{
     }
    
 }
- 
 
 const calcutlateDownpayment=()=>{
     const totalamount=initialClientData.NegotiationPrice;
@@ -139,15 +138,14 @@ const calcutlateDownpayment=()=>{
     }
     else{
         const newtotalPrice=initialClientData.NegotiationPrice;
-        dispatch(calculatenewDownPayment({
+        dispatch(calculateNewDownPayment({
             total:newtotalPrice,
             newReservationAmount:reservationRef.current.value
         }))
     }
 }
-
 const createInstallments=()=>{
-    dispatch(reservedOrnot(0))
+    dispatch(setReservationStatus(0))
     if(InstallmentInformation && bookingClient.ReservationAmount !=""){
          dispatch(generateInstallments(InstallmentInformation))
          navigate('/installments_schedule');
@@ -159,13 +157,11 @@ const createInstallments=()=>{
         });
     }
 }
-
 const getinstallmentsData=(id)=>{
     if(reserved===1){
-         dispatch(getreservedClientsByID(id));
+         dispatch(fetchReservedClientById(id));
          navigate('/installments_schedule');
     }
-   
 }
    useEffect(() => {
         if (focusRef.current) {
@@ -174,7 +170,7 @@ const getinstallmentsData=(id)=>{
      const savedData = localStorage.getItem('activeBookingClient');
      if (savedData) {
         const parsedData = JSON.parse(savedData);
-        dispatch(FillClientData(parsedData));
+        dispatch(fillClientData(parsedData));
     }
 
  }, [dispatch]);
@@ -224,7 +220,7 @@ const getinstallmentsData=(id)=>{
                                         name='BookingID'
                                         readOnly
                                         value={bookingClient.BookingID || 0}
-                                        onChange={HandleChange}
+                                        onChange={handleChange}
                                         />
                                     </div>
                                 </div>
@@ -254,7 +250,7 @@ const getinstallmentsData=(id)=>{
                                         className="final_input_modern"
                                         ref={focusRef}
                                         value={bookingClient.NationalID || ""}
-                                        onChange={HandleChange}
+                                        onChange={handleChange}
                                     />
                                 </div>
 
@@ -275,7 +271,7 @@ const getinstallmentsData=(id)=>{
                                     name="SecondaryPhone" 
                                     className="final_input_modern"
                                     value={bookingClient.SecondaryPhone || ""}
-                                    onChange={HandleChange}
+                                    onChange={handleChange}
                                     />
                                 </div>
                                 <div className="final_field_group mt-3">
@@ -285,7 +281,7 @@ const getinstallmentsData=(id)=>{
                                     name="Address" 
                                     className="final_input_modern"
                                     value={bookingClient.Address || ""}
-                                    onChange={HandleChange}
+                                    onChange={handleChange}
                                     />
                                 </div>
                                  <div className="final_field_group mt-3">
@@ -295,14 +291,14 @@ const getinstallmentsData=(id)=>{
                                     name="Job" 
                                     className="final_input_modern"
                                     value={bookingClient.Job || ""}
-                                    onChange={HandleChange}
+                                    onChange={handleChange}
                                     />
                                 </div>
                             </div>
                             <div className="col-lg-4">
                                <div className="final_image_preview_big">
                           {(() => {
-                            const imgName = nationalidImage || bookingClient?.NationalIdImagePath;
+                            const imgName = nationalIdImage || bookingClient?.NationalIdImagePath;
                             if (imgName && imgName !== "null") {
                             return (
                                 <img 
@@ -337,7 +333,7 @@ const getinstallmentsData=(id)=>{
                                         ref={reservationRef}
                                         value={bookingClient.ReservationAmount || ""} 
                                         onBlur={()=>calcutlateDownpayment()}
-                                        onChange={HandleChange}
+                                        onChange={handleChange}
                                         
                                     />
                                 </div>
@@ -349,7 +345,7 @@ const getinstallmentsData=(id)=>{
                                         className="final_input_modern"         
                                         ref={downPaymentRef}
                                         value={InstallmentInformation.DownPayment || ""}
-                                        onChange={HandleChangeinstallmentValues}
+                                        onChange={handleChangeinstallment}
                                     />
                                 </div>
 
@@ -360,7 +356,7 @@ const getinstallmentsData=(id)=>{
                                         name="FirstInstallmentDate"
                                         className="final_input_modern"
                                         value={InstallmentInformation.FirstInstallmentDate?.split('T')[0] || ""}
-                                        onChange={HandleChangeinstallmentValues}
+                                        onChange={handleChangeinstallment}
                                     />
                                 </div>
                                 <div className="final_field_group">
@@ -370,7 +366,7 @@ const getinstallmentsData=(id)=>{
                                     name="PaymentMethod" 
                                     className="final_select_modern"
                                     value={bookingClient.PaymentMethod || ""}
-                                    onChange={HandleChange}
+                                    onChange={handleChange}
                                     >
                                         <option value="-1">-إختر-</option>
                                         <option value="كاش">كاش (نقدي)</option>
@@ -395,7 +391,7 @@ const getinstallmentsData=(id)=>{
                                             name="InstallmentYears"
                                             className="final_select_modern"
                                             value={InstallmentInformation.InstallmentYears||""}
-                                            onChange={HandleChangeinstallmentValues}
+                                            onChange={handleChangeinstallment}
                                         >
                                             <option value="-1">-إختر السنين-</option>
                                             <option value="1">1 سنة</option>
@@ -451,7 +447,7 @@ const getinstallmentsData=(id)=>{
                 <div className="final_floating_actions">
                     <div 
                     className="final_circle_btn"
-                    title="تنظيف"> <AiOutlineClear size={28} color="#14213d" onClick={()=>ClearValues()} /></div>       
+                    title="تنظيف"> <AiOutlineClear size={28} color="#14213d" onClick={()=>resetForm()} /></div>       
                     <div className="final_circle_btn" title="طباعة"><LuPrinter  size={24} color="#1086b9" onClick={()=>window.print()} /></div>
                      <div className="final_circle_btn" title="حفظ"><RiSave3Fill size={24} color="#10b981" onClick={()=>SavedData()} /></div>
                      {reserved===1 && 

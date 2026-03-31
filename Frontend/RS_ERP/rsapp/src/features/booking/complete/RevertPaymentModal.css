@@ -1,13 +1,13 @@
-/* RevertPaymentModal.css */
+
 .rv-modal-overlay {
     position: fixed;
-    top: 30px; /* نزلتها شوية عشان لو فيه Modal تاني فوقها */
+    top: 30px; 
     left: 0;
     right: 0;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    z-index: 10001; /* Z-index أعلى لضمان الظهور */
+    z-index: 10001; 
     pointer-events: none;
 }
 
@@ -18,7 +18,7 @@
     width: 350px;
     text-align: center;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    border: 1px dashed #ff4d4f; /* إطار متقطع بلون أحمر بسيط لبيان الحذر */
+    border: 1px dashed #ff4d4f; 
     animation: rvSlideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     pointer-events: auto;
 }
@@ -48,7 +48,7 @@
 }
 
 .rv-btn-confirm {
-    background-color: #ff4d4f; /* لون أحمر للإلغاء */
+    background-color: #ff4d4f;
     color: white;
 }
 

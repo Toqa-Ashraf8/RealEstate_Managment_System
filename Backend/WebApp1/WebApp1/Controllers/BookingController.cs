@@ -446,7 +446,37 @@ namespace WebApp1.Controllers
             return new JsonResult(isDeleted);
         }
 
-
+        [Route("SearchBookings")]
+        [HttpPost]
+        public JsonResult SearchBookings([FromBody]Search term)
+        {
+            DataTable dt = new DataTable();
+            List<string> conditions = new List<string>();
+            foreach (var field in term.Fields)
+            {
+                conditions.Add($"{field} LIKE @searchterm");
+            }
+            string whereClause = string.Join(" OR ", conditions);
+            string search = @"select * from reserved_clients_details where " + whereClause;
+            using (SqlCommand cmd = new SqlCommand(search, conn))
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@searchterm", "%" + term.Term + "%");
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                if (conn.State == ConnectionState.Open) conn.Close();
+               
+            } 
+            if (dt.Rows.Count > 0)
+            {
+               return new JsonResult(dt);
+            }
+            else
+            {
+                return new JsonResult(new DataTable());
+            }
+        }
 
     }
 }

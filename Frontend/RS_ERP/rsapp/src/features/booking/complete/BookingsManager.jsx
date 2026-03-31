@@ -4,34 +4,25 @@ import './BookingsManager.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { 
-    clearInputs, 
-    FillClientData, 
-    GetBookngClient, 
-    reservedOrnot 
+    resetBookingForm, 
+    setInitialClientData, 
+    setReservationStatus
 } from '../../../assets/redux/bookingSlice'; 
 import { fetchApprovedNegotiations } from '../../../services/negotiationService';
 
-
-
 const BookingsManager = () => {
-   const db = useSelector((state) => state.negotiation);
-   const db_b=useSelector((state)=>state.booking);
+   const {acceptedRequests} = useSelector((state) => state.negotiation);
     const dispatch = useDispatch();
     const navigate=useNavigate();
     
- //----------------------------------------------------------
 const CompleteBooking=(index)=>{
-    const selectedClient = db.acceptedRequests[index];
-    const storageKey = 'activeBookingClient';
-    localStorage.removeItem(storageKey);
-    localStorage.setItem(storageKey, JSON.stringify(selectedClient));
-    dispatch(GetBookngClient(selectedClient));
-    dispatch(reservedOrnot(0))
+    const selectedClient = acceptedRequests[index];
+    localStorage.setItem('activeBookingClient', JSON.stringify(selectedClient));
+    dispatch(setInitialClientData(selectedClient));
+    dispatch(setReservationStatus(0))
     navigate('/complete_booking');
-    dispatch(clearInputs());
+    dispatch(resetBookingForm());
 }   
-
-
 useEffect(()=>{
     const Fetch=async()=>{
          dispatch(fetchApprovedNegotiations());
@@ -56,7 +47,7 @@ useEffect(()=>{
             </button>
             </div>
             <div className="bk-container">
-                {db.acceptedRequests.length===0 ?
+                {acceptedRequests.length===0 ?
                 (<div className="empty-state-container">
                  <div className="empty-state-icon">
                 
@@ -64,7 +55,7 @@ useEffect(()=>{
                      <h3>لا توجد طلبات معتمدة حالياً</h3>
                      <p>بمجرد الموافقة على طلبات التفاوض، ستظهر جميعها هنا لاستكمال بيانات الحجز.</p>
                      </div>): 
-                   (db.acceptedRequests.map((req,index)=>
+                   (acceptedRequests.map((req,index)=>
                     <div key={index} className="bk-card">
                         <div className="bk-main-info">
                             <div className="bk-user-avatar"><User size={20} /></div>
@@ -91,7 +82,6 @@ useEffect(()=>{
                     </div>
                 ))}
             </div>
-        
         </div>
     );
 };
