@@ -32,7 +32,7 @@ useEffect(()=>{
     return (
         <div className="bk-manage-wrapper">
             <div className="bk-header">
-                <h2><UserCheck size={24} /> إدارة الحجوزات (استكمال التعاقد)</h2>
+                <h2><UserCheck size={24} /> إدارة الحجوزات (استكمال الحجز)</h2>
                 <p>الطلبات المعتمدة من الإدارة وبانتظار جدولة الأقساط</p>
             </div>
            <div style={{display:'flex',justifyContent:'space-around',marginBottom:'20px',marginLeft:'20px',alignItems:'center'}}>

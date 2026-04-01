@@ -8,13 +8,13 @@ export const fetchProjects = createAsyncThunk("fetchProjects/clients", async () 
         .then((res) => res.data);
     return resp;
 })
-export const fetchUnitsByProject = createAsyncThunk("fetchUnitsByProject/clients", async (name) => {
-    const resp = await axios.post(variables.CLIENTS_API + "GetUnitsByProject?projectname=" + name)
+export const fetchUnitsByProject = createAsyncThunk("fetchUnitsByProject/clients", async (id) => {
+    const resp = await axios.post(variables.CLIENTS_API + "GetUnitsByProject?projectid=" + id)
         .then((res) => res.data);
     return resp;
 })
-export const fetchPriceByUnit = createAsyncThunk("fetchPriceByUnit/clients", async (unitname) => {
-    const resp = await axios.post(variables.CLIENTS_API + "GetUnitPrice?unitname=" + unitname)
+export const fetchPriceByUnit = createAsyncThunk("fetchPriceByUnit/clients", async (id) => {
+    const resp = await axios.post(variables.CLIENTS_API + "GetUnitPrice?unitid=" + id)
         .then((res) => res.data);
     return resp;
 })

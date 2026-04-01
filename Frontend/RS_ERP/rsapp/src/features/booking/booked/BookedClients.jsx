@@ -23,16 +23,14 @@ import { useReactToPrint } from 'react-to-print';
 import BookingsReport from '../../../assets/reports/BookingsReport';
 
 import { 
-    changeUnitAvailableStatus,
     deleteBookingData,
-    deleteReservation,
     fetchAllReservedClients, 
     fetchReservedClientById 
 } from '../../../services/bookingService';
 import { toast } from 'react-toastify';
 
 const BookedClients = () => {
-const {reservedClients,initialClientData}=useSelector((state)=>state.booking);
+const {reservedClients}=useSelector((state)=>state.booking);
     const dispatch=useDispatch();
     const navigate=useNavigate();
    
@@ -40,7 +38,6 @@ const handlePrint = useReactToPrint({
         contentRef: () => componentRef,
         documentTitle: 'تقرير_حجز_عميل',
 });
-
 useEffect(()=>{ 
     dispatch(fetchAllReservedClients());
 },[])
@@ -64,16 +61,17 @@ const printReport = async (index, id) => {
 }
 
 const deleteBooking=async(index)=>{
-  const selectedBookingId=reservedClients[index].BookingID;
+  const selectedBookingClient=reservedClients[index]
   const reservedClientID=reservedClients[index].ClientID;
    try {
-         const reuslt= await dispatch(deleteBookingData(selectedBookingId)).unwrap();  
-            toast.success("تم حذف الحجز !", {
-            theme: "colored",
-            position: "top-left",
-            });   
-            dispatch(deleteBookingRow(reservedClientID));   
-       }  
+         const reuslt= await dispatch(deleteBookingData(selectedBookingClient)).unwrap(); 
+            toast.success("تم حذف الحجز وتحديث حالة الوحدة!", {
+                theme: "colored",
+                position: "top-left",
+            });  
+            dispatch(deleteBookingRow(reservedClientID));
+        }
+             
        catch (error) {
             toast.error("حدث خطأ في الاتصال بالخادم!", {
             theme: "colored",

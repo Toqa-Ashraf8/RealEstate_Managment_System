@@ -24,6 +24,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 import {clearGlobalError} from './assets/redux/uiSlice'
+import ClientDetails from './features/dashboardClient/ClientDetails';
 
 
 function App() {
@@ -150,6 +151,13 @@ useEffect(() => {
               element={
                  <ProtectedRoute>
                     <ClientsPage/>
+                  </ProtectedRoute>
+               }
+              /> 
+              <Route path='/clientdetails' 
+              element={
+                 <ProtectedRoute>
+                    <ClientDetails/>
                   </ProtectedRoute>
                }
               /> 

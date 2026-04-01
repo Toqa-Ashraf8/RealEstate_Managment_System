@@ -11,18 +11,18 @@ import {
 import { fetchPriceByUnit, fetchProjects, fetchUnitsByProject } from "../../../services/clientService"; 
 
 const NegotiationModal = () => {
-const {negotiation,projects,units,selectedProjectId}= useSelector((state) => state.clients);
+const {negotiation,projects,units}= useSelector((state) => state.clients);
 const {isLoading}=useSelector((state)=>state.ui);
 const dispatch = useDispatch();
 const negotiationPriceRef=useRef();
 
 const handleInputsChange=(e)=>{
     const{name,value}=e.target;
-     if (e.target.name === "ProjectName") {
+     if (e.target.name === "ProjectCode") {
       const selectedValue = e.target.value;
       if (e.target.value !== "-1") dispatch(fetchUnitsByProject(selectedValue));
     }
-     if(e.target.name === "Unit"){
+     if(e.target.name === "UnitID"){
           const unitvalue=e.target.value;
         if (e.target.value !== "-1") dispatch(fetchPriceByUnit(unitvalue));
          negotiationPriceRef.current.focus();
@@ -36,12 +36,12 @@ const addNewNegotiation=()=>{
 
  useEffect(()=>{
     negotiationPriceRef.current.focus();
-    if(negotiation.ProjectName!==-1 && negotiation.ProjectName){
-       dispatch(fetchProjects());
-        dispatch(fetchUnitsByProject(negotiation.ProjectName));
+    if(negotiation.ProjectCode!==-1 && negotiation.ProjectCode){
+        dispatch(fetchProjects());
+        dispatch(fetchUnitsByProject(negotiation.ProjectCode));
     }
  },[dispatch])
-
+console.log("negotition",negotiation);
   return (
     <div dir="rtl">
       <div className="modaln">
@@ -64,28 +64,41 @@ const addNewNegotiation=()=>{
                       </label>
                       <select 
                       className="crm_select select-project" 
-                      name="ProjectName" 
-                      value={negotiation.ProjectName || ""} 
+                      name="ProjectCode" 
+                      value={negotiation.ProjectCode || ""} 
                       onChange={handleInputsChange} 
                       >
                         <option value="-1">-إختر-</option>
                         {projects.map((project) => 
-                        <option key={project.ProjectCode} value={project.ProjectName}>
-                            {project.ProjectName}
+                        <option key={project.ProjectCode} 
+                        value={project.ProjectCode}> {project.ProjectName}
+                          <input 
+                          value={project.ProjectName} 
+                          name="ProjectName"
+                          onChange={handleInputsChange}
+                          disabled/>
                         </option>
-                      )}
+                        )}
                       </select>
                   </div> 
                   <div>
                  </div>
-                   {negotiation.ProjectName && negotiation.ProjectName !== "-1" && (
+                   {negotiation.ProjectCode && negotiation.ProjectCode !== "-1" && (
                     <div className="data-unitname" style={{display:'flex',gap:'40px'}}>
                       <label className="lbl_crm"> الوحدة</label>
-                      <select className="crm_select select-unit" name="Unit" value={negotiation.Unit || ""} onChange={handleInputsChange}>
+                      <select 
+                      className="crm_select select-unit" 
+                      name="UnitID" 
+                      value={negotiation.UnitID || ""} 
+                      onChange={handleInputsChange}>
                         <option value="-1">-إختر-</option>
                         {units?.map((unit, index) => 
-                        <option key={index} value={unit.UnitName}>
-                          {unit.UnitName}
+                        <option key={index} value={unit.UnitID}> {unit.unitName}
+                          <input 
+                          value={unit.unitName} 
+                          name="unitName"
+                          onChange={handleInputsChange}
+                          disabled/>
                         </option>
                       )}
                       </select>

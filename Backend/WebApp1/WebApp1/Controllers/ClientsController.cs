@@ -36,15 +36,16 @@ namespace WebApp1.Controllers
         // Get Units By Project Name 
         [Route("GetUnitsByProject")]
         [HttpPost]
-        public JsonResult GetUnitsByProject(string projectname)
+        public JsonResult GetUnitsByProject(int projectid)
         {
             DataTable dt = new DataTable();
-            string sqlg = @"select UnitName from Project_Available_Units where ProjectName=@ProjectName AND ReservedStatus=0";
+            string sqlg = @"select * from Project_Available_Units 
+                            where ProjectCode=@ProjectCode AND ReservedStatus=0";
             using(SqlCommand cmd=new SqlCommand(sqlg, conn))
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@ProjectName", projectname);
+                cmd.Parameters.AddWithValue("@ProjectCode", projectid);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
             }
@@ -57,12 +58,19 @@ namespace WebApp1.Controllers
         // Get Price Of Unit 
         [Route("GetUnitPrice")]
         [HttpPost]
-        public JsonResult GetUnitPrice(string unitname)
+        public JsonResult GetUnitPrice(int unitid)
         {
             DataTable dt = new DataTable();
-            string sqlg = "select TotalPrice from Units where unitName ='" + unitname + "'";
-            SqlDataAdapter da = new SqlDataAdapter(sqlg, conn);
-            da.Fill(dt);
+            string sqlg = @"select * from Units where UnitID =@UnitID";
+            if (conn.State == ConnectionState.Closed) conn.Open();
+            using(SqlCommand cmd=new SqlCommand(sqlg, conn))
+            {
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@UnitID", unitid); 
+                SqlDataAdapter da = new SqlDataAdapter(cmd); 
+                da.Fill(dt);
+            }
+            if (conn.State == ConnectionState.Open) conn.Close();
             return new JsonResult(dt);
 
         }
@@ -150,14 +158,14 @@ namespace WebApp1.Controllers
                             }
 
                          string sqlin_dtls = @"insert into  Negotiations 
-                                                            (serialCode,ClientID,ClientName,ProjectName,
-                                                            Unit,OriginalPrice,
+                                                            (serialCode,ClientID,ClientName,ProjectCode,
+                                                            UnitID,OriginalPrice,
                                                             NegotiationPrice, DiscountAmount,NegotiationStatus,
                                                             NegotiationDate,checkedByAdmin,Requester,Reserved) 
-                                                            values(@serialCode,@ClientID,@ClientName,@ProjectName,@Unit,@OriginalPrice,
+                                                            values(@serialCode,@ClientID,@ClientName,@ProjectCode,
+                                                            @UnitID,@OriginalPrice,
                                                             @NegotiationPrice,@DiscountAmount
-                                                           ,@NegotiationStatus,
-                                                            @NegotiationDate,
+                                                           ,@NegotiationStatus,@NegotiationDate,
                                                            @checkedByAdmin,@Requester,@Reserved)";
                             using (SqlCommand cmd = new SqlCommand(sqlin_dtls, conn))
                             {
@@ -168,8 +176,8 @@ namespace WebApp1.Controllers
                                     cmd.Parameters.AddWithValue("@serialCode", neg.serialCode);
                                     cmd.Parameters.AddWithValue("@ClientID", id);
                                     cmd.Parameters.AddWithValue("@ClientName", cl.ClientName);
-                                    cmd.Parameters.AddWithValue("@projectName", neg.ProjectName);
-                                    cmd.Parameters.AddWithValue("@Unit", neg.Unit);
+                                    cmd.Parameters.AddWithValue("@ProjectCode", neg.ProjectCode);
+                                    cmd.Parameters.AddWithValue("@UnitID", neg.UnitID);
                                     cmd.Parameters.AddWithValue("@OriginalPrice", neg.OriginalPrice);
                                     cmd.Parameters.AddWithValue("@NegotiationPrice", neg.NegotiationPrice);
                                     cmd.Parameters.AddWithValue("@DiscountAmount", neg.DiscountAmount);
@@ -338,7 +346,7 @@ namespace WebApp1.Controllers
                 }
 
             }
-            //************************************************************************
+            
             if (empty_db == false)
             {
                 try

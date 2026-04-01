@@ -3,9 +3,7 @@ import axios from 'axios';
 import { variables } from '../variables'; 
 import { 
     bookingDetailRequest,
-    changeUnitAvailableStatus,
     deleteBookingData,
-    deleteReservation,
     fetchAllReservedClients, 
     fetchReservedClientById, 
     fillClientData, 
@@ -207,12 +205,7 @@ const bookingSlice = createSlice({
             .addCase(deleteBookingData.fulfilled, (state, action) => {
                 state.isDeletedBooking=action.payload;
             })
-            .addCase(changeUnitAvailableStatus.fulfilled, (state, action) => {
-                 state.isUpdated = action.payload;
-            }) 
-            .addCase(deleteReservation.fulfilled, (state, action) => {
-                 state.successDelete = action.payload;
-            })
+            
     }
 })
 export const {

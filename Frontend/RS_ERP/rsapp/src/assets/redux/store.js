@@ -6,6 +6,7 @@ import bookingReducer from './bookingSlice';
 import uiReducer from './uiSlice';
 import authReducer from './authSlice';
 import dashReducer from './dashboardSlice';
+import clientProfileReducer from './clientsProfileSlice';
 export const store = configureStore({
     reducer: {
         projects: projReducer,
@@ -14,6 +15,7 @@ export const store = configureStore({
         booking:bookingReducer,
         ui:uiReducer,
         auth:authReducer,
-        dashboard:dashReducer
+        dashboard:dashReducer,
+        clientsProfile:clientProfileReducer
     }
 })

@@ -61,7 +61,9 @@ const AddClients = () => {
     isNegotiationModalOpen,
     isDeleteClientModalOpen,
     isDeleteNegotiationModalOpen,
-    isSearchClientsModalOpen
+    isSearchClientsModalOpen,
+    units,
+    projects
   }= useSelector((state) => state.clients);
   const {userName}=useSelector((state)=>state.auth);
   const {isLoading}=useSelector((state)=>state.ui);
@@ -334,8 +336,8 @@ useEffect(()=>{
                negotiationsList.map((neg,index)=>
               <tr key={index}>
                 <td>{neg.serialCode}</td>
-                <td>{neg.ProjectName}</td>
-                <td>{neg.Unit}</td>
+                <td>{}</td>
+                <td>{units?.map(unit=>unit.unitName)}</td>
                 <td>{neg.OriginalPrice} ج</td>
                 <td>{neg.NegotiationPrice} ج</td>
                 <td>{neg.DiscountAmount} %</td>

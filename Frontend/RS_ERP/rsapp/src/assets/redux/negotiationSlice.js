@@ -20,8 +20,8 @@ const initialState={
 //
 selectedRequest:{
     ClientID:"",
-    ProjectName:"",
-    Unit:"",
+    ProjectCode:"",
+    UnitID:"",
     NegotiationCondition:0,
     SuggestedPrice:0,
     ReasonOfReject:"",

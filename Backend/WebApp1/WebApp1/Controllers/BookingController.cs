@@ -403,8 +403,8 @@ namespace WebApp1.Controllers
         }
 
         [Route("DeleteBookingData")]
-        [HttpDelete]
-        public JsonResult DeleteBookingData(int bookingid)
+        [HttpPost]
+        public JsonResult DeleteBookingData([FromBody]ClientBookingDetail client)
         {
             bool isDeleted = false;
             try
@@ -414,23 +414,43 @@ namespace WebApp1.Controllers
                 using (SqlCommand cmd = new SqlCommand(deleteInstallment, conn))
                 { 
                     cmd.Parameters.Clear();
-                    cmd.Parameters.AddWithValue("@BookingID", bookingid);
+                    cmd.Parameters.AddWithValue("@BookingID", client.BookingID);
                     int rows = cmd.ExecuteNonQuery();
                     isDeleted = true;
                     
                 }
                 if (isDeleted)
                 {
-                    string deleteClient = "delete ClientBookingDetails where BookingID=@BookingID";
-                    using (SqlCommand cmd = new SqlCommand(deleteClient, conn))
+                    try
                     {
-                        cmd.Parameters.Clear();
-                        cmd.Parameters.AddWithValue("@BookingID", bookingid);
-                        cmd.ExecuteNonQuery();
-                        isDeleted = true;
+                        string deleteClient = "delete ClientBookingDetails where BookingID=@BookingID";
+                        using (SqlCommand cmd = new SqlCommand(deleteClient, conn))
+                        {
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@BookingID", client.BookingID);
+                            cmd.ExecuteNonQuery();
+                            isDeleted = true;
+                        }
+                        string sqlp = "Update Units set ReservedStatus=0 where unitName=@unitName";
+                        using (SqlCommand cmd = new SqlCommand(sqlp, conn))
+                        {
+                            if (conn.State == ConnectionState.Closed) conn.Open();
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@unitName", client.Unit);
+                            cmd.ExecuteNonQuery();
+                            
+
+                        }
+
                     }
+                    catch (Exception)
+                    {
+
+                        return new JsonResult(new { message = "حدث خطأ أثناء تغيير الحالة " });
+                    }
+                   
                 }
-                
+
             }
             catch (Exception)
             {
@@ -444,61 +464,6 @@ namespace WebApp1.Controllers
 
             return new JsonResult(isDeleted);
         }
-
-        [Route("SetUnitAvailable")]
-        [HttpPost]
-        public JsonResult SetUnitAvailable(string unit)
-        {
-            bool isUpdated = false;
-            try
-            {
-                string sqlp = "Update Units set ReservedStatus=0 where unitName=@unitName";
-                using (SqlCommand cmd = new SqlCommand(sqlp, conn))
-                {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    cmd.Parameters.Clear();
-                    cmd.Parameters.AddWithValue("@unitName", unit);
-                    cmd.ExecuteNonQuery();
-                    isUpdated = true;
-
-                }
-            }
-            catch (Exception)
-            {
-
-                return new JsonResult(new { message = "حدث خطأ أثناء تغيير الحالة " });
-            }
-            finally
-            {
-                if (conn.State == ConnectionState.Open) conn.Close();
-
-            }
-            return new JsonResult(isUpdated);
-
-        }
-
-        //[Route("DeleteReservation")]
-        //[HttpPost]
-        //public JsonResult DeleteReservation([FromBody] NegotiationViewModel neg)
-        //{
-        //    bool saved = false;
-        //    string sqlup = @"Update Negotiations set Reserved=0 
-        //                     where ClientID=@ClientID AND 
-        //                     ProjectName=@ProjectName AND
-        //                     Unit=@Unit";
-        //    using (SqlCommand cmd = new SqlCommand(sqlup, conn))
-        //    {
-        //        if (conn.State == ConnectionState.Closed) conn.Open();
-        //        cmd.Parameters.Clear();
-        //        cmd.Parameters.AddWithValue("@ClientID", neg.ClientID);
-        //        cmd.Parameters.AddWithValue("@ProjectName", neg.ProjectName);
-        //        cmd.Parameters.AddWithValue("@Unit", neg.Unit);
-        //        cmd.ExecuteNonQuery();
-        //        if (conn.State == ConnectionState.Open) conn.Close();
-        //        saved = true;
-        //    }
-        //    return new JsonResult(saved);
-        //}
 
         [Route("SearchBookings")]
         [HttpPost]

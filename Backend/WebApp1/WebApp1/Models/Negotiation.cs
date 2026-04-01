@@ -11,8 +11,8 @@ namespace WebApp1.Models
         public int? serialCode { get; set; }
         public int? ClientID { get; set; }
         public string? ClientName { get; set; }
-        public string? ProjectName { get; set; }
-        public string? Unit { get; set; }
+        public int? ProjectCode { get; set; }
+        public int? UnitID { get; set; }
         public int? OriginalPrice { get; set; }
         public int? NegotiationPrice { get; set; }
         public decimal? DiscountAmount { get; set; }

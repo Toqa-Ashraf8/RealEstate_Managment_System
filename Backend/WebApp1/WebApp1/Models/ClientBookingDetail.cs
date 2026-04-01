@@ -21,7 +21,9 @@ namespace WebApp1.Models
         [ForeignKey("ClientID")]
         public int? ClientID { get; set; }
         public string? ClientName { get; set; }
+        public int? ProjectCode { get; set; }
         public string? ProjectName { get; set; }
+        public int? UnitID { get; set; }
         public string? Unit { get; set; }
         public DateTime? BookingDate { get; set; }
         public Boolean? Reserved { get; set; }

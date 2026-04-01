@@ -7,6 +7,7 @@ export const variables = {
     NEGOTIATIONS_API:`${BASE_URL}/api/Negotiation/`,
     AUTH_API:`${BASE_URL}/api/Auth/`,
     DASHBOARD_API:`${BASE_URL}/api/Dashboard/`,
+    CLIENTSPROFILE_API:`${BASE_URL}/api/ClientsProfile/`,
     UNIT_IMAGES_URL: `${BASE_URL}/Photos_units/`,
     BOOKINGS_API:`${BASE_URL}/api/Booking/`,
     NATIONAL_ID_IMAGES_URL:`${BASE_URL}/NationalIDCard_Images/`,
