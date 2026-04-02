@@ -101,8 +101,7 @@ const SavedData=async()=>{
         ...InstallmentInformation,
          bookingDate,
          installments:[]};
-
-    if (!bookingClient) {
+     if (!bookingClient) {
         toast.error("بيانات العميل غير مكتملة!");
         return;
     } 
@@ -127,7 +126,7 @@ const SavedData=async()=>{
             theme: "colored",
             position: "top-left",
         });
-    }
+    } 
    
 }
 
@@ -201,7 +200,7 @@ const getinstallmentsData=(id)=>{
                                     <div className="col-md-4">
                                         <div className="final_field_group">
                                             <label className="final_label"><Activity size={18} /> الوحدة</label>
-                                            <input type="text" value={initialClientData.Unit} readOnly className="final_input_modern final_disabled" />
+                                            <input type="text" value={initialClientData.unitName} readOnly className="final_input_modern final_disabled" />
                                         </div>
                                     </div>
                                 </div>

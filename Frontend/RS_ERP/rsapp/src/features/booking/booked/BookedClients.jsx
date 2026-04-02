@@ -62,22 +62,22 @@ const printReport = async (index, id) => {
 
 const deleteBooking=async(index)=>{
   const selectedBookingClient=reservedClients[index]
-  const reservedClientID=reservedClients[index].ClientID;
+ const reservedBookingId=reservedClients[index].BookingID; 
    try {
-         const reuslt= await dispatch(deleteBookingData(selectedBookingClient)).unwrap(); 
+         const result= await dispatch(deleteBookingData(selectedBookingClient)).unwrap(); 
             toast.success("تم حذف الحجز وتحديث حالة الوحدة!", {
                 theme: "colored",
                 position: "top-left",
             });  
-            dispatch(deleteBookingRow(reservedClientID));
+            dispatch(deleteBookingRow(reservedBookingId));
         }
-             
-       catch (error) {
+        catch (error) {
             toast.error("حدث خطأ في الاتصال بالخادم!", {
             theme: "colored",
             position: "top-left",
-       }); 
- } } 
+        }); 
+ }  
+} 
 
     return (
         <div className="booked_list_wrapper">      
@@ -119,7 +119,7 @@ const deleteBooking=async(index)=>{
                     </td>  
                       <td>
                         <div className="project_cell">
-                        <p>{client.Unit}</p>
+                        <p>{client.unitName}</p>
                         </div>
                     </td>       
                         <td>

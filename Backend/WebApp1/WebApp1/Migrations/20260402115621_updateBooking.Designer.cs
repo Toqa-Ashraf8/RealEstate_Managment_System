@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp1.EF;
 
@@ -11,9 +12,11 @@ using WebApp1.EF;
 namespace WebApp1.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20260402115621_updateBooking")]
+    partial class updateBooking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,6 +145,13 @@ namespace WebApp1.Migrations
                     b.Property<int?>("ClientBookingDetailBookingID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ClientID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClientName")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("DueDate")
                         .HasColumnType("datetime2");
 
@@ -158,6 +168,20 @@ namespace WebApp1.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("PaymentType")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProjectCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProjectName")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UnitID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("unitName")
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 

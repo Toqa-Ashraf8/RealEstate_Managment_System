@@ -36,8 +36,6 @@ const setSelectedClient=async(id)=>{
     }
 
 }
-console.log("bookingData",bookingData);
-console.log("bookedUnitsData",bookedUnitsData)
     if (clientData) { 
         return (
             <div className="erp-container animate-fade">

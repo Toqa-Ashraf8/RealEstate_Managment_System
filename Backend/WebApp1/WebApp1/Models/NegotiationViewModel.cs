@@ -1,9 +1,11 @@
-﻿namespace WebApp1.Models
+﻿using System.Security.Principal;
+
+namespace WebApp1.Models
 {
     public class NegotiationViewModel
     {
         public int ClientID { get; set; }
-        public string ProjectName { get; set; }
-        public string Unit { get; set; }
+        public int ProjectCode { get; set; }
+        public int UnitID { get; set; }
     }
 }

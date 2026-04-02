@@ -38,15 +38,15 @@ namespace WebApp1.Controllers
             
             string sqlget = @"select * from Negotiations 
                              where ClientID=@ClientID AND 
-                             ProjectName=@ProjectName AND
-                             Unit=@Unit";
+                             ProjectCode=@ProjectCode AND
+                             UnitID=@UnitID";
                     using(SqlCommand cmd=new SqlCommand(sqlget, conn))
                     {
                         if (conn.State == ConnectionState.Closed) conn.Open();
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("@ClientID", id);
-                        cmd.Parameters.AddWithValue("@ProjectName", cl.ProjectName);
-                        cmd.Parameters.AddWithValue("@Unit", cl.Unit);
+                        cmd.Parameters.AddWithValue("@ProjectCode", cl.ProjectCode);
+                        cmd.Parameters.AddWithValue("@UnitID", cl.UnitID);
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
                         da.Fill(dt);
                     } 
@@ -114,13 +114,13 @@ namespace WebApp1.Controllers
                                         (NationalID,NationalIdImagePath,SecondaryPhone,
                                         Address,Job,ReservationAmount,PaymentMethod,
                                         CheckImagePath,DownPayment,FirstInstallmentDate,
-                                        InstallmentYears,ClientID,
-                                        ClientName,ProjectName,Unit,BookingDate,Reserved) 
+                                        InstallmentYears,ClientID,ClientName,ProjectCode,
+                                        UnitID,BookingDate,Reserved) 
                                         values (@NationalID,@NationalIdImagePath,@SecondaryPhone,
                                         @Address,@Job,@ReservationAmount,@PaymentMethod,
                                         @CheckImagePath,@DownPayment,@FirstInstallmentDate,
-                                        @InstallmentYears,@ClientID,
-                                        @ClientName,@ProjectName,@Unit,@BookingDate,@Reserved)
+                                        @InstallmentYears,@ClientID,@ClientName,@ProjectCode
+                                        ,@UnitID,@BookingDate,@Reserved)
                                         SELECT SCOPE_IDENTITY()";
                     using (SqlCommand cmd = new SqlCommand(sqlinsert, conn))
                     {
@@ -140,8 +140,8 @@ namespace WebApp1.Controllers
                         cmd.Parameters.AddWithValue("@InstallmentYears", client.InstallmentYears);
                         cmd.Parameters.AddWithValue("@ClientID", client.ClientID);
                         cmd.Parameters.AddWithValue("@ClientName", client.ClientName);
-                        cmd.Parameters.AddWithValue("@ProjectName", client.ProjectName);
-                        cmd.Parameters.AddWithValue("@Unit", client.Unit);
+                        cmd.Parameters.AddWithValue("@ProjectCode", client.ProjectCode);                    
+                        cmd.Parameters.AddWithValue("@UnitID", client.UnitID);
                         cmd.Parameters.AddWithValue("@BookingDate", client.BookingDate);
                         cmd.Parameters.AddWithValue("@Reserved", client.Reserved);
                         booking_id = Convert.ToInt32(cmd.ExecuteScalar());
@@ -166,7 +166,7 @@ namespace WebApp1.Controllers
                                           PaymentMethod=@PaymentMethod,CheckImagePath=@CheckImagePath,
                                           DownPayment=@DownPayment ,FirstInstallmentDate=@FirstInstallmentDate,
                                           InstallmentYears=@InstallmentYears,ClientID=@ClientID,
-                                          ClientName=@ClientName,ProjectName=@ProjectName,Unit=@Unit 
+                                          ClientName=@ClientName,ProjectCode=@ProjectCode,UnitID=@UnitID 
                                           ,BookingDate=@BookingDate ,Reserved=@Reserved
                                           where BookingID=@BookingID";
                     using (SqlCommand cmd = new SqlCommand(updatedata, conn))
@@ -187,8 +187,8 @@ namespace WebApp1.Controllers
                         cmd.Parameters.AddWithValue("@InstallmentYears", client.InstallmentYears);
                         cmd.Parameters.AddWithValue("@ClientID", client.ClientID);
                         cmd.Parameters.AddWithValue("@ClientName", client.ClientName);
-                        cmd.Parameters.AddWithValue("@ProjectName", client.ProjectName);
-                        cmd.Parameters.AddWithValue("@Unit", client.Unit);
+                        cmd.Parameters.AddWithValue("@ProjectCode", client.ProjectCode);
+                        cmd.Parameters.AddWithValue("@UnitID", client.UnitID);
                         cmd.Parameters.AddWithValue("@BookingDate", client.BookingDate);
                         cmd.Parameters.AddWithValue("@Reserved", client.Reserved);
                         cmd.Parameters.AddWithValue("@BookingID", booking_id);
@@ -206,14 +206,14 @@ namespace WebApp1.Controllers
             if (saved_m == true)
             {
                 string sqlup = @"update Units set ReservedStatus=1 where
-                                 ProjectName=@ProjectName AND 
-                                 UnitName=@Unit";
+                                 ProjectCode=@ProjectCode AND 
+                                 UnitID=@UnitID";
                 using (SqlCommand cmd = new SqlCommand(sqlup, conn))
                 {
                     if (conn.State == ConnectionState.Closed) conn.Open();
                     cmd.Parameters.Clear();
-                    cmd.Parameters.AddWithValue("@ProjectName", client.ProjectName);
-                    cmd.Parameters.AddWithValue("@Unit", client.Unit);
+                    cmd.Parameters.AddWithValue("@ProjectCode", client.ProjectCode);
+                    cmd.Parameters.AddWithValue("@UnitID", client.UnitID);
                     cmd.ExecuteNonQuery();
                     if (conn.State == ConnectionState.Open) conn.Close();
 
@@ -316,15 +316,15 @@ namespace WebApp1.Controllers
             bool saved = false;
             string sqlup = @"Update Negotiations set Reserved=1 
                              where ClientID=@ClientID AND 
-                             ProjectName=@ProjectName AND
-                             Unit=@Unit";
+                             ProjectCode=@ProjectCode AND
+                             UnitID=@UnitID";
             using (SqlCommand cmd = new SqlCommand(sqlup, conn))
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@ClientID", neg.ClientID);
-                cmd.Parameters.AddWithValue("@ProjectName", neg.ProjectName);
-                cmd.Parameters.AddWithValue("@Unit", neg.Unit);
+                cmd.Parameters.AddWithValue("@ProjectCode", neg.ProjectCode);
+                cmd.Parameters.AddWithValue("@UnitID", neg.UnitID);
                 cmd.ExecuteNonQuery();
                 if (conn.State == ConnectionState.Open) conn.Close();
                 saved = true;
@@ -372,8 +372,8 @@ namespace WebApp1.Controllers
                     {
                         ClientID = Convert.ToInt32(clientdt.Rows[0]["ClientID"]),
                         ClientName = clientdt.Rows[0]["ClientName"].ToString(),
-                        ProjectName = clientdt.Rows[0]["ProjectName"].ToString(),
-                        Unit = clientdt.Rows[0]["Unit"].ToString()
+                        ProjectName =clientdt.Rows[0]["ProjectName"].ToString(),
+                        unitName = clientdt.Rows[0]["unitName"].ToString(),
                     });
                     installmentdata.Add(new InstallmentData
                     {
@@ -431,12 +431,12 @@ namespace WebApp1.Controllers
                             cmd.ExecuteNonQuery();
                             isDeleted = true;
                         }
-                        string sqlp = "Update Units set ReservedStatus=0 where unitName=@unitName";
+                        string sqlp = "Update Units set ReservedStatus=0 where UnitID=@UnitID";
                         using (SqlCommand cmd = new SqlCommand(sqlp, conn))
                         {
                             if (conn.State == ConnectionState.Closed) conn.Open();
                             cmd.Parameters.Clear();
-                            cmd.Parameters.AddWithValue("@unitName", client.Unit);
+                            cmd.Parameters.AddWithValue("@UnitID", client.UnitID);
                             cmd.ExecuteNonQuery();
                             
 

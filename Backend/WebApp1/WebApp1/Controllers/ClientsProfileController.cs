@@ -41,7 +41,7 @@ namespace WebApp1.Controllers
             DataTable bookingdt = new DataTable();
             DataTable unitdt = new DataTable();
             //var cd = new List<ClientBookingDetail>();
-            string sqlg = @"select * from reserved_clients_details where ClientID=@ClientID";
+            string sqlg = @"select * from ClientFullDetails where ClientID=@ClientID";
             if (conn.State== ConnectionState.Closed) conn.Open();
             using (SqlCommand cmd = new SqlCommand(sqlg, conn))
             {

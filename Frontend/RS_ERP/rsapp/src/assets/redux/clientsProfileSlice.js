@@ -17,8 +17,8 @@ const clientsProfile=createSlice({
     .addCase(fetchClientFullDetails.fulfilled,(state,action)=>{
         localStorage.setItem('bookingDetails',JSON.stringify(action.payload.bookingdt));
         state.bookingData=action.payload.bookingdt;
-        localStorage.setItem('bookedUnits',JSON.stringify(action.payload.unitdt));
-        state.bookedUnitsData=action.payload.unitdt;
+        /* localStorage.setItem('bookedUnits',JSON.stringify(action.payload.unitdt));
+        state.bookedUnitsData=action.payload.unitdt; */
     })
    }
 })

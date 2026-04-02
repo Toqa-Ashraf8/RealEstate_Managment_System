@@ -168,7 +168,7 @@ const bookingSlice = createSlice({
       },
       deleteBookingRow:(state,action)=>{
         state.reservedClients=
-        state.reservedClients.filter((client)=>client.ClientID!==action.payload);
+        state.reservedClients.filter((client)=>client.BookingID!==action.payload);
       }
     },
     extraReducers: (builder) => {

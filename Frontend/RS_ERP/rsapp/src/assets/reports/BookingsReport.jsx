@@ -26,7 +26,7 @@ const BookingsReport = React.forwardRef(({ client, installments}, ref) => {
                         <div className="info-item"><label>اسم العميل</label><span>{client.ClientName}</span></div>
                         <div className="info-item"><label>الرقم القومي</label><span>{client.NationalID || "---"}</span></div>
                         <div className="info-item"><label>المشروع</label><span>{client.ProjectName}</span></div>
-                        <div className="info-item"><label>رقم الوحدة</label><span>{client.Unit}</span></div>
+                        <div className="info-item"><label>رقم الوحدة</label><span>{client.unitName}</span></div>
                         <div className="info-item"><label>إجمالي السعر</label><span>{client.NegotiationPrice?.toLocaleString()} ج.م</span></div>
                         <div className="info-item"><label>المقدم المدفوع</label><span>{client.ReservationAmount?.toLocaleString()} ج.م</span></div>
                     </div>

@@ -102,11 +102,7 @@ const negotiationSlice=createSlice({
          prepareRejectAction:(state,action)=>{
             state.rejected=action.payload;     
         },
-        filterAcceptedRequests:(state,action)=>{
-
-            state.acceptedRequests=state.acceptedRequests.filter(neg=>neg.NegotiationID!==action.payload)
-        }
-       
+      
     },
    
     extraReducers:(builder)=>{
@@ -172,7 +168,6 @@ export const{
     prepareApproveAction,
     prepareRejectAction,
     selectRejectedForUpdate,
-    filterAcceptedRequests
 }=negotiationSlice.actions;
 const negotiationReducer=negotiationSlice.reducer;
 export default negotiationReducer;
