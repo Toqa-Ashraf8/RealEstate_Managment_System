@@ -176,13 +176,25 @@ const getinstallmentsData=(id)=>{
     return (
         <div className="final_page_wrapper">
             <div className="final_booking_container">
+                
                 <div className="final_header_area">
                     <h2 className="final_main_title">استكمال بيانات الحجز والأقساط</h2>
                 </div>
               
 
                 <div className="final_content_box animate__animated animate__fadeIn">
-                    <form className="final_form_body">                          
+                     
+                    <form className="final_form_body" >   
+                         <div className="final_floating_actions row">
+                         <div 
+                        className="final_circle_btn"
+                        title="تنظيف"> <AiOutlineClear size={28} color="#14213d" onClick={()=>resetForm()} /></div>       
+                        <div className="final_circle_btn" title="طباعة"><LuPrinter  size={24} color="#1086b9" onClick={()=>window.print()} /></div>
+                        <div className="final_circle_btn" title="حفظ"><RiSave3Fill size={24} color="#10b981" onClick={()=>SavedData()} /></div>
+                        {reserved===1 && 
+                        <div className="final_circle_btn" title="جدول الاقساط"><NotepadText  size={24} color="#42025e" onClick={()=>getinstallmentsData(bookingClient.BookingID)}/></div>
+                        }
+                        </div>                       
                                 <div className="row mb-4">
                                     <div className="col-md-4">
                                         <div className="final_field_group">
@@ -443,16 +455,7 @@ const getinstallmentsData=(id)=>{
                     </form>
                 </div>
 
-                <div className="final_floating_actions">
-                    <div 
-                    className="final_circle_btn"
-                    title="تنظيف"> <AiOutlineClear size={28} color="#14213d" onClick={()=>resetForm()} /></div>       
-                    <div className="final_circle_btn" title="طباعة"><LuPrinter  size={24} color="#1086b9" onClick={()=>window.print()} /></div>
-                     <div className="final_circle_btn" title="حفظ"><RiSave3Fill size={24} color="#10b981" onClick={()=>SavedData()} /></div>
-                     {reserved===1 && 
-                     <div className="final_circle_btn" title="جدول الاقساط"><NotepadText  size={24} color="#42025e" onClick={()=>getinstallmentsData(bookingClient.BookingID)}/></div>
-                     }
-                </div>
+              
             </div>
         </div>
     );

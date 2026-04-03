@@ -5,9 +5,11 @@
     font-family: 'Cairo', sans-serif !important;
     direction: rtl;
     padding: 40px;
+    position: relative;
 }
 
 .final_booking_container {
+    position: relative;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
@@ -171,12 +173,13 @@
 }
 
 .final_floating_actions {
-    position: fixed;
+    position: absolute; 
+    right: -70px;
+    z-index: 1000;
+    top:110px;
     display: flex;
     flex-direction: column;
     gap: 15px;
-    right: 30px;
-    top: 50%;
     transform: translateY(-50%);
     background: white;
     padding: 12px;
