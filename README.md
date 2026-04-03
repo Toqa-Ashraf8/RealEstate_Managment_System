@@ -97,7 +97,6 @@ The system relies on a highly normalized relational schema to ensure data integr
 ![System ERD Diagram](./docs/erd-diagram.png)
 
 ##  System Workflow (Business Logic)
-
 ```mermaid
 graph TD
 A[Employee] -->|Registers| B(Client Data and Purchases)
