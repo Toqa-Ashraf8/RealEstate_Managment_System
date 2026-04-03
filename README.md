@@ -18,6 +18,7 @@ In many real estate agencies, operations like unit bookings and installment trac
 
 ### 3. Advanced Negotiation & Approval Workflow 
 * **Request Initiation:** Sales employees can submit "Negotiation Requests" if a client proposes a different price.
+  
 | **Step 1: Initiation** | **Step 2: Negotiation Modal** | **Step 3: Result in Table** |
 | :---: | :---: | :---: |
 | <img src="screenshots/step1.png" width="350" alt="Client Setup" /> | <img src="screenshots/step2.png" width="350" alt="Negotiation Modal" /> | <img src="screenshots/step3.png" width="350" alt="Final Table" /> |
