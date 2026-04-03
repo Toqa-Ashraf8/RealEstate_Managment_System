@@ -26,10 +26,26 @@ In many real estate agencies, operations like unit bookings and installment trac
 | *1. Starting with a new client entry.* | *2. Processing the negotiation logic.* | *3. Success! Data synced to the tracking table.* |
 
 * **Managerial Decision Engine:** Managers receive these requests and can **Approve, Reject** them, ensuring a controlled sales process.
-<p align="center">
-  <img src="screenshots/step4.png" width="100%" alt="Managerial Decision Dashboard - Full Table View">
-  <br>
-</p>
+<table style="width: 100%; border-collapse: collapse; border: none; table-layout: fixed;">
+  <tr>
+    <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/843_1x_shots_so.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Negotiation Inbox">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em>1. **Negotiation Inbox:** Pending purchase offers waiting for managerial review.</em></p>
+    </td>
+    <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/893_1x_shots_so.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Rejection Decision Modal">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em>2. **Decision Modal:** Action taken to reject an offer with a required reason.</em></p>
+    </td>
+    <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/878_1x_shots_so.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Excluded Purchases List">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em>3. **Excluded List:** Log of rejected offers, with an option to restore.</em></p>
+    </td>
+    <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/377_1x_shots_so.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Accepted Purchases List">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em>4. **Accepted List:** Log of finalized, approved purchases.</em></p>
+    </td>
+  </tr>
+</table>
 
 ### 4. Automated Installment & Payment Engine
 * **Dynamic Schedule Generation:** Once a deal is approved, the system automatically calculates and generates a complete **Installment Plan** based on:
