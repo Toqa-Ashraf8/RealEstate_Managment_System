@@ -38,6 +38,14 @@ In many real estate agencies, operations like unit bookings and installment trac
     * Payment frequency (Monthly/Quarterly).
 * **Payment Tracking:** Employees can log each payment, attach digital receipts/vouchers, and update the installment status in real-time.
 * **Printable Schedules:** Generate professional installment tables for clients.
+  
+  <p align="center">
+  <img src="screenshots/Booking.png" width="48%" />
+  <img src="screenshots/Installments.png" width="48%" />
+</p>
+<p align="center">
+  <em>Interfaces for Booking Completion (Left) and Installment Management Schedule (Right)</em>
+</p>
 
 ##  Tech Stack
 * **Frontend:** React.js, Redux Toolkit (Complex State Management),**Bootstrap**,Custom CSS.
