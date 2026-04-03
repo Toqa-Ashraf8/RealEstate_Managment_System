@@ -33,7 +33,7 @@ In many real estate agencies, operations like unit bookings and installment trac
       <p style="font-size: 0.85em; margin-top: 10px;"><em>1. **Negotiation Inbox:** Pending purchase offers waiting for managerial review.</em></p>
     </td>
     <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
-      <img src="screenshots/893_1x_shots_so.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Rejection Decision Modal">
+      <img src="screenshots/583_1x_shots_so.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Rejection Decision Modal">
       <p style="font-size: 0.85em; margin-top: 10px;"><em>2. **Decision Modal:** Action taken to reject an offer with a required reason.</em></p>
     </td>
     <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
