@@ -61,7 +61,7 @@ useEffect(()=>{
                             <div className="bk-user-avatar"><User size={20} /></div>
                             <div>
                                 <h3>{req.ClientName}</h3>
-                                <span>مشروع: {req.ProjectName} | وحدة: {req.Unit}</span>
+                                <span>مشروع: {req.ProjectName} | وحدة: {req.unitName}</span>
                             </div>
                         </div>
 

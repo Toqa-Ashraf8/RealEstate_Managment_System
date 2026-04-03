@@ -105,7 +105,7 @@ const handleEdit=(i)=>{
                     <header className="mini_ins_header">
                         <div className="mini_ins_title_section">  
                             <h1>إدارة تحصيل الأقساط</h1>
-                            <p>الوحدة: <mark>{initialClientData.Unit}</mark>
+                            <p>الوحدة: <mark>{initialClientData.unitName}</mark>
                              - مشروع <mark>{initialClientData.ProjectName}</mark>
                             </p>
                         </div>

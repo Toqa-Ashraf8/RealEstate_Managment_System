@@ -19,7 +19,7 @@ const ClientDetails = () => {
     const {bookingData,bookedUnitsData}=useSelector((state)=>state.clientsProfile);
     const navigate = useNavigate();
     const [openUnitIndex, setOpenUnitIndex] = useState(null);
-console.log('bookingData',bookingData)
+
     return (
         <div className="erp-container animate-fade">
             <div className="erp-header">
@@ -72,10 +72,9 @@ console.log('bookingData',bookingData)
                             <ImageIcon size={14} /> صورة البطاقة الشخصية
                         </label>
                         <div className="id-card-frame">
-                            <img src={variables.NATIONAL_ID_IMAGES_URL+c.NationalIdImagePath} alt="" className="id-card-image" />
-                            <button className="btn-zoom-overlay">
-                                <ExternalLink size={12}/> تكبير الصورة
-                            </button>
+                            <img src={variables.NATIONAL_ID_IMAGES_URL+c.NationalIdImagePath} 
+                            alt="" className="id-card-image" />
+                            
                         </div>
                     </div>
                    

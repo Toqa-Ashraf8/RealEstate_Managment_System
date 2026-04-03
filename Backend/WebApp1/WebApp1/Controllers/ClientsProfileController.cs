@@ -72,11 +72,9 @@ namespace WebApp1.Controllers
                 da2.Fill(dt);
 
                 foreach (DataRow row in dt.Rows)
-                {
-                 
-                    string json = row["InstallmentsJson"].ToString();
-                    var installmentsList = string.IsNullOrEmpty(json)
-                        ? new List<Installment>()
+                {  
+                   string json = row["InstallmentsJson"].ToString();
+                    var installmentsList = string.IsNullOrEmpty(json)? new List<Installment>()
                         : Newtonsoft.Json.JsonConvert.DeserializeObject<List<Installment>>(json);
                     units_installments.Add(new UnitInstallments
                     {
@@ -84,19 +82,16 @@ namespace WebApp1.Controllers
                         UnitID = Convert.ToInt32(row["UnitID"]),
                         unitName = row["unitName"].ToString(),
                         ProjectName = row["ProjectName"].ToString(),
-                        Installments = installmentsList // القائمة نزلت جاهزة هنا!
+                        Installments = installmentsList 
                     });
                 }
             }
-
             if (conn.State == ConnectionState.Open) conn.Close();
-
             var data = new
             {
                 clientData=bookingdt,
-                bookedUnitsData = units_installments // بيانات الوحدات بالـ Nested Installments للجدول
+                bookedUnitsData = units_installments 
             };
-
             return new JsonResult(data);
         }
     

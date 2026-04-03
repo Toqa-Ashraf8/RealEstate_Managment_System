@@ -110,7 +110,7 @@ useEffect(() => {
                                     <div className="unit-info">
                                         <span>{neg.ProjectName}</span>
                                         <span>/</span>
-                                        <small>{neg.Unit}</small>
+                                        <small>{neg.unitName}</small>
                                     </div>
                                 </td>
                                 <td>
