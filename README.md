@@ -14,11 +14,17 @@ In many real estate agencies, operations like unit bookings and installment trac
   
 ### 2. Project & Unit Inventory (Master-Detail) 
 * **Master-Detail Architecture:** Administrators can create projects and dynamically add associated units with detailed specifications (Area, Floor, Price, Images, and Status).
-* **Live Inventory:** A real-time display of available vs. sold units for sales teams.
+* **Live Inventory:** A real-time display of available vs. reserved units for sales teams.
 
 ### 3. Advanced Negotiation & Approval Workflow 
 * **Request Initiation:** Sales employees can submit "Negotiation Requests" if a client proposes a different price.
 * **Managerial Decision Engine:** Managers receive these requests and can **Approve, Reject** them, ensuring a controlled sales process.
+
+#### 📸 Workflow Demonstration (Step-by-Step)
+| **Step 1: Initiation** | **Step 2: Negotiation Modal** | **Step 3: Result in Table** |
+| :---: | :---: | :---: |
+| <img src="screenshots/step1.png" width="350" alt="Client Setup" /> | <img src="screenshots/step2.png" width="350" alt="Negotiation Modal" /> | <img src="screenshots/step3.png" width="350" alt="Final Table" /> |
+| *1. Starting with a new client entry.* | *2. Processing the negotiation logic.* | *3. Success! Data synced to the tracking table.* |
 
 ### 4. Automated Installment & Payment Engine 
 * **Dynamic Schedule Generation:** Once a deal is approved, the system automatically generates a complete **Installment Plan** based on:
