@@ -37,8 +37,9 @@ const initialState = {
         PaymentType:"",
         CheckImage:""
     },
-   
-    initialClientBookingsData:JSON.parse(localStorage.getItem('clientDetails')),
+    previousSavedClientData: (localStorage.getItem('activeClientData') && localStorage.getItem('activeClientData') !== "undefined") 
+    ? JSON.parse(localStorage.getItem('activeClientData')) 
+    : {},
     reservedClients:[],
     installmentDetails:[],
     nationalIdImage: "",
@@ -177,9 +178,14 @@ const bookingSlice = createSlice({
         builder
             .addCase(fillClientData.fulfilled, (state, action) => {
               state.initialClientData= action.payload.dt[0];
-              localStorage.setItem('clientDetails',JSON.stringify(action.payload.clientDetails));
-              state.initialClientBookingsData=action.payload.clientDetails;
-              
+              const clientInformation=action.payload.clientData[0] || {};
+              if(action.payload.isExist===true){
+                localStorage.setItem('activeClientData',JSON.stringify(clientInformation));
+                state.previousSavedClientData=clientInformation;
+              }
+              else{
+                state.previousSavedClientData={};
+              }
             })         
             .addCase(saveNationalIdImage.fulfilled, (state, action) => {
                 state.nationalIdImage = action.payload;

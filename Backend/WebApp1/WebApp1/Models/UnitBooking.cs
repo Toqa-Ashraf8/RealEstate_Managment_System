@@ -2,7 +2,7 @@
 
 namespace WebApp1.Models
 {
-    public class ClientBooking
+    public class UnitBooking
     {
         [Key]
         public int BookingID { get; set; }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApp1.Models
 {
-    public class BookingDetail
+    public class ClientExtraDetails
     {
         [Key]
         public int Code { get; set; }

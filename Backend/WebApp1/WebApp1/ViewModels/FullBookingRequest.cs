@@ -4,7 +4,7 @@ namespace WebApp1.ViewModels
 {
     public class FullBookingRequest
     {
-        public BookingDetail ClientDetails { get; set; }
-        public ClientBooking BookingDetails { get; set; }
+        public ClientExtraDetails ClientExtraDetails { get; set; }
+        public UnitBooking UnitBooking { get; set; }
     }
 }

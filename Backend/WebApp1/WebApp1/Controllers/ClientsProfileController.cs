@@ -39,16 +39,13 @@ namespace WebApp1.Controllers
         }
         [Route("GetClientDetails")]
         [HttpPost]
-        public JsonResult GetClientFullFile(int clientid)
+        public JsonResult GetClientDetails(int clientid)
         {
             DataTable bookingdt = new DataTable();
             DataTable dt = new DataTable();
-            // دي اللستة اللي هنجمع فيها الوحدات بشكل منظم
             var units_installments = new List<UnitInstallments>();
 
             if (conn.State == ConnectionState.Closed) conn.Open();
-
-            // 1. جلب بيانات العميل الشخصية (الـ Header اللي فوق في الصورة)
             string sqld = @"select * from ClientFullDetails where ClientID=@ClientID";
             using (SqlCommand cmd = new SqlCommand(sqld, conn))
             {
@@ -56,8 +53,6 @@ namespace WebApp1.Controllers
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(bookingdt);
             }
-
-            // 2. جلب بيانات الوحدات والأقساط (الجدول اللي تحت في الصورة)
             string sqlg = @"SELECT * FROM ClientUnitsBookings WHERE ClientID=@ClientID";
             using (SqlCommand cmd2 = new SqlCommand(sqlg, conn))
             {
@@ -68,13 +63,11 @@ namespace WebApp1.Controllers
                 foreach (DataRow row in dt.Rows)
                 {
                     int bID = Convert.ToInt32(row["BookingID"]);
-
-                    // التريك هنا: بندور في اللستة بتاعتنا، هل الـ BookingID ده موجود فعلاً؟
                     var existingUnit = units_installments.FirstOrDefault(x => x.BookingID == bID);
 
                     if (existingUnit == null)
                     {
-                        // لو مش موجود (أول مرة نقابل الوحدة دي)، بنضيفها ونفتح لستة أقساط جواها
+                       
                         units_installments.Add(new UnitInstallments
                         {
                             BookingID = bID,
@@ -82,21 +75,19 @@ namespace WebApp1.Controllers
                             unitName = row["unitName"].ToString(),
                             ProjectName = row["ProjectName"].ToString(),
                             BookingDate = Convert.ToDateTime(row["BookingDate"]),
-                            // بنبدأ لستة الأقساط بأول قسط قابلناه في الجدول
                             Installments = new List<dynamic>
-                    {
-                        new {
-                            InstallmentID = row["InstallmentID"],
-                            DueDate = row["DueDate"],
-                            MonthlyAmount = row["MonthlyAmount"],
-                            Paid = row["Paid"]
-                        }
-                    }
+                            {
+                                new {
+                                    InstallmentID = row["InstallmentID"],
+                                    DueDate = row["DueDate"],
+                                    MonthlyAmount = row["MonthlyAmount"],
+                                    Paid = row["Paid"]
+                                }
+                            }
                         });
                     }
                     else
                     {
-                        // لو الـ BookingID موجود قبل كدة، بنزود القسط الحالي بس لـ "نفس" الوحدة
                         existingUnit.Installments.Add(new
                         {
                             InstallmentID = row["InstallmentID"],
@@ -107,16 +98,12 @@ namespace WebApp1.Controllers
                     }
                 }
             }
-
             if (conn.State == ConnectionState.Open) conn.Close();
-
-            // بنبعت الداتا مجمعة للـ React
             var data = new
             {
                 clientData = bookingdt,
                 bookedUnitsData = units_installments
             };
-
             return new JsonResult(data);
         }
 

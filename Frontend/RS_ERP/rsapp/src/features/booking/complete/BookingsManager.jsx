@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
     resetBookingForm, 
     setInitialClientData, 
-    setReservationStatus
+    setReservationStatus,
 } from '../../../assets/redux/bookingSlice'; 
 import { fetchApprovedNegotiations } from '../../../services/negotiationService';
 
@@ -18,10 +18,11 @@ const BookingsManager = () => {
 const CompleteBooking=(index)=>{
     const selectedClient = acceptedRequests[index];
     localStorage.setItem('activeBookingClient', JSON.stringify(selectedClient));
-    dispatch(setInitialClientData(selectedClient));
+    dispatch(setInitialClientData(selectedClient)); 
     dispatch(setReservationStatus(0))
     navigate('/complete_booking');
     dispatch(resetBookingForm());
+    
 }   
 useEffect(()=>{
     const Fetch=async()=>{
@@ -29,6 +30,7 @@ useEffect(()=>{
     }
     Fetch();
 },[])
+
     return (
         <div className="bk-manage-wrapper">
             <div className="bk-header">

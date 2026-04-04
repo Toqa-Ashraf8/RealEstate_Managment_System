@@ -40,7 +40,8 @@ const InstallmentsSchedule = () => {
         isRevertPaymentModalOpen, 
         isPaymentModalOpen,
         reserved,
-        BookingDate
+        BookingDate,
+        previousSavedClientData
     } = useSelector((state) => state.booking);
 
 const payInstallment=(i)=>{
@@ -49,8 +50,9 @@ const payInstallment=(i)=>{
     dispatch(resetPaymentModal());
 }
 const saveAllData=async()=>{
-    const data={
-        clientDetails:{...initialClientData,...bookingClient},
+    if(previousSavedClientData){
+         const data={
+        clientDetails:{...initialClientData,...previousSavedClientData},
         bookingDetails:{...initialClientData,...InstallmentInformation,BookingDate, 
         installments:installmentDetails.map(item => ({
             ...item,
@@ -60,8 +62,22 @@ const saveAllData=async()=>{
         }))
     }
     }
+    }
+    else{
+        const data={
+        clientDetails:{...initialClientData,...bookingClient},
+        bookingDetails:{...initialClientData,...InstallmentInformation,BookingDate, 
+        installments:installmentDetails.map(item => ({
+            ...item,
+            Paid: item.Paid ? 1 : 0 ,
+            PaymentType: item.PaymentType || "", 
+            CheckImage: item.CheckImage || ""
+        }))
+        }
+        }
+    }
        console.log("data",data);
-       try {
+    /*    try {
            const result=await dispatch(bookingDetailRequest(data)).unwrap();
             toast.success("تم الحجز بنجاح!", {
                theme: "colored",
@@ -77,7 +93,7 @@ const saveAllData=async()=>{
        } 
        if(reserved===0){
         await navigate('/booking');
-       }      
+       }      */ 
 }
 
 const handleEdit=(i)=>{

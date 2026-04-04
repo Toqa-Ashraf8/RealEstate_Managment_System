@@ -10,11 +10,11 @@ namespace WebApp1.EF
         public DbSet<Unit> Units { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Negotiation> Negotiations { get; set; }
-        public DbSet <BookingDetail> BookingDetails { get; set; }
+        public DbSet <ClientExtraDetails> ClientExtraDetails { get; set; }
         public DbSet<Rejected_negotiations_phase> Rejected_negotiations_phases { get; set; }
         public DbSet<Installment>Installments { get; set; }
         public DbSet<User>Users { get; set; }
-        public DbSet<ClientBooking>ClientBookings { get; set; }
+        public DbSet<UnitBooking> UnitBooking { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

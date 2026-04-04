@@ -57,6 +57,7 @@ const CompleteBooking = () => {
         nationalIdImage,
         checkImage,
         BookingDate,
+        previousSavedClientData
     }=useSelector((state)=>state.booking);
   
 const handleChange=(e)=>{
@@ -96,38 +97,46 @@ const handleChangeinstallment=(e)=>{
     
 };
 const SavedData=async()=>{
-    const parms={
-          clientDetails:{...initialClientData,...bookingClient},
+    if(previousSavedClientData){
+         const parms={
+          clientDetails:{...initialClientData,...previousSavedClientData},
           bookingDetails:{...initialClientData,...InstallmentInformation,BookingDate}
          ,installments:[]
-};
-      
-    if (!bookingClient) {
+        };
+    }
+    else{
+        const parms={
+            clientDetails:{...initialClientData,...bookingClient},
+            bookingDetails:{...initialClientData,...InstallmentInformation,BookingDate}
+            ,installments:[]
+        };
+    } 
+    console.log("parms",parms);
+   /*  if (!bookingClient || !previousSavedClientData) {
         toast.error("بيانات العميل غير مكتملة!");
         return;
-    }  
-   
-      try {
+    }   */
+   /*  try {
         const result=await dispatch(bookingDetailRequest(parms)).unwrap();
         if(result.saved===true){
          toast.success("تم الحجز بنجاح!", {
             theme: "colored",
             position: "top-left",
-        });
+    });
         
-        } 
-        if (result.updated===true){
-        toast.success("تم تحديث البيانات بنجاح!", {
-            theme: "colored",
-            position: "top-left",
-        });
-        }
+    } 
+    if (result.updated===true){
+     toast.success("تم تحديث البيانات بنجاح!", {
+     theme: "colored",
+     position: "top-left",
+    });
+    }
     } catch (error) {
          toast.error("حدث خطأ في الاتصال بالخادم!", {
             theme: "colored",
             position: "top-left",
         });
-    }  
+    }   */
 }
 
 const calcutlateDownpayment=()=>{
@@ -143,7 +152,6 @@ const calcutlateDownpayment=()=>{
         }))
     }
 }
-console.log(initialClientData.NegotiationPrice)
 const createInstallments=()=>{
     dispatch(setReservationStatus(0))
     if(InstallmentInformation.ReservationAmount !=""){
@@ -174,7 +182,7 @@ const getinstallmentsData=(id)=>{
         dispatch(fillClientData(parsedData));
     }
  }, [dispatch]);
-
+console.log("previousSavedClientData",previousSavedClientData);
     return (
         <div className="final_page_wrapper">
             <div className="final_booking_container">
@@ -260,7 +268,7 @@ const getinstallmentsData=(id)=>{
                                         name="NationalID"
                                         className="final_input_modern"
                                         ref={focusRef}
-                                        value={bookingClient.NationalID}
+                                        value={ previousSavedClientData?.NationalID || bookingClient.NationalID}  
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -281,7 +289,7 @@ const getinstallmentsData=(id)=>{
                                     type="text" 
                                     name="SecondaryPhone" 
                                     className="final_input_modern"
-                                    value={bookingClient.SecondaryPhone}
+                                    value={previousSavedClientData?.SecondaryPhone  || bookingClient.SecondaryPhone }
                                     onChange={handleChange}
                                     />
                                 </div>
@@ -291,7 +299,7 @@ const getinstallmentsData=(id)=>{
                                     type="text" 
                                     name="Address" 
                                     className="final_input_modern"
-                                    value={bookingClient.Address}
+                                    value={previousSavedClientData?.Address || bookingClient.Address}
                                     onChange={handleChange}
                                     />
                                 </div>
@@ -301,7 +309,7 @@ const getinstallmentsData=(id)=>{
                                     type="text" 
                                     name="Job" 
                                     className="final_input_modern"
-                                    value={bookingClient.Job}
+                                    value={previousSavedClientData?.Job || bookingClient.Job}
                                     onChange={handleChange}
                                     />
                                 </div>
@@ -309,7 +317,9 @@ const getinstallmentsData=(id)=>{
                             <div className="col-lg-4">
                            <div className="final_image_preview_big">
                           {(() => {
-                            const imgName = nationalIdImage || bookingClient?.NationalIdImagePath;
+                          const imgName = nationalIdImage || 
+                                          previousSavedClientData?.NationalIdImagePath || 
+                                          bookingClient?.NationalIdImagePath;
                             if (imgName && imgName !== "null") {
                             return (
                                 <img 
