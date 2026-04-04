@@ -7,8 +7,35 @@ In many real estate agencies, operations like unit bookings and installment trac
 ##  Core Features
 
 ### 1. Role-Based Access Control (RBAC) 
+The system implements a secure multi-user environment where each role (Admin vs. Employee) has a tailored interface and specific permissions.
+
+<table style="width: 100%; border-collapse: collapse; border: none; table-layout: fixed;">
+  <tr>
+    <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/login.jpg" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Login Screen">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em>1. <b>Secure Login:</b> Access point for registered staff.</em></p>
+    </td>
+    <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/register.jpg" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Register Screen">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em>2. <b>Staff Registration:</b> Secure onboarding for new employees.</em></p>
+    </td>
+    <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/adminShown.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Admin Navigation">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em>3. <b>Admin Navbar:</b> Full access to analytics and project setup.</em></p>
+    </td>
+    <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/employeeShown.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Employee Navigation">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em>4. <b>Employee Navbar:</b> Streamlined view focused on sales and clients.</em></p>
+    </td>
+  </tr>
+</table>
 * **Secure Auth**: Integrated **JWT Authentication** and **BCrypt** password hashing for robust data protection.
 * **Admin Dashboard**: High-level overview with **Charts & Analytics** (Sales performance, unit availability, and project statistics).
+<p align="center">
+  <img src="screenshots/adminDashboard.jpg" width="850" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" alt="Admin Dashboard">
+  <br />
+  <em>The Main Dashboard provides real-time insights into project availability and booking activity using Chart.js.</em>
+</p>
 * **Managerial Controls**: Exclusive access to approve/reject negotiation requests and manage project configurations.
 * **Employee/Sales Portal**: Tools to register clients, browse units, and initiate formal negotiation/purchase requests.
   
@@ -79,7 +106,7 @@ In many real estate agencies, operations like unit bookings and installment trac
   </tr>
 </table>
 
-## 🛠️ Future Logic Enhancements & Roadmap
+## Future Logic Enhancements & Roadmap
 While the core functionality is fully operational, I have identified several key areas for future logic refinement to further enhance data integrity and user experience:
 
 * **Dynamic Price Validation:** Implementing a safe range for "Suggested Price" inputs to prevent negative discount rates and ensure logical pricing boundaries during negotiations.
