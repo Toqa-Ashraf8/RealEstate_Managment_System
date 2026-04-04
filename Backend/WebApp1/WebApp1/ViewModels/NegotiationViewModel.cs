@@ -1,6 +1,6 @@
 ﻿using System.Security.Principal;
 
-namespace WebApp1.Models
+namespace WebApp1.ViewModels
 {
     public class NegotiationViewModel
     {

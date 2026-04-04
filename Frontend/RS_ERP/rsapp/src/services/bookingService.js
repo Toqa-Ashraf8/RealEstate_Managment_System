@@ -29,7 +29,7 @@ export const saveInstallmentCheck = createAsyncThunk("saveInstallmentCheck/booki
     return resp;
 })
 export const bookingDetailRequest = createAsyncThunk("bookingDetailRequest/booking", async (sentdata) => {
-    const resp = await axios.post(variables.BOOKINGS_API + "BookingDetailRequest", sentdata)
+    const resp = await axios.post(variables.BOOKINGS_API + "ConfirmFullBooking", sentdata)
         .then((res) => res.data);
     return resp;
 })

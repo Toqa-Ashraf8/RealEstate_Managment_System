@@ -23,6 +23,46 @@ namespace WebApp1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("WebApp1.Models.BookingDetail", b =>
+                {
+                    b.Property<int>("Code")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Code"));
+
+                    b.Property<string>("Address")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ClientID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClientName")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Job")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NationalID")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NationalIdImagePath")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecondaryPhone")
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Code");
+
+                    b.ToTable("BookingDetails");
+                });
+
             modelBuilder.Entity("WebApp1.Models.Client", b =>
                 {
                     b.Property<int?>("ClientID")
@@ -73,8 +113,8 @@ namespace WebApp1.Migrations
                     b.Property<int?>("DownPayment")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FirstInstallmentDate")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("FirstInstallmentDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("InstallmentYears")
                         .HasColumnType("int");
@@ -100,46 +140,6 @@ namespace WebApp1.Migrations
                     b.ToTable("ClientBookings");
                 });
 
-            modelBuilder.Entity("WebApp1.Models.ClientBookingDetail", b =>
-                {
-                    b.Property<int>("Code")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Code"));
-
-                    b.Property<string>("Address")
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ClientID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClientName")
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Job")
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NationalID")
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NationalIdImagePath")
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SecondaryPhone")
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Code");
-
-                    b.ToTable("ClientBookingDetails");
-                });
-
             modelBuilder.Entity("WebApp1.Models.Installment", b =>
                 {
                     b.Property<int>("InstallmentID")
@@ -155,7 +155,7 @@ namespace WebApp1.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ClientBookingDetailCode")
+                    b.Property<int?>("ClientBookingBookingID")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("DueDate")
@@ -179,7 +179,7 @@ namespace WebApp1.Migrations
 
                     b.HasKey("InstallmentID");
 
-                    b.HasIndex("ClientBookingDetailCode");
+                    b.HasIndex("ClientBookingBookingID");
 
                     b.ToTable("Installments");
                 });
@@ -407,9 +407,9 @@ namespace WebApp1.Migrations
 
             modelBuilder.Entity("WebApp1.Models.Installment", b =>
                 {
-                    b.HasOne("WebApp1.Models.ClientBookingDetail", null)
+                    b.HasOne("WebApp1.Models.ClientBooking", null)
                         .WithMany("installments")
-                        .HasForeignKey("ClientBookingDetailCode");
+                        .HasForeignKey("ClientBookingBookingID");
                 });
 
             modelBuilder.Entity("WebApp1.Models.Negotiation", b =>
@@ -431,7 +431,7 @@ namespace WebApp1.Migrations
                     b.Navigation("negotiations");
                 });
 
-            modelBuilder.Entity("WebApp1.Models.ClientBookingDetail", b =>
+            modelBuilder.Entity("WebApp1.Models.ClientBooking", b =>
                 {
                     b.Navigation("installments");
                 });

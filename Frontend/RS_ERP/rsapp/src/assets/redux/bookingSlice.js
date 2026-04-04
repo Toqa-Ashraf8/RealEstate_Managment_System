@@ -15,28 +15,30 @@ import {
 
 const initialState = {
     bookingClient: {
-        BookingID: 0,
         NationalID: "",
         NationalIdImagePath: "",
         SecondaryPhone: "",
         Address: "",
         Job:"",
-        ReservationAmount: 0,
-        PaymentMethod: "-1",
-        CheckImagePath: "",
-        Reserved:1
-    },
+    }, 
+    initialClientData:{},
     InstallmentInformation: { 
+        BookingID:0,        
         TotalAmount: 0, 
+        ReservationAmount: 0,
         DownPayment: 0, 
         FirstInstallmentDate: "", 
-        InstallmentYears: "-1" 
+        PaymentMethod: "-1",
+        CheckImagePath:"",
+        InstallmentYears: "-1" , 
+        Reserved:1
     },
     paymentType:{
         PaymentType:"",
         CheckImage:""
     },
-    initialClientData:{},
+   
+    initialClientBookingsData:JSON.parse(localStorage.getItem('clientDetails')),
     reservedClients:[],
     installmentDetails:[],
     nationalIdImage: "",
@@ -56,7 +58,7 @@ const initialState = {
     selectedInstallmentrow:-1,
     selectedDeleteIndex: -1,
     //
-    bookingDate:new Date().toISOString().split('T')[0],
+    BookingDate:new Date().toISOString().split('T')[0],
 }
 
 const bookingSlice = createSlice({
@@ -74,11 +76,11 @@ const bookingSlice = createSlice({
         },
         //حساب قيمة المقدم قبل الحجز
         caluclateDownPayment: (state, action) => {
-            if (state.bookingClient.ReservationAmount > 0) {
+            if (state.InstallmentInformation.ReservationAmount > 0) {
                 const negoiationPrice = action.payload;
                 state.InstallmentInformation.TotalAmount = negoiationPrice;
                 const balance = 
-                state.InstallmentInformation.TotalAmount - state.bookingClient.ReservationAmount;
+                state.InstallmentInformation.TotalAmount - state.InstallmentInformation.ReservationAmount;
                 state.InstallmentInformation.DownPayment = balance * 0.25;
             }
         },
@@ -174,7 +176,9 @@ const bookingSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fillClientData.fulfilled, (state, action) => {
-              state.initialClientData= action.payload[0];
+              state.initialClientData= action.payload.dt[0];
+              localStorage.setItem('clientDetails',JSON.stringify(action.payload.clientDetails));
+              state.initialClientBookingsData=action.payload.clientDetails;
               
             })         
             .addCase(saveNationalIdImage.fulfilled, (state, action) => {
@@ -191,21 +195,19 @@ const bookingSlice = createSlice({
             })        
             .addCase(bookingDetailRequest.fulfilled, (state, action) => {
                 state.bookingClient.BookingID = action.payload.booking_id;
-                state.successSaveBookingData=action.payload.saved_m;
-                state.successSaveInstallmentData=action.payload.saved_d;
             })
             .addCase(fetchAllReservedClients.fulfilled, (state, action) => {
                 state.reservedClients=action.payload;
             })
             .addCase(fetchReservedClientById.fulfilled, (state, action) => {
-                state.InstallmentInformation=action.payload.installmentdata[0];
+                state.InstallmentInformation=action.payload.reservationData[0];
                 state.bookingClient=action.payload.clientdt[0];
+                state.initialClientData=action.payload.clientdt[0];
                 state.installmentDetails=action.payload.installmentdt;
             })  
             .addCase(deleteBookingData.fulfilled, (state, action) => {
                 state.isDeletedBooking=action.payload;
             })
-            
     }
 })
 export const {

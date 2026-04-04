@@ -3,8 +3,8 @@ import { fetchAllClients, fetchClientFullDetails } from "../../services/clientsP
 
 const initialState={
     clientData:[],
-    bookingData:JSON.parse(localStorage.getItem('bookingDetails')) || null,
-    bookedUnitsData:JSON.parse(localStorage.getItem('bookedUnits')) || null
+    bookingData:JSON.parse(localStorage.getItem('bookingDetails')) || [],
+    bookedUnitsData:JSON.parse(localStorage.getItem('bookedUnits')) || []
 }
 const clientsProfile=createSlice({
     name:'clientsProfile',
@@ -15,10 +15,12 @@ const clientsProfile=createSlice({
         state.clientData=action.payload;
     })
     .addCase(fetchClientFullDetails.fulfilled,(state,action)=>{
-        localStorage.setItem('bookingDetails',JSON.stringify(action.payload.clientData));
-        state.bookingData=action.payload.clientData;
-        localStorage.setItem('bookedUnits',JSON.stringify(action.payload.bookedUnitsData));
-        state.bookedUnitsData=action.payload.bookedUnitsData; 
+             const clientData = action.payload.clientData || [];
+            const unitsData = action.payload.bookedUnitsData || [];
+                localStorage.setItem('bookingDetails', JSON.stringify(clientData));
+                localStorage.setItem('bookedUnits', JSON.stringify(unitsData));
+                state.bookingData = clientData;
+                state.bookedUnitsData = unitsData;
     })
    }
 })

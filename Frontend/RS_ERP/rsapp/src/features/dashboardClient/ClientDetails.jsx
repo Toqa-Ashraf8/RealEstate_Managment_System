@@ -94,17 +94,17 @@ const ClientDetails = () => {
                             <tr>
                                 <th>اسم الوحدة</th>
                                 <th>المشروع</th>
-                               {/*  <th>تاريخ الحجز</th> */}
+                                <th>تاريخ الحجز</th>
                                 <th style={{ textAlign: 'center' }}>الأقساط</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {bookedUnitsData.map((unit, index) => (
+                            {bookedUnitsData && bookedUnitsData.map((unit, index) => (
                                 <React.Fragment key={index}>
                                     <tr>
                                         <td><span className="client-name-text">{unit.unitName}</span></td>
                                         <td>{unit.ProjectName}</td>
-                                        {/* <td>{unit.BookingDate}</td> */}
+                                         <td>{unit.BookingDate.split('T')[0]}</td> 
                                         <td style={{ textAlign: 'center' }}>
                                             <button className="btn-tiny" 
                                             onClick={() => setOpenUnitIndex(openUnitIndex === index ? null : index)}>

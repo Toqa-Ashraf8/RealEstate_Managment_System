@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Diagnostics.Contracts;
 using WebApp1.EF;
 using WebApp1.Models;
+using WebApp1.ViewModels;
 
 namespace WebApp1.Controllers
 {
@@ -125,184 +126,152 @@ namespace WebApp1.Controllers
             return new JsonResult(fileName);
 
         }
-        //Save Booking Client Data 
-        [Route("BookingDetailRequest")]
+       
+        [Route("ConfirmFullBooking")]
         [HttpPost]
-        //public JsonResult BookingDetailRequest([FromBody] ClientBookingDetail client)
-        //{
-        //    //int booking_id = Convert.ToInt32(client.BookingID);
-        //    bool saved_m = false;
-        //    bool saved_d = false;
-        //    bool updated = false;
-            //if (booking_id == 0)
-            //{
-            //    try
-            //    {
-            //        string sqlinsert = @"insert into ClientBookingDetails
-            //                            (NationalID,NationalIdImagePath,SecondaryPhone,
-            //                            Address,Job,ReservationAmount,PaymentMethod,
-            //                            CheckImagePath,DownPayment,FirstInstallmentDate,
-            //                            InstallmentYears,ClientID,ClientName,ProjectCode,
-            //                            UnitID,BookingDate,Reserved) 
-            //                            values (@NationalID,@NationalIdImagePath,@SecondaryPhone,
-            //                            @Address,@Job,@ReservationAmount,@PaymentMethod,
-            //                            @CheckImagePath,@DownPayment,@FirstInstallmentDate,
-            //                            @InstallmentYears,@ClientID,@ClientName,@ProjectCode
-            //                            ,@UnitID,@BookingDate,@Reserved)
-            //                            SELECT SCOPE_IDENTITY()";
-            //        using (SqlCommand cmd = new SqlCommand(sqlinsert, conn))
-            //        {
-                        //if (conn.State == ConnectionState.Closed) conn.Open();
-                        //cmd.Parameters.Clear();
-                        //cmd.Parameters.AddWithValue("@NationalID", client.NationalID);
-                        //cmd.Parameters.AddWithValue("@NationalIdImagePath", client.NationalIdImagePath);
-                        //cmd.Parameters.AddWithValue("@SecondaryPhone", client.SecondaryPhone);
-                        //cmd.Parameters.AddWithValue("@Address", client.Address);
-                        //cmd.Parameters.AddWithValue("@Job", client.Job);
-                        //cmd.Parameters.AddWithValue("@ReservationAmount", client.ReservationAmount);
-                        //cmd.Parameters.AddWithValue("@PaymentMethod", client.PaymentMethod);
-                        //cmd.Parameters.AddWithValue("@CheckImagePath", 
-                        //string.IsNullOrEmpty(client.CheckImagePath) ? DBNull.Value : client.CheckImagePath);
-                        //cmd.Parameters.AddWithValue("@DownPayment", client.DownPayment);
-                        //cmd.Parameters.AddWithValue("@FirstInstallmentDate", client.FirstInstallmentDate);
-                        //cmd.Parameters.AddWithValue("@InstallmentYears", client.InstallmentYears);
-                        //cmd.Parameters.AddWithValue("@ClientID", client.ClientID);
-                        //cmd.Parameters.AddWithValue("@ClientName", client.ClientName);
-                        //cmd.Parameters.AddWithValue("@ProjectCode", client.ProjectCode);                    
-                        //cmd.Parameters.AddWithValue("@UnitID", client.UnitID);
-                        //cmd.Parameters.AddWithValue("@BookingDate", client.BookingDate);
-                        //cmd.Parameters.AddWithValue("@Reserved", client.Reserved);
-                        //booking_id = Convert.ToInt32(cmd.ExecuteScalar());
-                        //if (conn.State == ConnectionState.Open) conn.Close();
-                        //saved_m = true;
+        public JsonResult ConfirmFullBooking([FromBody] FullBookingRequest request)
+        {
+            if (request == null || request.ClientDetails == null || request.BookingDetails == null)
+                return new JsonResult(new { success = false, message = "بيانات ناقصة" });
 
-            //        }
-                   
-            //    }
-            //    catch { saved_m = false; }
-                
-            //}
-           
-            //else
-            //{
-            //    try
-            //    {
-            //        string updatedata = @"update ClientBookingDetails set NationalID=@NationalID,
-            //                              NationalIdImagePath=@NationalIdImagePath,
-            //                              SecondaryPhone=@SecondaryPhone,Address=@Address,
-            //                              Job=@Job,ReservationAmount=@ReservationAmount,
-            //                              PaymentMethod=@PaymentMethod,CheckImagePath=@CheckImagePath,
-            //                              DownPayment=@DownPayment ,FirstInstallmentDate=@FirstInstallmentDate,
-            //                              InstallmentYears=@InstallmentYears,ClientID=@ClientID,
-            //                              ClientName=@ClientName,ProjectCode=@ProjectCode,UnitID=@UnitID 
-            //                              ,BookingDate=@BookingDate ,Reserved=@Reserved
-            //                              where BookingID=@BookingID";
-            //        using (SqlCommand cmd = new SqlCommand(updatedata, conn))
-            //        {
-                        //if (conn.State == ConnectionState.Closed) conn.Open();
-                        //cmd.Parameters.Clear();
-                        //cmd.Parameters.AddWithValue("@NationalID", client.NationalID);
-                        //cmd.Parameters.AddWithValue("@NationalIdImagePath", client.NationalIdImagePath);
-                        //cmd.Parameters.AddWithValue("@SecondaryPhone", client.SecondaryPhone);
-                        //cmd.Parameters.AddWithValue("@Address", client.Address);
-                        //cmd.Parameters.AddWithValue("@Job", client.Job);
-                        //cmd.Parameters.AddWithValue("@ReservationAmount", client.ReservationAmount);
-                        //cmd.Parameters.AddWithValue("@PaymentMethod", client.PaymentMethod);
-                        //cmd.Parameters.AddWithValue("@CheckImagePath", 
-                        //string.IsNullOrEmpty(client.CheckImagePath) ? DBNull.Value : client.CheckImagePath);
-                        //cmd.Parameters.AddWithValue("@DownPayment", client.DownPayment);
-                        //cmd.Parameters.AddWithValue("@FirstInstallmentDate", client.FirstInstallmentDate);
-                        //cmd.Parameters.AddWithValue("@InstallmentYears", client.InstallmentYears);
-                        //cmd.Parameters.AddWithValue("@ClientID", client.ClientID);
-                        //cmd.Parameters.AddWithValue("@ClientName", client.ClientName);
-                        //cmd.Parameters.AddWithValue("@ProjectCode", client.ProjectCode);
-                        //cmd.Parameters.AddWithValue("@UnitID", client.UnitID);
-                        //cmd.Parameters.AddWithValue("@BookingDate", client.BookingDate);
-                        //cmd.Parameters.AddWithValue("@Reserved", client.Reserved);
-                        //cmd.Parameters.AddWithValue("@BookingID", booking_id);
-                        //cmd.ExecuteNonQuery();
-            //            if (conn.State == ConnectionState.Open) conn.Close();
-            //            saved_m = true;
-            //            updated = true;
+            if (conn.State == ConnectionState.Closed) conn.Open();
+            SqlTransaction transaction = conn.BeginTransaction();
 
-            //        }
+            try
+            {
+             
+                string checkSql = "SELECT COUNT(*) FROM BookingDetails WHERE ClientID=@ClientID";
+                int exists = 0;
+                using (SqlCommand cmdCheck = new SqlCommand(checkSql, conn, transaction))
+                {
+                    cmdCheck.Parameters.AddWithValue("@ClientID", request.ClientDetails.ClientID);
+                    exists = (int)cmdCheck.ExecuteScalar();
+                }
 
-            //    }
-            //    catch { updated = false;  }
+                if (exists == 0)
+                {
+                    string sqlInsertClient = @"INSERT INTO BookingDetails (NationalID, NationalIdImagePath, 
+                                               SecondaryPhone, Address, Job, ClientID, ClientName) 
+                                               VALUES (@NationalID, @ImgPath, @SPhone, @Addr, @Job, @CID, @CName)";
+                    using (SqlCommand cmd = new SqlCommand(sqlInsertClient, conn, transaction))
+                    {
+                        FillClientParams(cmd, request.ClientDetails);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    string sqlUpdateClient = @"UPDATE BookingDetails SET NationalID=@NationalID, NationalIdImagePath=@ImgPath, 
+                                       SecondaryPhone=@SPhone, Address=@Addr, Job=@Job, ClientName=@CName 
+                                       WHERE ClientID=@CID";
+                    using (SqlCommand cmd = new SqlCommand(sqlUpdateClient, conn, transaction))
+                    {
+                        FillClientParams(cmd, request.ClientDetails);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+          
+                int booking_id = 0;
+                string sqlBooking = @"INSERT INTO ClientBookings (ReservationAmount, PaymentMethod, CheckImagePath, DownPayment, 
+                              FirstInstallmentDate, InstallmentYears, BookingDate, ClientID, ProjectCode, UnitID, Reserved) 
+                              VALUES (@ResAmt, @PayMethod, @CheckImg, @DownPay, @FirstDate, @Years, @BDate, @CID, @PCode, @UID, @Reserved);
+                              SELECT SCOPE_IDENTITY()";
+
+                using (SqlCommand cmd = new SqlCommand(sqlBooking, conn, transaction))
+                {
+                    cmd.Parameters.AddWithValue("@ResAmt", request.BookingDetails.ReservationAmount);
+                    cmd.Parameters.AddWithValue("@PayMethod", request.BookingDetails.PaymentMethod);
+                    cmd.Parameters.AddWithValue("@CheckImg", request.BookingDetails.CheckImagePath ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@DownPay", request.BookingDetails.DownPayment);
+                    cmd.Parameters.AddWithValue("@FirstDate", request.BookingDetails.FirstInstallmentDate);
+                    cmd.Parameters.AddWithValue("@Years", request.BookingDetails.InstallmentYears);
+                    cmd.Parameters.AddWithValue("@BDate", request.BookingDetails.BookingDate);
+                    cmd.Parameters.AddWithValue("@CID", request.ClientDetails.ClientID);
+                    cmd.Parameters.AddWithValue("@PCode", request.BookingDetails.ProjectCode);
+                    cmd.Parameters.AddWithValue("@UID", request.BookingDetails.UnitID);
+                    cmd.Parameters.AddWithValue("@Reserved", request.BookingDetails.Reserved);
+
+                    booking_id = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+              
+                string sqlUnit = "UPDATE Units SET ReservedStatus=1 WHERE ProjectCode=@PCode AND UnitID=@UID";
+                using (SqlCommand cmd = new SqlCommand(sqlUnit, conn, transaction))
+                {
+                    cmd.Parameters.AddWithValue("@PCode", request.BookingDetails.ProjectCode);
+                    cmd.Parameters.AddWithValue("@UID", request.BookingDetails.UnitID);
+                    cmd.ExecuteNonQuery();
+                }
+
                
-            //}
-            //if (saved_m == true)
-            //{
-            //    string sqlup = @"update Units set ReservedStatus=1 where
-            //                     ProjectCode=@ProjectCode AND 
-            //                     UnitID=@UnitID";
-            //    using (SqlCommand cmd = new SqlCommand(sqlup, conn))
-            //    {
-                    //if (conn.State == ConnectionState.Closed) conn.Open();
-                    //cmd.Parameters.Clear();
-                    //cmd.Parameters.AddWithValue("@ProjectCode", client.ProjectCode);
-                    //cmd.Parameters.AddWithValue("@UnitID", client.UnitID);
-                    //cmd.ExecuteNonQuery();
-                    //if (conn.State == ConnectionState.Open) conn.Close();
+                if (request.BookingDetails.installments != null && request.BookingDetails.installments.Count > 0)
+                {
+                    try
+                    {
+                        string sqldelete = @"delete Installments where BookingID=@BID";
+                        if (conn.State == ConnectionState.Closed) conn.Open();
+                        using(SqlCommand cmd=new SqlCommand(sqldelete, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@BID", booking_id);
+                            cmd.ExecuteNonQuery();
+                        }
+                        if (conn.State == ConnectionState.Open) conn.Close();
 
-            //    }
-               
-            //}
-            //if (client.installments.Count > 0)
-            //{ 
-            //    string delete_old_installments = @"delete Installments where BookingID=@BookingID";
-            //     using(SqlCommand cmd=new SqlCommand(delete_old_installments, conn))
-            //     //{    if (conn.State == ConnectionState.Closed) conn.Open();
-            //     //      cmd.Parameters.Clear();
-            //     //      cmd.Parameters.AddWithValue("@BookingID", booking_id);
-            //     //      cmd.ExecuteNonQuery();
-            //     //      if (conn.State == ConnectionState.Open) conn.Close();
-            //     //      saved_d = true;
-            //     }
-            //    foreach (var item in client.installments)
-            //    {              
-            //        try
-            //        {
-                       
-            //            string insert_installments = @"insert into Installments 
-            //                                         (InstallmentNumber,DueDate,Months,MonthlyAmount,
-            //                                         Paid,PaymentType,CheckImage,BookingID) values 
-            //                                         (@InstallmentNumber,@DueDate,@Months,
-            //                                         @MonthlyAmount,@Paid,@PaymentType,
-            //                                         @CheckImage,@BookingID)"; 
-                                                    
-                       
-            //            using(SqlCommand cmd=new SqlCommand(insert_installments, conn))
-            //            {
-            //                if (conn.State == ConnectionState.Closed) conn.Open();
-            //                cmd.Parameters.Clear();
-            //                cmd.Parameters.AddWithValue("@InstallmentNumber", item.InstallmentNumber);
-            //                cmd.Parameters.AddWithValue("@DueDate", item.DueDate);
-            //                cmd.Parameters.AddWithValue("@Months", item.Months);
-            //                cmd.Parameters.AddWithValue("@MonthlyAmount", item.MonthlyAmount);
-            //                cmd.Parameters.AddWithValue("@Paid", item.Paid);
-            //                cmd.Parameters.AddWithValue("@PaymentType", 
-            //                string.IsNullOrEmpty(item.PaymentType) ? DBNull.Value : item.PaymentType);
-            //                cmd.Parameters.AddWithValue("@CheckImage", 
-            //                //string.IsNullOrEmpty(item.CheckImage) ? DBNull.Value : item.CheckImage);
-            //                //cmd.Parameters.AddWithValue("@BookingID", booking_id);
-            //                //cmd.ExecuteNonQuery();
-            //                saved_d = true;
+                    }
+                    catch 
+                    {
 
-            //            }  
-            //            if (conn.State == ConnectionState.Open) conn.Close();
-            //        }
-            //        catch{ saved_d = false;}
-            //    } 
-            //}
-            //var data = new { saved_m = saved_m, 
-            //                 booking_id = booking_id, 
-            //                 updated=updated,
-            //                 saved_d=saved_d
-            //                };
-            //return new JsonResult(data); }
+                        return new JsonResult(new { message = "حدث خطأ أثناء مسح الأقساط" });
+                    }
+
+                    string sqlInstallment = @"INSERT INTO Installments (InstallmentNumber, DueDate, 
+                                            Months, MonthlyAmount, Paid, PaymentType, CheckImage, BookingID) 
+                                            VALUES (@Num, @Date, @Months, @Amt, @Paid, @Type, @Img, @BID)";
+
+                    foreach (var item in request.BookingDetails.installments)
+                    {
+                        using (SqlCommand cmd = new SqlCommand(sqlInstallment, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@Num", item.InstallmentNumber);
+                            cmd.Parameters.AddWithValue("@Date", item.DueDate);
+                            cmd.Parameters.AddWithValue("@Months", item.Months);
+                            cmd.Parameters.AddWithValue("@Amt", item.MonthlyAmount);
+                            cmd.Parameters.AddWithValue("@Paid", item.Paid);
+                            cmd.Parameters.AddWithValue("@Type", item.PaymentType);
+                            cmd.Parameters.AddWithValue("@Img", item.CheckImage);
+                            cmd.Parameters.AddWithValue("@BID", booking_id);
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+
+                transaction.Commit();
+                return new JsonResult(new { success = true, bookingId = booking_id });
+
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback(); 
+                return new JsonResult(new { success = false, message = "حدث خطأ: " + ex.Message });
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open) conn.Close();
+            }
+        }
 
        
+        private void FillClientParams(SqlCommand cmd, BookingDetail cl)
+        {
+            cmd.Parameters.AddWithValue("@NationalID", cl.NationalID);
+            cmd.Parameters.AddWithValue("@ImgPath", cl.NationalIdImagePath ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@SPhone", cl.SecondaryPhone ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Addr", cl.Address);
+            cmd.Parameters.AddWithValue("@Job", cl.Job);
+            cmd.Parameters.AddWithValue("@CID", cl.ClientID);
+            cmd.Parameters.AddWithValue("@CName", cl.ClientName);
+        }
         //Generate installment Table 
         [Route("GenerateInstallments")]
         [HttpPost]
@@ -382,7 +351,7 @@ namespace WebApp1.Controllers
         public JsonResult GetReservedClientById(int id)
         {
             var clientdata = new List<BookingClient>();
-            var installmentdata = new List<InstallmentData>();
+            var reservationData = new List<InstallmentData>();
             DataTable clientdt = new DataTable();
             DataTable installmentdt = new DataTable();
             string sqls = "Select * from reserved_clients_details where BookingID=@BookingID"; 
@@ -396,22 +365,34 @@ namespace WebApp1.Controllers
                 da.Fill(clientdt);
                 if (clientdt.Rows.Count > 0)
                 {
-                    clientdata.Add(new BookingClient
+                    foreach (DataRow row in clientdt.Rows)
                     {
-                        ClientID = Convert.ToInt32(clientdt.Rows[0]["ClientID"]),
-                        ClientName = clientdt.Rows[0]["ClientName"].ToString(),
-                        ProjectName =clientdt.Rows[0]["ProjectName"].ToString(),
-                        unitName = clientdt.Rows[0]["unitName"].ToString(),
-                    });
-                    installmentdata.Add(new InstallmentData
-                    {
-                        DownPayment = Convert.ToInt32(clientdt.Rows[0]["DownPayment"]),
-                        FirstInstallmentDate = Convert.ToDateTime(clientdt.Rows[0]["FirstInstallmentDate"]),
-                        InstallmentYears = Convert.ToInt32(clientdt.Rows[0]["InstallmentYears"]),
-                        
-                    });
+                        clientdata.Add(new BookingClient
+                        {
+                            ClientID = Convert.ToInt32(row["ClientID"]),
+                            ClientName = row["ClientName"].ToString(),
+                            ProjectCode = Convert.ToInt32(row["ProjectCode"]),
+                            ProjectName = row["ProjectName"].ToString(),
+                            UnitID = Convert.ToInt32(row["UnitID"]),
+                            unitName = row["unitName"].ToString(),
+                           
+
+                        });
+                        reservationData.Add(new InstallmentData
+                        {
+                            BookingID = Convert.ToInt32(row["BookingID"]),
+                            ReservationAmount = Convert.ToInt32(row["ReservationAmount"]),
+                            PaymentMethod = row["PaymentMethod"].ToString(),
+                            DownPayment = Convert.ToInt32(row["DownPayment"]),
+                            FirstInstallmentDate = Convert.ToDateTime(row["FirstInstallmentDate"]),
+                            InstallmentYears = Convert.ToInt32(row["InstallmentYears"]),
+                            CheckImagePath= row["CheckImagePath"].ToString(),
+                            BookingDate = Convert.ToDateTime(row["BookingDate"]),
+                        });
+                    }
+
                 }
-            }
+             }
             string sqlg = "Select * from reserved_clients_installments where BookingID=@BookingID";
             using (SqlCommand cmd = new SqlCommand(sqlg, conn))
             {
@@ -422,17 +403,18 @@ namespace WebApp1.Controllers
                 da.Fill(installmentdt);
             }
             if (conn.State == ConnectionState.Open) conn.Close();
-            var data = new { clientdata = clientdata, 
-                             installmentdata= installmentdata, 
-                             clientdt = clientdt, 
-                             installmentdt= installmentdt 
-                           };
+            var data = new {  
+                clientdt = clientdt, 
+                installmentdt= installmentdt ,
+                reservationData = reservationData,
+                clientdata= clientdata
+            }; 
             return new JsonResult(data);
         }
 
         [Route("DeleteBookingData")]
         [HttpPost]
-        public JsonResult DeleteBookingData([FromBody]ClientBookingDetail client)
+        public JsonResult DeleteBookingData([FromBody] ClientBooking client)
         {
             bool isDeleted = false;
             try
@@ -440,12 +422,12 @@ namespace WebApp1.Controllers
                 string deleteInstallment = "delete Installments where BookingID=@BookingID";
                 if (conn.State == ConnectionState.Closed) conn.Open();
                 using (SqlCommand cmd = new SqlCommand(deleteInstallment, conn))
-                { 
-                    //cmd.Parameters.Clear();
-                    //cmd.Parameters.AddWithValue("@BookingID", client.BookingID);
-                    //int rows = cmd.ExecuteNonQuery();
-                    //isDeleted = true;
-                    
+                {
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@BookingID", client.BookingID);
+                    int rows = cmd.ExecuteNonQuery();
+                    isDeleted = true;
+
                 }
                 if (isDeleted)
                 {
@@ -454,19 +436,18 @@ namespace WebApp1.Controllers
                         string deleteClient = "delete ClientBookingDetails where BookingID=@BookingID";
                         using (SqlCommand cmd = new SqlCommand(deleteClient, conn))
                         {
-                            //cmd.Parameters.Clear();
-                            //cmd.Parameters.AddWithValue("@BookingID", client.BookingID);
-                            //cmd.ExecuteNonQuery();
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@BookingID", client.BookingID);
+                            cmd.ExecuteNonQuery();
                             isDeleted = true;
                         }
                         string sqlp = "Update Units set ReservedStatus=0 where UnitID=@UnitID";
                         using (SqlCommand cmd = new SqlCommand(sqlp, conn))
                         {
-                            //if (conn.State == ConnectionState.Closed) conn.Open();
-                            //cmd.Parameters.Clear();
-                            //cmd.Parameters.AddWithValue("@UnitID", client.UnitID);
-                            //cmd.ExecuteNonQuery();
-                            
+                            if (conn.State == ConnectionState.Closed) conn.Open();
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@UnitID", client.UnitID);
+                            cmd.ExecuteNonQuery();
 
                         }
 

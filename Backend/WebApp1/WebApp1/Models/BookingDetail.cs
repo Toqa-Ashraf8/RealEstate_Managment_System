@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApp1.Models
 {
-    public class ClientBookingDetail
+    public class BookingDetail
     {
         [Key]
         public int Code { get; set; }
@@ -15,7 +15,6 @@ namespace WebApp1.Models
         [ForeignKey("ClientID")]
         public int? ClientID { get; set; }
         public string? ClientName { get; set; }
-        public List<Installment> installments { get; set; }
-
+       
     }
 }

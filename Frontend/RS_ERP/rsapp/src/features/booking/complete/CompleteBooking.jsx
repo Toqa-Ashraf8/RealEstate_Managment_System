@@ -56,7 +56,7 @@ const CompleteBooking = () => {
         reserved,
         nationalIdImage,
         checkImage,
-        bookingDate
+        BookingDate,
     }=useSelector((state)=>state.booking);
   
 const handleChange=(e)=>{
@@ -70,7 +70,7 @@ const resetForm=()=>{
 }
 const handleChangeinstallment=(e)=>{
     const {name,value}=e.target;
-     const totalamount=bookingClient.NegotiationPrice;
+    const totalamount=initialClientData.NegotiationPrice;
     dispatch(setInstallmentData({[name]:value}));
 
 }
@@ -91,22 +91,23 @@ const handleChangeinstallment=(e)=>{
                 const fileName_ = file2.name;
                 formData_.append("file_c", file2, fileName_);    
               await dispatch(saveChecksImages(formData_));
-              await dispatch(setBookingClientData({[name]:fileName_})); 
+              await dispatch(setInstallmentData({[name]:fileName_})); 
         }
     
 };
 const SavedData=async()=>{
     const parms={
-        ...bookingClient,
-        ...InstallmentInformation,
-         bookingDate,
-         installments:[]};
-     if (!bookingClient) {
+          clientDetails:{...initialClientData,...bookingClient},
+          bookingDetails:{...initialClientData,...InstallmentInformation,BookingDate}
+         ,installments:[]
+};
+      
+    if (!bookingClient) {
         toast.error("بيانات العميل غير مكتملة!");
         return;
-    } 
+    }  
    
-  /*    try {
+      try {
         const result=await dispatch(bookingDetailRequest(parms)).unwrap();
         if(result.saved===true){
          toast.success("تم الحجز بنجاح!", {
@@ -126,13 +127,12 @@ const SavedData=async()=>{
             theme: "colored",
             position: "top-left",
         });
-    }  */
-   
+    }  
 }
 
 const calcutlateDownpayment=()=>{
     const totalamount=initialClientData.NegotiationPrice;
-    if(bookingClient.BookingID===0 ){
+    if(InstallmentInformation.BookingID===0 ){
        dispatch(caluclateDownPayment(totalamount));
     }
     else{
@@ -143,9 +143,10 @@ const calcutlateDownpayment=()=>{
         }))
     }
 }
+console.log(initialClientData.NegotiationPrice)
 const createInstallments=()=>{
     dispatch(setReservationStatus(0))
-    if(InstallmentInformation && bookingClient.ReservationAmount !=""){
+    if(InstallmentInformation.ReservationAmount !=""){
          dispatch(generateInstallments(InstallmentInformation))
          navigate('/installments_schedule');
     }
@@ -172,8 +173,8 @@ const getinstallmentsData=(id)=>{
         const parsedData = JSON.parse(savedData);
         dispatch(fillClientData(parsedData));
     }
-
  }, [dispatch]);
+
     return (
         <div className="final_page_wrapper">
             <div className="final_booking_container">
@@ -195,7 +196,8 @@ const getinstallmentsData=(id)=>{
                         {reserved===1 && 
                         <div className="final_circle_btn" title="جدول الاقساط"><NotepadText  size={24} color="#42025e" onClick={()=>getinstallmentsData(bookingClient.BookingID)}/></div>
                         }
-                        </div>                       
+                        </div>                   
+                          
                                 <div className="row mb-4">
                                     <div className="col-md-4">
                                         <div className="final_field_group">
@@ -217,7 +219,7 @@ const getinstallmentsData=(id)=>{
                                         </div>
                                     </div>
                                 </div>
-
+                           
                         <hr className="final_divider" />
                         <div className="row mt-4">
                             <div className="col-lg-8">
@@ -231,8 +233,8 @@ const getinstallmentsData=(id)=>{
                                         className="final_input_modern final_disabled" 
                                         name='BookingID'
                                         readOnly
-                                        value={bookingClient.BookingID || 0}
-                                        onChange={handleChange}
+                                        value={InstallmentInformation.BookingID || 0}
+                                        onChange={handleChangeinstallment}
                                         />
                                     </div>
                                 </div>
@@ -246,10 +248,7 @@ const getinstallmentsData=(id)=>{
                                         className="final_input_modern final_disabled" 
                                         name='BookingDate'
                                         readOnly
-                                        value={bookingClient && bookingClient.BookingDate? 
-                                               bookingClient.BookingDate.split('T')[0] 
-                                              : bookingDate
-                                             }
+                                        value={BookingDate .split('T')[0]}
                                         />
                                     </div>
                                 </div>
@@ -261,7 +260,7 @@ const getinstallmentsData=(id)=>{
                                         name="NationalID"
                                         className="final_input_modern"
                                         ref={focusRef}
-                                        value={bookingClient.NationalID || ""}
+                                        value={bookingClient.NationalID}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -282,7 +281,7 @@ const getinstallmentsData=(id)=>{
                                     type="text" 
                                     name="SecondaryPhone" 
                                     className="final_input_modern"
-                                    value={bookingClient.SecondaryPhone || ""}
+                                    value={bookingClient.SecondaryPhone}
                                     onChange={handleChange}
                                     />
                                 </div>
@@ -292,7 +291,7 @@ const getinstallmentsData=(id)=>{
                                     type="text" 
                                     name="Address" 
                                     className="final_input_modern"
-                                    value={bookingClient.Address || ""}
+                                    value={bookingClient.Address}
                                     onChange={handleChange}
                                     />
                                 </div>
@@ -302,7 +301,7 @@ const getinstallmentsData=(id)=>{
                                     type="text" 
                                     name="Job" 
                                     className="final_input_modern"
-                                    value={bookingClient.Job || ""}
+                                    value={bookingClient.Job}
                                     onChange={handleChange}
                                     />
                                 </div>
@@ -329,7 +328,7 @@ const getinstallmentsData=(id)=>{
                             }
                         })()}
                         </div>
-                            </div>
+                        </div>
                         </div>
 
                         <hr className="final_divider" />
@@ -343,9 +342,9 @@ const getinstallmentsData=(id)=>{
                                         name="ReservationAmount"
                                         className="final_input_modern"
                                         ref={reservationRef}
-                                        value={bookingClient.ReservationAmount || ""} 
+                                        value={InstallmentInformation.ReservationAmount || ""} 
                                         onBlur={()=>calcutlateDownpayment()}
-                                        onChange={handleChange}
+                                        onChange={handleChangeinstallment}
                                         
                                     />
                                 </div>
@@ -377,8 +376,8 @@ const getinstallmentsData=(id)=>{
                                     <select 
                                     name="PaymentMethod" 
                                     className="final_select_modern"
-                                    value={bookingClient.PaymentMethod || ""}
-                                    onChange={handleChange}
+                                    value={InstallmentInformation.PaymentMethod || ""}
+                                    onChange={handleChangeinstallment}
                                     >
                                         <option value="-1">-إختر-</option>
                                         <option value="كاش">كاش (نقدي)</option>
@@ -427,7 +426,7 @@ const getinstallmentsData=(id)=>{
                             <div className="col-lg-4">
                                 <div className="final_image_preview_big" style={{ height: '220px' }}>
                                 {(() => {
-                                    const imgName = checkImage || bookingClient.CheckImagePath;
+                                    const imgName = checkImage || InstallmentInformation.CheckImagePath;
 
                                     if (imgName && imgName !== "null") {
                                     // الحالة الأولى: لو فيه صورة
