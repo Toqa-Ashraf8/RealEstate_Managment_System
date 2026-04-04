@@ -172,7 +172,7 @@ namespace WebApp1.Controllers
                         string sqUpdateClient = @"Update ClientExtraDetails set NationalID=@NationalID, 
                                                   NationalIdImagePath=@NationalIdImagePath, 
                                                   SecondaryPhone=@SecondaryPhone,Address=@Address, 
-                                                  Job=@Job,ClientID=@ClientID,ClientName=@ClientName";                      
+                                                  Job=@Job,ClientID=@ClientID,ClientName=@ClientName";
                         using (SqlCommand cmd = new SqlCommand(sqUpdateClient, conn, transaction))
                         {
                             FillClientParams(cmd, request.ClientExtraDetails);
@@ -181,7 +181,7 @@ namespace WebApp1.Controllers
                         }
                     }
 
-                   string sqlBooking = @"INSERT INTO UnitBooking (ReservationAmount, PaymentMethod, CheckImagePath, DownPayment, 
+                    string sqlBooking = @"INSERT INTO UnitBooking (ReservationAmount, PaymentMethod, CheckImagePath, DownPayment, 
                      FirstInstallmentDate, InstallmentYears, BookingDate, ClientID, ProjectCode, UnitID, Reserved) 
                      VALUES (@ReservationAmount, @PaymentMethod, @CheckImagePath, @DownPayment, @FirstInstallmentDate, @InstallmentYears, 
                      @BookingDate, @ClientID, @ProjectCode, @UnitID, @Reserved);
@@ -195,11 +195,11 @@ namespace WebApp1.Controllers
                     }
                     if (savedBooking == true)
                     {
-                        string sqlUnit = "UPDATE Units SET ReservedStatus=1 WHERE ProjectCode=@PCode AND UnitID=@UID";
+                        string sqlUnit = "UPDATE Units SET ReservedStatus=1 WHERE ProjectCode=@ProjectCode AND UnitID=@UnitID";
                         using (SqlCommand cmd = new SqlCommand(sqlUnit, conn, transaction))
                         {
-                            cmd.Parameters.AddWithValue("@PCode", request.UnitBooking.ProjectCode);
-                            cmd.Parameters.AddWithValue("@UID", request.UnitBooking.UnitID);
+                            cmd.Parameters.AddWithValue("@ProjectCode", request.UnitBooking.ProjectCode);
+                            cmd.Parameters.AddWithValue("@UnitID", request.UnitBooking.UnitID);
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -298,28 +298,28 @@ namespace WebApp1.Controllers
        
         private void FillClientParams(SqlCommand cmd, ClientExtraDetails cl)
         {
-            cmd.Parameters.AddWithValue("@NationalID", cl.NationalID);
-            cmd.Parameters.AddWithValue("@NationalIdImagePath", cl.NationalIdImagePath);
-            cmd.Parameters.AddWithValue("@SecondaryPhone", cl.SecondaryPhone);
-            cmd.Parameters.AddWithValue("@Address", cl.Address);
-            cmd.Parameters.AddWithValue("@Job", cl.Job);
-            cmd.Parameters.AddWithValue("@ClientID", cl.ClientID);
-            cmd.Parameters.AddWithValue("@ClientName", cl.ClientName);
+            cmd.Parameters.AddWithValue("@NationalID", (object)cl.NationalID ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@NationalIdImagePath", (object)cl.NationalIdImagePath ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@SecondaryPhone", (object)cl.SecondaryPhone ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Address", (object)cl.Address ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Job", (object)cl.Job ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@ClientID", (object)cl.ClientID ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@ClientName", (object)cl.ClientName ?? DBNull.Value);
         }
         private void FillBookingParams(SqlCommand cmd, UnitBooking ub)
         {
-            cmd.Parameters.AddWithValue("@BookingID", ub.BookingID);
-            cmd.Parameters.AddWithValue("@ReservationAmount", ub.ReservationAmount);
-            cmd.Parameters.AddWithValue("@PaymentMethod", ub.PaymentMethod);
-            cmd.Parameters.AddWithValue("@CheckImagePath", ub.CheckImagePath);
-            cmd.Parameters.AddWithValue("@DownPayment", ub.DownPayment);
-            cmd.Parameters.AddWithValue("@FirstInstallmentDate", ub.FirstInstallmentDate);
-            cmd.Parameters.AddWithValue("@InstallmentYears", ub.InstallmentYears);
-            cmd.Parameters.AddWithValue("@BookingDate", ub.BookingDate);
-            cmd.Parameters.AddWithValue("@ClientID", ub.ClientID);
-            cmd.Parameters.AddWithValue("@ProjectCode", ub.ProjectCode);
-            cmd.Parameters.AddWithValue("@UnitID", ub.UnitID);
-            cmd.Parameters.AddWithValue("@Reserved", ub.Reserved);
+            cmd.Parameters.AddWithValue("@BookingID", (object)ub.BookingID ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@ReservationAmount", (object)ub.ReservationAmount ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@PaymentMethod", (object)ub.PaymentMethod ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@CheckImagePath", (object)ub.CheckImagePath ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@DownPayment", (object)ub.DownPayment ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@FirstInstallmentDate", (object)ub.FirstInstallmentDate ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@InstallmentYears", (object)ub.InstallmentYears ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@BookingDate", (object)ub.BookingDate ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@ClientID", (object)ub.ClientID ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@ProjectCode", (object)ub.ProjectCode ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@UnitID", (object)ub.UnitID ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Reserved", (object)ub.Reserved ?? DBNull.Value);
         }
         //Generate installment Table 
         [Route("GenerateInstallments")]
@@ -482,7 +482,7 @@ namespace WebApp1.Controllers
                 {
                     try
                     {
-                        string deleteClient = "delete ClientBookingDetails where BookingID=@BookingID";
+                        string deleteClient = "delete UnitBooking where BookingID=@BookingID";
                         using (SqlCommand cmd = new SqlCommand(deleteClient, conn))
                         {
                             cmd.Parameters.Clear();

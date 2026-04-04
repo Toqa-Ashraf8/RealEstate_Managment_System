@@ -99,19 +99,21 @@ const handleChangeinstallment=(e)=>{
 const SavedData=async()=>{
     if(previousSavedClientData){
          const parms={
-          clientDetails:{...initialClientData,...previousSavedClientData},
-          bookingDetails:{...initialClientData,...InstallmentInformation,BookingDate}
+          ClientExtraDetails:{...initialClientData,...previousSavedClientData},
+          UnitBooking:{...initialClientData,...InstallmentInformation,BookingDate}
          ,installments:[]
         };
+        console.log("parms",parms); 
     }
     else{
         const parms={
-            clientDetails:{...initialClientData,...bookingClient},
-            bookingDetails:{...initialClientData,...InstallmentInformation,BookingDate}
+            ClientExtraDetails:{...initialClientData,...bookingClient},
+            UnitBooking:{...initialClientData,...InstallmentInformation,BookingDate}
             ,installments:[]
         };
+        console.log("parms",parms); 
     } 
-    console.log("parms",parms);
+   
    /*  if (!bookingClient || !previousSavedClientData) {
         toast.error("بيانات العميل غير مكتملة!");
         return;

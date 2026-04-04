@@ -66,7 +66,7 @@ useEffect(() => {
            
             <Route path="/dashboard" 
               element={
-              <ProtectedRoute>  
+              <ProtectedRoute allowedRoles={['Admin']}>  
                 <DashboardPage/>
               </ProtectedRoute>
               }

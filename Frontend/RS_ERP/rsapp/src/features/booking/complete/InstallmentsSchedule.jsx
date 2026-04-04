@@ -43,17 +43,17 @@ const InstallmentsSchedule = () => {
         BookingDate,
         previousSavedClientData
     } = useSelector((state) => state.booking);
-
 const payInstallment=(i)=>{
     dispatch(setPendingPayment({ index: i, isEdit: 0 }));
     dispatch(togglePaymentModal(true));
     dispatch(resetPaymentModal());
 }
 const saveAllData=async()=>{
+    let data = {};
     if(previousSavedClientData){
-         const data={
-        clientDetails:{...initialClientData,...previousSavedClientData},
-        bookingDetails:{...initialClientData,...InstallmentInformation,BookingDate, 
+        data={
+        ClientExtraDetails:{...initialClientData,...previousSavedClientData},
+        UnitBooking:{...initialClientData,...InstallmentInformation,BookingDate, 
         installments:installmentDetails.map(item => ({
             ...item,
             Paid: item.Paid ? 1 : 0 ,
@@ -63,37 +63,46 @@ const saveAllData=async()=>{
     }
     }
     }
-    else{
-        const data={
-        clientDetails:{...initialClientData,...bookingClient},
-        bookingDetails:{...initialClientData,...InstallmentInformation,BookingDate, 
-        installments:installmentDetails.map(item => ({
-            ...item,
-            Paid: item.Paid ? 1 : 0 ,
-            PaymentType: item.PaymentType || "", 
-            CheckImage: item.CheckImage || ""
-        }))
+   
+   else{
+         data={
+            ClientExtraDetails:{...initialClientData,...bookingClient},
+            UnitBooking:{...initialClientData,...InstallmentInformation,BookingDate, 
+            installments:installmentDetails.map(item => ({
+                ...item,
+                Paid: item.Paid ? 1 : 0 ,
+                PaymentType: item.PaymentType || "", 
+                CheckImage: item.CheckImage || ""
+            }))
+            }
         }
-        }
-    }
-       console.log("data",data);
-    /*    try {
+    } 
+      try {
            const result=await dispatch(bookingDetailRequest(data)).unwrap();
-            toast.success("تم الحجز بنجاح!", {
+           if(result.savedBooking){
+             toast.success("تم الحجز بنجاح!", {
                theme: "colored",
                position: "top-left",
            });
+           }
+           else if(result.updatedBooking){
+              toast.success("تم تحديث البيانات بنجاح!", {
+               theme: "colored",
+               position: "top-left",
+           });
+           }
+         localStorage.removeItem('activeClientData')   
         await dispatch(confirmReservation(initialClientData));
-       } 
+       }
        catch (error) {
            toast.error("حدث خطأ في الاتصال الخادم", {
                theme: "colored",
                position: "top-left",
            });
-       } 
-       if(reserved===0){
+       }    
+     if(reserved===0){
         await navigate('/booking');
-       }      */ 
+    }       
 }
 
 const handleEdit=(i)=>{
@@ -112,7 +121,7 @@ const handleEdit=(i)=>{
         }
         FetchClientData();
     }, [dispatch, InstallmentInformation]);
-
+console.log("previousSavedClientData",previousSavedClientData)
     return (
         <div className="mini_ins_wrapper"> 
         {isPaymentModalOpen && <PaymentTypeModal/>}

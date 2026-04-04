@@ -78,7 +78,7 @@ const deleteBooking=async(index)=>{
         }); 
  }  
 } 
-
+console.log("reservedClients",reservedClients)
     return (
         <div className="booked_list_wrapper">      
           <div className="booked_list_header">
