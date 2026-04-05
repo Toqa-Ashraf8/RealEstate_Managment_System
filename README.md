@@ -125,6 +125,25 @@ The system implements a secure multi-user environment where each role (Admin vs.
   </tr>
 </table>
 
+### 3. Customer Management (CRM) 
+* **Centralized Database:** Managed portal for client profiles and identity records.
+* **360° Client View:** Unified history of bookings and installment schedules.
+
+<div align="center">
+<table style="border-collapse: collapse; border: none; margin: auto;">
+  <tr>
+    <td style="padding: 10px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/allclients.png" width="350" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Client Directory">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em><b>Client Directory</b></em></p>
+    </td>
+    <td style="padding: 10px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/clientForm.png" width="350" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Full Client Profile">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em><b>Comprehensive Profile</b></em></p>
+    </td>
+  </tr>
+</table>
+</div>
+
 ## Future Logic Enhancements & Roadmap
 While the core functionality is fully operational, I have identified several key areas for future logic refinement to further enhance data integrity and user experience:
 
