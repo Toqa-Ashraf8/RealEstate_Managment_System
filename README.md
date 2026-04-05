@@ -40,17 +40,7 @@ The system implements a secure multi-user environment where each role (Admin vs.
 ### 2. Project & Unit Inventory (Master-Detail) 
 * **Master-Detail Architecture:** Administrators can create projects and dynamically add associated units with detailed specifications (Area, Floor, Price, Images, and Status).
 * **Live Inventory:** A real-time display of available vs. reserved units for sales teams.
-  فهمت قصدك، إنتي عايزة تعملي "شريط معرض صور" كامل (Image Gallery) من 4 صور جنب بعض في صف واحد، وده هيدي شكل احترافي جداً في الـ README بيبين الـ Flow الكامل من الـ Admin للـ User.
-
-عشان نعمل كدة ونحافظ على جودة الصور وتفاصيل العناوين، هقسم مساحة الـ Table بنسبة 25% لكل صورة، وهختصر العناوين شوية عشان متعملش زحمة في الصف الصغير ده.
-
-إليكِ الكود الكامل والمعدل للقسم التاني (انسخي ده كله):
-
-Markdown
-### 2. Project & Unit Inventory (Master-Detail) 🏢
-* **Master-Detail Architecture:** Administrators can create projects and dynamically add associated units with detailed specifications.
-* **Live Inventory:** A real-time display of available vs. reserved units for sales teams.
-
+  
 <table style="width: 100%; border-collapse: collapse; border: none; table-layout: fixed;">
   <tr>
     <td style="width: 25%; padding: 5px; text-align: center; border: none; vertical-align: top;">
