@@ -125,7 +125,7 @@ The system implements a secure multi-user environment where each role (Admin vs.
   </tr>
 </table>
 
-### 3. Customer Management (CRM) 
+### 5. Customer Management (CRM) 
 * **Centralized Database:** Managed portal for client profiles and identity records.
 * **360° Client View:** Unified history of bookings and installment schedules.
 
