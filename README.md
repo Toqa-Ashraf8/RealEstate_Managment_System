@@ -39,7 +39,33 @@ The system implements a secure multi-user environment where each role (Admin vs.
   
 ### 2. Project & Unit Inventory (Master-Detail) 
 * **Master-Detail Architecture:** Administrators can create projects and dynamically add associated units with detailed specifications (Area, Floor, Price, Images, and Status).
+  
+  <table style="width: 100%; border-collapse: collapse; border: none; table-layout: fixed;">
+  <tr>
+    <td style="width: 50%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/addprojects.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Project Management">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em><b>Project Creation:</b> Defining project scope and geographic location.</em></p>
+    </td>
+    <td style="width: 50%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/addprojectsModal.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Unit Modal">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em><b>Unit Specification:</b> Adding detailed unit data via dynamic modal.</em></p>
+    </td>
+  </tr>
+</table>
 * **Live Inventory:** A real-time display of available vs. reserved units for sales teams.
+
+<table style="width: 100%; border-collapse: collapse; border: none; table-layout: fixed;">
+  <tr>
+    <td style="width: 50%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/projects.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Projects Showcase">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em><b>Projects Gallery:</b> view of all real estate projects.</em></p>
+    </td>
+    <td style="width: 50%; padding: 5px; text-align: center; border: none; vertical-align: top;">
+      <img src="screenshots/units.png" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" alt="Units Status">
+      <p style="font-size: 0.85em; margin-top: 10px;"><em><b>Unit Inventory:</b> Real-time status (Available vs. Reserved) with visual badges.</em></p>
+    </td>
+  </tr>
+</table>
 
 ### 3. Advanced Negotiation & Approval Workflow 
 * **Request Initiation:** Sales employees can submit "Negotiation Requests" if a client proposes a different price.
