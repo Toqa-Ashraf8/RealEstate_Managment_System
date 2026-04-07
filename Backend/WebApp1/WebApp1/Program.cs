@@ -28,7 +28,7 @@ c.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandli
  .AddNewtonsoftJson(c =>
 c.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-//Enable Dbcontext
+//Enable EF
 builder.Services.AddDbContext<DataContext>(options =>
         options.UseSqlServer(
         builder.Configuration.GetConnectionString("connT")
@@ -63,6 +63,8 @@ builder.Services.AddAuthentication(options =>
         };
  });
 builder.Services.AddAuthorization();
+
+
 
 var app = builder.Build();
 

@@ -42,7 +42,7 @@ const authSlice=createSlice({
         .addCase(loginUser.fulfilled,(state,action)=>{ 
             state.token = action.payload.token;
             state.role = action.payload.role;
-             state.userName=action.payload.user;
+            state.userName=action.payload.user;
             sessionStorage.setItem('token', action.payload.token);
             sessionStorage.setItem('userRole', action.payload.role);
             sessionStorage.setItem('name',action.payload.user);
