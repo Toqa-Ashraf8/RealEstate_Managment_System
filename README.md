@@ -1,7 +1,7 @@
 # Real Estate Management System 
 
 A specialized Full-Stack Application designed to digitize real estate operations. This project was inspired by real-world manual workflow challenges to automate project management, client negotiations, and financial installment tracking.
-##  Why This Project? (The Problem)
+##  Why This Project? 
 In many real estate agencies, operations like unit bookings and installment tracking are still handled manually on paper. This leads to data inconsistency and slow approval cycles. I developed this system to provide a **Digital Transformation** solution that centralizes data and automates the financial lifecycle of property sales.
 
 ##  Tech Stack
