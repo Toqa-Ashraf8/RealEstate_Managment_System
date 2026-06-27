@@ -53,7 +53,7 @@ C -->|Approve| E[Client Booking Details]
 E -->|Generates| F[Automated Installment Plan]
 F -->|Tracks| G[Monthly Payments]
 ```
-## 🔧 Installation & Setup
+##  Installation & Setup
 1. Clone the repo: `git clone https://github.com/Toqa-Ashraf8/RealEstate_FullStack_System.git`
 2. **Backend:** - Update `appsettings.json` with your SQL connection string.ٍ
    - Run `dotnet ef database update`.
